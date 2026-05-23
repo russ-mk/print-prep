@@ -1,0 +1,854 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>UPA Print Prep</title>
+<link href="https://fonts.googleapis.com/css2?family=DM+Mono:wght@400;500&family=DM+Sans:wght@300;400;500;600&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg: #f5f3ef;
+    --surface: #ffffff;
+    --surface2: #f0ede8;
+    --border: #e2ddd6;
+    --text: #1a1814;
+    --text2: #6b6560;
+    --text3: #9e9890;
+    --accent: #2d5a3d;
+    --accent2: #4a7c5f;
+    --accent-bg: #eaf2ec;
+    --warn: #92400e;
+    --warn-bg: #fef3c7;
+    --front: #1e3a5f;
+    --front-bg: #dbeafe;
+    --back: #4c1d95;
+    --back-bg: #ede9fe;
+    --other: #065f46;
+    --other-bg: #d1fae5;
+    --danger: #991b1b;
+    --danger-bg: #fee2e2;
+    --mono: 'DM Mono', monospace;
+    --sans: 'DM Sans', sans-serif;
+    --radius: 10px;
+    --radius-lg: 16px;
+  }
+
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+
+  body {
+    font-family: var(--sans);
+    background: var(--bg);
+    color: var(--text);
+    min-height: 100vh;
+    padding: 0;
+  }
+
+  header {
+    background: var(--accent);
+    color: white;
+    padding: 20px 32px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+  }
+
+  .header-title {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+  }
+
+  .header-logo {
+    width: 38px;
+    height: 38px;
+    background: rgba(255,255,255,0.15);
+    border-radius: 8px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 18px;
+    font-weight: 600;
+    letter-spacing: -1px;
+  }
+
+  header h1 {
+    font-size: 18px;
+    font-weight: 600;
+    letter-spacing: -0.3px;
+  }
+
+  header p {
+    font-size: 12px;
+    opacity: 0.65;
+    margin-top: 1px;
+  }
+
+  .sheet-status {
+    font-size: 12px;
+    font-family: var(--mono);
+    background: rgba(255,255,255,0.12);
+    padding: 5px 12px;
+    border-radius: 20px;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+  }
+
+  .dot-live { width: 7px; height: 7px; border-radius: 50%; background: #4ade80; display: inline-block; animation: pulse 2s infinite; }
+  @keyframes pulse { 0%,100%{opacity:1} 50%{opacity:0.4} }
+
+  main { max-width: 960px; margin: 0 auto; padding: 28px 24px; }
+
+  .card {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: var(--radius-lg);
+    padding: 20px 24px;
+    margin-bottom: 16px;
+  }
+
+  .card-title {
+    font-size: 11px;
+    font-weight: 600;
+    letter-spacing: 0.8px;
+    text-transform: uppercase;
+    color: var(--text3);
+    margin-bottom: 14px;
+  }
+
+  .selectors {
+    display: grid;
+    grid-template-columns: 1fr 2fr 1fr 1fr;
+    gap: 12px;
+    align-items: end;
+  }
+
+  @media(max-width: 680px) {
+    .selectors { grid-template-columns: 1fr 1fr; }
+    .sel-generate { grid-column: 1/-1; }
+  }
+
+  .field label {
+    display: block;
+    font-size: 12px;
+    font-weight: 500;
+    color: var(--text2);
+    margin-bottom: 6px;
+  }
+
+  .field select, .field input {
+    width: 100%;
+    padding: 9px 12px;
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    background: var(--surface2);
+    color: var(--text);
+    font-size: 14px;
+    font-family: var(--sans);
+    appearance: none;
+    -webkit-appearance: none;
+    outline: none;
+    transition: border-color 0.15s;
+  }
+
+  .field select:focus, .field input:focus {
+    border-color: var(--accent2);
+    background: white;
+  }
+
+  .field select:disabled {
+    opacity: 0.45;
+    cursor: not-allowed;
+  }
+
+  .sel-wrap { position: relative; }
+  .sel-wrap::after {
+    content: '▾';
+    position: absolute;
+    right: 11px;
+    top: 50%;
+    transform: translateY(-50%);
+    font-size: 11px;
+    color: var(--text3);
+    pointer-events: none;
+  }
+
+  .btn {
+    padding: 10px 20px;
+    border-radius: var(--radius);
+    font-size: 14px;
+    font-weight: 500;
+    font-family: var(--sans);
+    cursor: pointer;
+    border: none;
+    transition: all 0.15s;
+    display: inline-flex;
+    align-items: center;
+    gap: 7px;
+    width: 100%;
+    justify-content: center;
+  }
+
+  .btn-primary {
+    background: var(--accent);
+    color: white;
+  }
+
+  .btn-primary:hover { background: var(--accent2); }
+  .btn-primary:active { transform: scale(0.98); }
+
+  .btn-secondary {
+    background: var(--surface2);
+    color: var(--text);
+    border: 1px solid var(--border);
+  }
+
+  .btn-secondary:hover { background: var(--border); }
+
+  #error-bar {
+    display: none;
+    background: var(--danger-bg);
+    color: var(--danger);
+    border: 1px solid #fca5a5;
+    border-radius: var(--radius);
+    padding: 10px 14px;
+    font-size: 13px;
+    margin-top: 12px;
+  }
+
+  #loading-bar {
+    display: none;
+    text-align: center;
+    padding: 40px;
+    color: var(--text2);
+    font-size: 14px;
+  }
+
+  .spinner {
+    width: 22px; height: 22px;
+    border: 2px solid var(--border);
+    border-top-color: var(--accent);
+    border-radius: 50%;
+    animation: spin 0.7s linear infinite;
+    display: inline-block;
+    vertical-align: middle;
+    margin-right: 8px;
+  }
+  @keyframes spin { to { transform: rotate(360deg); } }
+
+  #results { display: none; }
+
+  .stats {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 12px;
+    margin-bottom: 16px;
+  }
+
+  .stat {
+    background: var(--surface2);
+    border-radius: var(--radius);
+    padding: 14px 16px;
+    text-align: center;
+  }
+
+  .stat-val {
+    font-size: 26px;
+    font-weight: 600;
+    color: var(--text);
+    line-height: 1;
+  }
+
+  .stat-lbl {
+    font-size: 11px;
+    color: var(--text3);
+    margin-top: 5px;
+    font-weight: 500;
+    letter-spacing: 0.3px;
+  }
+
+  .two-col {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 16px;
+    margin-bottom: 16px;
+  }
+
+  @media(max-width: 640px) { .two-col { grid-template-columns: 1fr; } }
+
+  .badge {
+    display: inline-block;
+    font-size: 10px;
+    font-weight: 600;
+    letter-spacing: 0.4px;
+    padding: 2px 8px;
+    border-radius: 20px;
+    text-transform: uppercase;
+    margin-right: 6px;
+  }
+
+  .badge-front { background: var(--front-bg); color: var(--front); }
+  .badge-back { background: var(--back-bg); color: var(--back); }
+  .badge-other { background: var(--other-bg); color: var(--other); }
+
+  .warn-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+    font-size: 10px;
+    font-weight: 600;
+    background: var(--warn-bg);
+    color: var(--warn);
+    padding: 2px 8px;
+    border-radius: 20px;
+  }
+
+  .placement-row {
+    display: flex;
+    gap: 12px;
+    padding: 12px 0;
+    border-bottom: 1px solid var(--border);
+    align-items: flex-start;
+  }
+
+  .placement-row:last-child { border-bottom: none; }
+
+  .logo-letter {
+    width: 34px;
+    height: 34px;
+    border-radius: 8px;
+    background: var(--accent);
+    color: white;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 16px;
+    font-weight: 600;
+    flex-shrink: 0;
+    font-family: var(--mono);
+  }
+
+  .placement-detail {
+    flex: 1;
+  }
+
+  .placement-name {
+    font-size: 13px;
+    font-weight: 500;
+    color: var(--text);
+    margin-bottom: 3px;
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 4px;
+  }
+
+  .placement-pos {
+    font-size: 12px;
+    color: var(--text2);
+    font-family: var(--mono);
+  }
+
+  .press-info {
+    font-size: 11px;
+    color: var(--text3);
+    margin-top: 4px;
+  }
+
+  svg.garment { display: block; margin: 0 auto; }
+
+  .file-item {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 7px 0;
+    border-bottom: 1px solid var(--bg);
+    font-size: 12px;
+    font-family: var(--mono);
+    color: var(--text2);
+  }
+
+  .file-item:last-child { border-bottom: none; }
+
+  .file-loc {
+    font-size: 10px;
+    font-weight: 600;
+    letter-spacing: 0.5px;
+    text-transform: uppercase;
+    color: var(--text3);
+    min-width: 60px;
+  }
+
+  .copy-bar {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 14px;
+  }
+
+  .notice {
+    background: var(--warn-bg);
+    border: 1px solid #fcd34d;
+    border-radius: var(--radius);
+    padding: 10px 14px;
+    font-size: 12px;
+    color: var(--warn);
+    display: flex;
+    gap: 8px;
+    align-items: flex-start;
+    margin-bottom: 16px;
+  }
+
+  .notice-icon { font-size: 14px; flex-shrink: 0; margin-top: 1px; }
+
+  footer {
+    text-align: center;
+    padding: 24px;
+    font-size: 11px;
+    color: var(--text3);
+    font-family: var(--mono);
+  }
+
+  .refresh-btn {
+    background: none;
+    border: none;
+    color: rgba(255,255,255,0.6);
+    font-size: 12px;
+    cursor: pointer;
+    font-family: var(--sans);
+    display: flex;
+    align-items: center;
+    gap: 5px;
+    padding: 0;
+  }
+
+  .refresh-btn:hover { color: white; }
+</style>
+</head>
+<body>
+
+<header>
+  <div class="header-title">
+    <div class="header-logo">UP</div>
+    <div>
+      <h1>UPA Print Prep</h1>
+      <p>Uniform print job preparation</p>
+    </div>
+  </div>
+  <div style="display:flex;align-items:center;gap:12px">
+    <div class="sheet-status" id="sheet-status">
+      <span class="dot-live"></span> loading sheet...
+    </div>
+    <button class="refresh-btn" onclick="reloadSheet()" title="Reload sheet">&#8635; Refresh</button>
+  </div>
+</header>
+
+<main>
+
+  <div id="loading-bar"><span class="spinner"></span> Fetching your Google Sheet...</div>
+
+  <div id="app" style="display:none">
+
+    <div class="card">
+      <div class="card-title">Job setup</div>
+      <div class="selectors">
+        <div class="field">
+          <label>Adult / Child</label>
+          <div class="sel-wrap">
+            <select id="sel-ac" onchange="onACChange()">
+              <option value="">Select...</option>
+            </select>
+          </div>
+        </div>
+        <div class="field">
+          <label>Garment</label>
+          <div class="sel-wrap">
+            <select id="sel-item" disabled onchange="onItemChange()">
+              <option value="">Select adult/child first</option>
+            </select>
+          </div>
+        </div>
+        <div class="field">
+          <label>Size</label>
+          <div class="sel-wrap">
+            <select id="sel-size" disabled>
+              <option value="">Select garment first</option>
+            </select>
+          </div>
+        </div>
+        <div class="field sel-generate">
+          <label>Quantity</label>
+          <div style="display:flex;gap:8px">
+            <input type="number" id="qty" value="1" min="1" max="999" style="width:80px">
+            <button class="btn btn-primary" onclick="generate()" style="flex:1">
+              &#9654; Generate job
+            </button>
+          </div>
+        </div>
+      </div>
+      <div id="error-bar"></div>
+    </div>
+
+    <div id="results">
+
+      <div class="stats">
+        <div class="stat">
+          <div class="stat-val" id="stat-logos">—</div>
+          <div class="stat-lbl">Logo placements</div>
+        </div>
+        <div class="stat">
+          <div class="stat-val" id="stat-files">—</div>
+          <div class="stat-lbl">Files to copy</div>
+        </div>
+        <div class="stat">
+          <div class="stat-val" id="stat-press">—</div>
+          <div class="stat-lbl">Press temp / time</div>
+        </div>
+      </div>
+
+      <div id="warn-notice" class="notice" style="display:none">
+        <span class="notice-icon">⚠</span>
+        <span>Some placements are marked with <strong>?</strong> in your sheet — measurements are unconfirmed. Double-check these before pressing.</span>
+      </div>
+
+      <div class="two-col">
+        <div class="card">
+          <div class="card-title">Placement diagram</div>
+          <div id="diagram"></div>
+        </div>
+        <div class="card">
+          <div class="card-title">Logo placements</div>
+          <div id="placements"></div>
+        </div>
+      </div>
+
+      <div class="card">
+        <div class="copy-bar">
+          <div class="card-title" style="margin:0">Files to copy to print folder</div>
+          <button class="btn btn-secondary" id="copy-btn" onclick="copyFiles()" style="width:auto;padding:7px 14px;font-size:13px">
+            &#128203; Copy list
+          </button>
+        </div>
+        <div id="files"></div>
+      </div>
+
+    </div>
+  </div>
+
+</main>
+
+<footer>UPA Print Prep &mdash; data loaded live from Google Sheets</footer>
+
+<script>
+const SHEET_ID = '1e2bRbJwGPwEbXX8XXzQwYSFZVenGF8_1OoluX4ayBVA';
+const GID = '1102647217';
+let allRows = [];
+let fileList = [];
+
+function csvToRows(text) {
+  const lines = text.trim().split('\n');
+  const headers = parseCSVLine(lines[0]);
+  return lines.slice(1).map(line => {
+    const vals = parseCSVLine(line);
+    const obj = {};
+    headers.forEach((h, i) => obj[h.trim()] = (vals[i] || '').trim());
+    return obj;
+  }).filter(r => r['Adult - Child'] && r['Item']);
+}
+
+function parseCSVLine(line) {
+  const result = []; let cur = ''; let inQ = false;
+  for (let i = 0; i < line.length; i++) {
+    if (line[i] === '"') { inQ = !inQ; }
+    else if (line[i] === ',' && !inQ) { result.push(cur); cur = ''; }
+    else cur += line[i];
+  }
+  result.push(cur);
+  return result;
+}
+
+async function loadSheet() {
+  document.getElementById('loading-bar').style.display = 'block';
+  document.getElementById('app').style.display = 'none';
+  document.getElementById('sheet-status').innerHTML = '<span class="dot-live"></span> loading...';
+
+  const url = `https://docs.google.com/spreadsheets/d/${SHEET_ID}/export?format=csv&gid=${GID}`;
+  try {
+    const r = await fetch(url);
+    if (!r.ok) throw new Error('Sheet returned ' + r.status);
+    const text = await r.text();
+    allRows = csvToRows(text);
+    document.getElementById('loading-bar').style.display = 'none';
+    document.getElementById('app').style.display = 'block';
+    document.getElementById('sheet-status').innerHTML = `<span class="dot-live"></span> ${allRows.length} rows loaded`;
+    initSelectors();
+  } catch(e) {
+    document.getElementById('loading-bar').innerHTML = `
+      <div style="color:#991b1b;background:#fee2e2;border:1px solid #fca5a5;border-radius:10px;padding:20px 24px;max-width:480px;margin:0 auto;text-align:left">
+        <strong style="display:block;margin-bottom:8px">Could not load Google Sheet</strong>
+        <p style="font-size:13px;margin-bottom:12px">Make sure the sheet is shared as "Anyone with the link — Viewer".</p>
+        <button class="btn btn-primary" onclick="reloadSheet()" style="width:auto">Try again</button>
+      </div>`;
+    document.getElementById('sheet-status').innerHTML = '<span style="color:#fca5a5">&#9679;</span> error';
+  }
+}
+
+function reloadSheet() {
+  document.getElementById('results').style.display = 'none';
+  loadSheet();
+}
+
+function initSelectors() {
+  const acVals = [...new Set(allRows.map(r => r['Adult - Child']))].filter(Boolean).sort();
+  const sel = document.getElementById('sel-ac');
+  sel.innerHTML = '<option value="">Select...</option>';
+  acVals.forEach(v => sel.appendChild(new Option(v, v)));
+}
+
+function onACChange() {
+  const ac = document.getElementById('sel-ac').value;
+  const selItem = document.getElementById('sel-item');
+  selItem.innerHTML = '<option value="">Select garment...</option>';
+  selItem.disabled = !ac;
+  document.getElementById('sel-size').innerHTML = '<option value="">Select garment first</option>';
+  document.getElementById('sel-size').disabled = true;
+  document.getElementById('results').style.display = 'none';
+  if (!ac) return;
+  [...new Set(allRows.filter(r => r['Adult - Child'] === ac).map(r => r['Item']))]
+    .forEach(v => selItem.appendChild(new Option(v, v)));
+}
+
+function onItemChange() {
+  const ac = document.getElementById('sel-ac').value;
+  const item = document.getElementById('sel-item').value;
+  const selSize = document.getElementById('sel-size');
+  selSize.innerHTML = '<option value="">Select size...</option>';
+  selSize.disabled = !item;
+  document.getElementById('results').style.display = 'none';
+  if (!item) return;
+  [...new Set(allRows.filter(r => r['Adult - Child'] === ac && r['Item'] === item).map(r => r['Size']))]
+    .forEach(v => selSize.appendChild(new Option(v, v)));
+}
+
+function hasWarning(row) {
+  return ['Logo','Position1','Postion2','Position3'].some(k => (row[k]||'').includes('?'));
+}
+
+function cleanLogo(raw) { return raw.replace(/^\?+/, '').trim(); }
+
+function logoLetter(logo) {
+  const m = logo.match(/^([A-Z])/);
+  return m ? m[1] : '?';
+}
+
+function safeFile(s) { return s.replace(/[<>:"/\\|?*]/g, '_').trim(); }
+
+function locationBadge(loc) {
+  const l = loc.toLowerCase();
+  if (l.includes('front')) return `<span class="badge badge-front">Front</span>`;
+  if (l.includes('back')) return `<span class="badge badge-back">Back</span>`;
+  return `<span class="badge badge-other">${loc}</span>`;
+}
+
+function generate() {
+  const ac = document.getElementById('sel-ac').value;
+  const item = document.getElementById('sel-item').value;
+  const size = document.getElementById('sel-size').value;
+  const qty = parseInt(document.getElementById('qty').value) || 1;
+  const errEl = document.getElementById('error-bar');
+  errEl.style.display = 'none';
+
+  if (!ac || !item || !size) {
+    errEl.textContent = 'Please select adult/child, garment and size before generating.';
+    errEl.style.display = 'block';
+    return;
+  }
+
+  const rows = allRows.filter(r =>
+    r['Adult - Child'] === ac && r['Item'] === item && r['Size'] === size
+  );
+
+  if (!rows.length) {
+    errEl.textContent = 'No data found for this combination — check your sheet.';
+    errEl.style.display = 'block';
+    return;
+  }
+
+  const anyWarn = rows.some(hasWarning);
+  document.getElementById('warn-notice').style.display = anyWarn ? 'flex' : 'none';
+
+  const temps = [...new Set(rows.map(r => r['Temp']).filter(Boolean))];
+  const times = [...new Set(rows.map(r => r['Time']).filter(Boolean))];
+
+  document.getElementById('stat-logos').textContent = rows.length;
+  document.getElementById('stat-files').textContent = rows.length * qty;
+  document.getElementById('stat-press').textContent = (temps[0] || '—') + ' / ' + (times[0] || '—');
+
+  buildPlacements(rows);
+  buildDiagram(rows, item);
+  buildFiles(rows, qty, item, size);
+
+  document.getElementById('results').style.display = 'block';
+  document.getElementById('results').scrollIntoView({ behavior: 'smooth', block: 'start' });
+}
+
+function buildPlacements(rows) {
+  document.getElementById('placements').innerHTML = rows.map(row => {
+    const logo = cleanLogo(row['Logo'] || '');
+    const letter = logoLetter(logo);
+    const pos1 = row['Position1'] || '';
+    const pos2 = row['Postion2'] || '';
+    const pos3 = row['Position3'] || '';
+    const positions = [pos1,pos2,pos3].filter(Boolean).join(' · ');
+    const warn = hasWarning(row);
+    return `<div class="placement-row">
+      <div class="logo-letter">${letter}</div>
+      <div class="placement-detail">
+        <div class="placement-name">
+          ${locationBadge(row['Location']||'')}
+          <span>${logo}</span>
+          ${warn ? '<span class="warn-badge">&#9888; check</span>' : ''}
+        </div>
+        ${positions ? `<div class="placement-pos">${positions}</div>` : ''}
+        <div class="press-info">${row['Temp']||''} &middot; ${row['Time']||''}</div>
+      </div>
+    </div>`;
+  }).join('');
+}
+
+function buildFiles(rows, qty, item, size) {
+  fileList = [];
+  rows.forEach(row => {
+    const logo = cleanLogo(row['Logo'] || '');
+    const letter = logoLetter(logo);
+    const loc = safeFile(row['Location'] || 'location');
+    for (let i = 1; i <= qty; i++) {
+      fileList.push({
+        name: `${safeFile(logo)}_${loc}_${String(i).padStart(3,'0')}.png`,
+        loc: row['Location'] || '',
+        letter
+      });
+    }
+  });
+
+  document.getElementById('files').innerHTML = fileList.map(f =>
+    `<div class="file-item">
+      <span class="file-loc">${f.letter} · ${f.loc}</span>
+      <span>${f.name}</span>
+    </div>`
+  ).join('');
+}
+
+function copyFiles() {
+  const text = fileList.map(f => f.name).join('\n');
+  navigator.clipboard.writeText(text).then(() => {
+    const btn = document.getElementById('copy-btn');
+    btn.textContent = '✓ Copied!';
+    btn.style.color = '#065f46';
+    setTimeout(() => { btn.innerHTML = '&#128203; Copy list'; btn.style.color = ''; }, 2000);
+  });
+}
+
+function buildDiagram(rows, item) {
+  const locs = rows.map(r => (r['Location']||'').toLowerCase());
+  const hasFront = locs.some(l => l.includes('front'));
+  const hasBack = locs.some(l => l.includes('back'));
+  const hasHip = locs.some(l => l.includes('hip') || l.includes('right leg'));
+  const hasBottomLeg = locs.some(l => l.includes('bottom') || l.includes('botton'));
+  const isJacket = /jacket|zip/i.test(item);
+  const isHoodie = /hoodie|zoodie/i.test(item);
+
+  const el = document.getElementById('diagram');
+
+  if (hasFront || hasBack) {
+    el.innerHTML = torsoSVG(rows, hasFront, hasBack, isJacket, isHoodie);
+  } else if (hasHip || hasBottomLeg) {
+    el.innerHTML = legsSVG(rows, hasHip, hasBottomLeg);
+  } else {
+    el.innerHTML = torsoSVG(rows, true, false, isJacket, isHoodie);
+  }
+}
+
+function torsoSVG(rows, hasFront, hasBack, isJacket, isHoodie) {
+  const both = hasFront && hasBack;
+  const W = both ? 480 : 240;
+  const frontRows = rows.filter(r => (r['Location']||'').toLowerCase().includes('front'));
+  const backRows = rows.filter(r => (r['Location']||'').toLowerCase().includes('back'));
+
+  let content = '';
+  if (hasFront) content += garmentShape(20, 15, isJacket, isHoodie, 'Front', frontRows);
+  if (hasBack) content += garmentShape(both ? 255 : 20, 15, isJacket, isHoodie, 'Back', backRows);
+
+  return `<svg class="garment" viewBox="0 0 ${W} 270" width="${W}" height="270" xmlns="http://www.w3.org/2000/svg">
+    <defs>
+      <style>.gl{font-family:'DM Sans',sans-serif;font-size:11px;fill:#9e9890;text-anchor:middle}
+      .gc{font-family:'DM Mono',monospace;font-size:14px;font-weight:500;fill:white;text-anchor:middle}</style>
+    </defs>
+    ${content}
+  </svg>`;
+}
+
+function garmentShape(ox, oy, isJacket, isHoodie, label, rows) {
+  const cx = ox + 100;
+  const bodyFill = '#e2ddd6';
+  const bodyStroke = '#b5b0a8';
+  const sleeveFill = '#d5d0c8';
+
+  const bodyPath = `M${ox+35},${oy+38} L${ox+15},${oy+58} L${ox+15},${oy+235} L${ox+185},${oy+235} L${ox+185},${oy+58} L${ox+165},${oy+38}`;
+  const lSleeve = `M${ox+35},${oy+38} L${ox+2},${oy+65} L${ox+2},${oy+145} L${ox+15},${oy+145} L${ox+15},${oy+58}`;
+  const rSleeve = `M${ox+165},${oy+38} L${ox+198},${oy+65} L${ox+198},${oy+145} L${ox+185},${oy+145} L${ox+185},${oy+58}`;
+
+  let neckPath = '';
+  if (isHoodie) {
+    neckPath = `<path d="M${ox+72},${oy+12} Q${cx},${oy+48} ${ox+128},${oy+12}" fill="${sleeveFill}" stroke="${bodyStroke}" stroke-width="1"/>`;
+  } else {
+    neckPath = `<path d="M${ox+72},${oy+12} Q${cx},${oy+30} ${ox+128},${oy+12}" fill="${sleeveFill}" stroke="${bodyStroke}" stroke-width="1"/>`;
+  }
+
+  const zipLine = isJacket
+    ? `<line x1="${cx}" y1="${oy+28}" x2="${cx}" y2="${oy+235}" stroke="#b5b0a8" stroke-width="1" stroke-dasharray="4,3"/>`
+    : '';
+
+  const labelEl = `<text x="${cx}" y="${oy+253}" class="gl">${label}</text>`;
+
+  const dots = rows.map(row => {
+    const letter = logoLetter(cleanLogo(row['Logo']||''));
+    const loc = (row['Location']||'').toLowerCase();
+    let dx = cx, dy = oy + 110;
+    if (loc.includes('front') && isJacket) { dx = cx - 28; }
+    return `<circle cx="${dx}" cy="${dy}" r="18" fill="#2d5a3d" opacity="0.88"/>
+      <text x="${dx}" y="${dy+5}" class="gc">${letter}</text>`;
+  }).join('');
+
+  return `<g>
+    <path d="${bodyPath} Z" fill="${bodyFill}" stroke="${bodyStroke}" stroke-width="1"/>
+    <path d="${lSleeve} Z" fill="${sleeveFill}" stroke="${bodyStroke}" stroke-width="1"/>
+    <path d="${rSleeve} Z" fill="${sleeveFill}" stroke="${bodyStroke}" stroke-width="1"/>
+    ${neckPath}
+    ${zipLine}
+    ${dots}
+    ${labelEl}
+  </g>`;
+}
+
+function legsSVG(rows, hasHip, hasBottomLeg) {
+  const hipRows = rows.filter(r => { const l=(r['Location']||'').toLowerCase(); return l.includes('hip')||l.includes('right leg'); });
+  const botRows = rows.filter(r => { const l=(r['Location']||'').toLowerCase(); return l.includes('bottom')||l.includes('botton'); });
+
+  return `<svg class="garment" viewBox="0 0 240 300" width="240" height="300" xmlns="http://www.w3.org/2000/svg">
+    <defs><style>.gl{font-family:'DM Sans',sans-serif;font-size:11px;fill:#9e9890;text-anchor:middle}
+    .gc{font-family:'DM Mono',monospace;font-size:14px;font-weight:500;fill:white;text-anchor:middle}</style></defs>
+    <rect x="30" y="10" width="75" height="22" rx="5" fill="#d5d0c8" stroke="#b5b0a8" stroke-width="1"/>
+    <rect x="115" y="10" width="75" height="22" rx="5" fill="#d5d0c8" stroke="#b5b0a8" stroke-width="1"/>
+    <path d="M30,32 L30,210 Q30,232 52,232 L83,232 Q105,232 105,210 L105,32 Z" fill="#e2ddd6" stroke="#b5b0a8" stroke-width="1"/>
+    <path d="M115,32 L115,210 Q115,232 137,232 L168,232 Q190,232 190,210 L190,32 Z" fill="#e2ddd6" stroke="#b5b0a8" stroke-width="1"/>
+    ${hasHip ? hipRows.map(r => `<circle cx="152" cy="75" r="18" fill="#2d5a3d" opacity="0.88"/><text x="152" y="80" class="gc">${logoLetter(cleanLogo(r['Logo']||''))}</text>`).join('') : ''}
+    ${hasBottomLeg ? botRows.map(r => `<circle cx="152" cy="190" r="18" fill="#4c1d95" opacity="0.88"/><text x="152" y="195" class="gc">${logoLetter(cleanLogo(r['Logo']||''))}</text>`).join('') : ''}
+    <text x="120" y="255" class="gl">right leg</text>
+  </svg>`;
+}
+
+loadSheet();
+</script>
+</body>
+</html>
