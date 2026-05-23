@@ -755,14 +755,18 @@ function buildDiagram(rows, item) {
   const hasBack = locs.some(l => l.includes('back'));
   const hasHip = locs.some(l => l.includes('hip') || l.includes('right leg'));
   const hasBottomLeg = locs.some(l => l.includes('bottom') || l.includes('botton'));
+  const isTorso = hasFront || hasBack;
+  const isLegs = !isTorso && (hasHip || hasBottomLeg);
   const isJacket = /jacket|zip/i.test(item);
   const isHoodie = /hoodie|zoodie/i.test(item);
 
   const el = document.getElementById('diagram');
 
-  if (hasFront || hasBack) {
+  if (isTorso && isLegs) {
+    el.innerHTML = torsoSVG(rows, hasFront, hasBack, isJacket, isHoodie) + legsSVG(rows, hasHip, hasBottomLeg);
+  } else if (isTorso) {
     el.innerHTML = torsoSVG(rows, hasFront, hasBack, isJacket, isHoodie);
-  } else if (hasHip || hasBottomLeg) {
+  } else if (isLegs) {
     el.innerHTML = legsSVG(rows, hasHip, hasBottomLeg);
   } else {
     el.innerHTML = torsoSVG(rows, true, false, isJacket, isHoodie);
@@ -811,11 +815,14 @@ function garmentShape(ox, oy, isJacket, isHoodie, label, rows) {
 
   const labelEl = `<text x="${cx}" y="${oy+253}" class="gl">${label}</text>`;
 
-  const dots = rows.map(row => {
+  // Place multiple dots — spread them vertically if more than one
+  const dots = rows.map((row, i) => {
     const letter = logoLetter(cleanLogo(row['Logo']||''));
-    const loc = (row['Location']||'').toLowerCase();
-    let dx = cx, dy = oy + 110;
-    if (loc.includes('front') && isJacket) { dx = cx - 28; }
+    const isJacketFront = label === 'Front' && isJacket;
+    let dx = isJacketFront ? cx - 28 : cx;
+    // spread dots vertically: centre at oy+110, shift up/down for multiples
+    const spread = (rows.length - 1) * 22;
+    const dy = oy + 110 - spread / 2 + i * 44;
     return `<circle cx="${dx}" cy="${dy}" r="18" fill="#2d5a3d" opacity="0.88"/>
       <text x="${dx}" y="${dy+5}" class="gc">${letter}</text>`;
   }).join('');
@@ -835,6 +842,19 @@ function legsSVG(rows, hasHip, hasBottomLeg) {
   const hipRows = rows.filter(r => { const l=(r['Location']||'').toLowerCase(); return l.includes('hip')||l.includes('right leg'); });
   const botRows = rows.filter(r => { const l=(r['Location']||'').toLowerCase(); return l.includes('bottom')||l.includes('botton'); });
 
+  // Multiple hip logos spread horizontally
+  const hipDots = hipRows.map((r, i) => {
+    const x = 145 + (i - (hipRows.length-1)/2) * 40;
+    const letter = logoLetter(cleanLogo(r['Logo']||''));
+    return `<circle cx="${x}" cy="75" r="18" fill="#2d5a3d" opacity="0.88"/><text x="${x}" y="80" class="gc">${letter}</text>`;
+  }).join('');
+
+  const botDots = botRows.map((r, i) => {
+    const x = 145 + (i - (botRows.length-1)/2) * 40;
+    const letter = logoLetter(cleanLogo(r['Logo']||''));
+    return `<circle cx="${x}" cy="190" r="18" fill="#4c1d95" opacity="0.88"/><text x="${x}" y="195" class="gc">${letter}</text>`;
+  }).join('');
+
   return `<svg class="garment" viewBox="0 0 240 300" width="240" height="300" xmlns="http://www.w3.org/2000/svg">
     <defs><style>.gl{font-family:'DM Sans',sans-serif;font-size:11px;fill:#9e9890;text-anchor:middle}
     .gc{font-family:'DM Mono',monospace;font-size:14px;font-weight:500;fill:white;text-anchor:middle}</style></defs>
@@ -842,8 +862,8 @@ function legsSVG(rows, hasHip, hasBottomLeg) {
     <rect x="115" y="10" width="75" height="22" rx="5" fill="#d5d0c8" stroke="#b5b0a8" stroke-width="1"/>
     <path d="M30,32 L30,210 Q30,232 52,232 L83,232 Q105,232 105,210 L105,32 Z" fill="#e2ddd6" stroke="#b5b0a8" stroke-width="1"/>
     <path d="M115,32 L115,210 Q115,232 137,232 L168,232 Q190,232 190,210 L190,32 Z" fill="#e2ddd6" stroke="#b5b0a8" stroke-width="1"/>
-    ${hasHip ? hipRows.map(r => `<circle cx="152" cy="75" r="18" fill="#2d5a3d" opacity="0.88"/><text x="152" y="80" class="gc">${logoLetter(cleanLogo(r['Logo']||''))}</text>`).join('') : ''}
-    ${hasBottomLeg ? botRows.map(r => `<circle cx="152" cy="190" r="18" fill="#4c1d95" opacity="0.88"/><text x="152" y="195" class="gc">${logoLetter(cleanLogo(r['Logo']||''))}</text>`).join('') : ''}
+    ${hipDots}
+    ${botDots}
     <text x="120" y="255" class="gl">right leg</text>
   </svg>`;
 }
