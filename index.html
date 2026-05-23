@@ -721,11 +721,11 @@ function buildFiles(rows, qty, item, size) {
   rows.forEach(row => {
     const logo = cleanLogo(row['Logo'] || '');
     const letter = logoLetter(logo);
-    const loc = safeFile(row['Location'] || 'location');
-    for (let i = 1; i <= qty; i++) {
+    const loc = row['Location'] || '';
+    for (let i = 0; i < qty; i++) {
       fileList.push({
-        name: `${safeFile(logo)}_${loc}_${String(i).padStart(3,'0')}.png`,
-        loc: row['Location'] || '',
+        name: `${safeFile(logo)}.png`,
+        loc,
         letter
       });
     }
