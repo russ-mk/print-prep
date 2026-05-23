@@ -6,6 +6,7 @@
 <title>UPA Print Prep</title>
 <link href="https://fonts.googleapis.com/css2?family=DM+Mono:wght@400;500&family=DM+Sans:wght@300;400;500;600&display=swap" rel="stylesheet">
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.min.js"></script>
 <style>
   :root {
     --bg: #f5f3ef;
@@ -109,7 +110,13 @@
   .batch-total { font-size: 12px; color: var(--text2); }
   .batch-total strong { color: var(--text); font-weight: 600; }
 
-  footer { text-align: center; padding: 24px; font-size: 11px; color: var(--text3); font-family: var(--mono); }
+  .import-drop { border: 2px dashed var(--border); border-radius: var(--radius); padding: 24px; text-align: center; cursor: pointer; transition: border-color 0.15s, background 0.15s; }
+  .import-drop:hover, .import-drop.drag-over { border-color: var(--accent2); background: var(--accent-bg); }
+  .import-drop p { font-size: 13px; color: var(--text2); margin-top: 6px; }
+  .unmatched-item { display: flex; align-items: center; gap: 10px; padding: 8px 12px; background: var(--warn-bg); border: 1px solid #fcd34d; border-radius: var(--radius); margin-bottom: 6px; font-size: 13px; color: var(--warn); }
+  .import-result { font-size: 13px; margin-top: 12px; }
+  .import-ok { color: var(--accent); }
+  .import-warn { color: var(--warn); }
 </style>
 </head>
 <body>
@@ -132,6 +139,18 @@
   <div id="loading-bar"><span class="spinner"></span> Fetching your Google Sheet...</div>
 
   <div id="app" style="display:none">
+
+    <!-- PDF import -->
+    <div class="card">
+      <div class="card-title">Import from order PDF</div>
+      <div class="import-drop" id="import-drop" onclick="document.getElementById('pdf-input').click()" ondragover="onDragOver(event)" ondragleave="onDragLeave(event)" ondrop="onDrop(event)">
+        <div style="font-size:28px">&#128196;</div>
+        <p>Click to upload or drag &amp; drop an order PDF</p>
+        <p style="font-size:11px;color:var(--text3);margin-top:4px">Reads garments and sizes automatically</p>
+      </div>
+      <input type="file" id="pdf-input" accept=".pdf" style="display:none" onchange="handlePDFFile(this.files[0])">
+      <div id="import-result"></div>
+    </div>
 
     <!-- Job selector -->
     <div class="card">
@@ -426,27 +445,44 @@ function buildPlacements(rows) {
 }
 
 function buildFiles(rows, qty) {
+  // Show unique files needed for this job (one row per unique logo)
+  const seen = new Set();
   fileList = [];
   rows.forEach(row => {
     const logo = cleanLogo(row['Logo'] || '');
     const letter = logoLetter(logo);
     const loc = row['Location'] || '';
-    for (let i = 0; i < qty; i++) {
-      fileList.push({ name: `${safeFile(logo)}.png`, loc, letter });
-    }
+    const name = `${logo}.png`;
+    if (!seen.has(name)) { seen.add(name); fileList.push({ name, loc, letter }); }
   });
   document.getElementById('files').innerHTML = fileList.map(f =>
     `<div class="file-item"><span class="file-loc">${f.letter} · ${f.loc}</span><span>${f.name}</span></div>`
   ).join('');
 }
 
+function getBatchFileList() {
+  // Build the full unique file list across ALL batch jobs
+  const seen = new Set();
+  const all = [];
+  batch.forEach(job => {
+    job.rows.forEach(row => {
+      const logo = cleanLogo(row['Logo'] || '');
+      const name = `${logo}.png`;
+      if (!seen.has(name)) { seen.add(name); all.push(name); }
+    });
+  });
+  return all;
+}
+
 function copyFiles() {
-  const text = fileList.map(f => f.name).join('\n');
+  // Copy ALL unique files from the whole batch
+  const all = getBatchFileList();
+  const text = all.length ? all.join('\n') : fileList.map(f => f.name).join('\n');
   navigator.clipboard.writeText(text).then(() => {
     const btn = document.getElementById('copy-btn');
-    btn.textContent = '✓ Copied!';
+    btn.textContent = `✓ Copied ${all.length} file${all.length !== 1 ? 's' : ''}!`;
     btn.style.color = '#065f46';
-    setTimeout(() => { btn.innerHTML = '&#128203; Copy list'; btn.style.color = ''; }, 2000);
+    setTimeout(() => { btn.innerHTML = '&#128203; Copy list'; btn.style.color = ''; }, 2500);
   });
 }
 
@@ -732,6 +768,163 @@ function generatePDF() {
 
   const dateStr = new Date().toISOString().slice(0,10);
   doc.save(`UPA_Batch_${dateStr}.pdf`);
+}
+
+// ── PDF Import ─────────────────────────────────────────────────────────
+
+function onDragOver(e) { e.preventDefault(); document.getElementById('import-drop').classList.add('drag-over'); }
+function onDragLeave(e) { document.getElementById('import-drop').classList.remove('drag-over'); }
+function onDrop(e) {
+  e.preventDefault();
+  document.getElementById('import-drop').classList.remove('drag-over');
+  const file = e.dataTransfer.files[0];
+  if (file && file.type === 'application/pdf') handlePDFFile(file);
+}
+
+async function handlePDFFile(file) {
+  const resultEl = document.getElementById('import-result');
+  resultEl.innerHTML = '<span style="color:var(--text2);font-size:13px"><span class="spinner"></span> Reading PDF...</span>';
+  try {
+    const arrayBuffer = await file.arrayBuffer();
+    pdfjsLib.GlobalWorkerOptions.workerSrc = 'https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.worker.min.js';
+    const pdf = await pdfjsLib.getDocument({ data: arrayBuffer }).promise;
+    let fullText = '';
+    for (let i = 1; i <= pdf.numPages; i++) {
+      const page = await pdf.getPage(i);
+      const content = await page.getTextContent();
+      fullText += content.items.map(item => item.str).join(' ') + '\n';
+    }
+    parseOrderText(fullText, resultEl);
+  } catch(e) {
+    resultEl.innerHTML = `<span class="import-warn">&#9888; Could not read PDF: ${e.message}</span>`;
+  }
+}
+
+function normaliseItemName(raw) {
+  return raw.replace(/^UPA\s+/i, '').replace(/\s+/g, ' ').trim().toLowerCase();
+}
+
+function matchScore(a, b) {
+  const wa = a.toLowerCase().split(/\s+/);
+  const wb = b.toLowerCase().split(/\s+/);
+  let hits = 0;
+  wa.forEach(w => { if (w.length > 2 && wb.some(x => x.includes(w) || w.includes(x))) hits++; });
+  return hits / Math.max(wa.length, 1);
+}
+
+function findBestItem(invoiceName, ac) {
+  const norm = normaliseItemName(invoiceName);
+  const items = [...new Set(allRows.filter(r => r['Adult - Child'] === ac).map(r => r['Item']))];
+  let best = null, bestScore = 0;
+  items.forEach(item => {
+    const score = matchScore(norm, item.toLowerCase());
+    if (score > bestScore) { bestScore = score; best = item; }
+  });
+  return bestScore >= 0.3 ? best : null;
+}
+
+function findBestSize(item, ac, invoiceSize) {
+  const sizes = [...new Set(allRows.filter(r => r['Item'] === item && r['Adult - Child'] === ac).map(r => r['Size']))];
+  const norm = invoiceSize.trim().toLowerCase()
+    .replace(/^age\s*/i, '').replace(/^size\s*/i, '')
+    .replace(/medium\s*\([\d-]+\)/i, 'm').replace(/small\s*\([\d-]+\)/i, 's')
+    .replace(/\blarge\b/i, 'l').replace(/\bmedium\b/i, 'm').replace(/\bsmall\b/i, 's')
+    .trim();
+
+  // Exact match
+  let match = sizes.find(s => s.toLowerCase().trim() === norm);
+  if (match) return match;
+
+  // Age range overlap: invoice "7-8" matches sheet "7-9"
+  const invRange = invoiceSize.match(/(\d+)\s*[-–]\s*(\d+)/);
+  if (invRange) {
+    const ilo = parseInt(invRange[1]), ihi = parseInt(invRange[2]);
+    match = sizes.find(s => {
+      const sm = s.match(/(\d+)\s*[-–]\s*(\d+)/);
+      if (!sm) return false;
+      const slo = parseInt(sm[1]), shi = parseInt(sm[2]);
+      return ilo >= slo && ihi <= shi + 2;
+    });
+    if (match) return match;
+  }
+
+  // Letter size
+  const letterMap = { medium: 'm', small: 's', large: 'l', 'x-large': 'xl', xl: 'xl', xxl: 'xxl', xxxl: 'xxxl', xs: 'xs' };
+  for (const [k, v] of Object.entries(letterMap)) {
+    if (norm.includes(k)) {
+      match = sizes.find(s => s.toLowerCase().trim() === v);
+      if (match) return match;
+    }
+  }
+
+  // Youth special case
+  if (norm.includes('youth')) {
+    match = sizes.find(s => s.toLowerCase().includes('youth'));
+    if (match) return match;
+  }
+
+  return null;
+}
+
+function parseOrderText(text, resultEl) {
+  const joined = text.replace(/\s+/g, ' ');
+  const matched = [], unmatched = [];
+
+  // Extract each product block: name ... SKU XXXXX ... Size: X ... £price QTY VAT%
+  const namePattern = /(UPA\s+[\w\s\/½∕]+?)\s+SKU\s+\d+/g;
+  let nm;
+  const names = [];
+  while ((nm = namePattern.exec(joined)) !== null) names.push({ name: nm[1].trim(), pos: nm.index });
+
+  names.forEach((entry, i) => {
+    const nextPos = i + 1 < names.length ? names[i + 1].pos : joined.length;
+    const block = joined.slice(entry.pos, nextPos);
+
+    // Size
+    const sizeM = block.match(/Size:\s*([\w\s\(\)\-\/]+?)(?=\s+£|\s+Colour|\s+SKU|\s+UPA|\s*$)/i);
+    const invoiceSize = sizeM ? sizeM[1].trim() : '';
+
+    // Quantity
+    const qtyM = block.match(/£[\d.]+\s+(\d+)\s+\d+%/);
+    const qty = qtyM ? parseInt(qtyM[1]) : 1;
+
+    const ac = entry.name.toLowerCase().includes('adult') ? 'Adult' : 'Child';
+    const bestItem = findBestItem(entry.name, ac);
+
+    if (!bestItem) {
+      unmatched.push({ name: entry.name, size: invoiceSize, qty, reason: 'Garment not recognised — add manually' });
+      return;
+    }
+
+    const bestSize = findBestSize(bestItem, ac, invoiceSize);
+    if (!bestSize) {
+      unmatched.push({ name: entry.name, size: invoiceSize, qty, reason: `Size "${invoiceSize}" not matched for ${bestItem} — add manually` });
+      return;
+    }
+
+    const rows = allRows.filter(r => r['Adult - Child'] === ac && r['Item'] === bestItem && r['Size'] === bestSize);
+    if (!rows.length) {
+      unmatched.push({ name: entry.name, size: invoiceSize, qty, reason: `No sheet data for ${bestItem} size ${bestSize}` });
+      return;
+    }
+
+    batch.push({ ac, item: bestItem, size: bestSize, qty, rows });
+    matched.push({ name: entry.name, bestItem, bestSize, qty });
+  });
+
+  renderBatch();
+  if (batch.length) previewJob(batch.length - 1);
+
+  let html = '';
+  if (matched.length) html += `<div class="import-result import-ok">&#10003; ${matched.length} garment${matched.length !== 1 ? 's' : ''} added to batch from order</div>`;
+  if (unmatched.length) {
+    html += `<div class="import-result import-warn" style="margin-top:8px">&#9888; ${unmatched.length} item${unmatched.length !== 1 ? 's' : ''} need manual matching:</div>`;
+    unmatched.forEach(u => {
+      html += `<div class="unmatched-item">&#9888; <span><strong>${u.name}</strong> &nbsp;&middot;&nbsp; Size: ${u.size} &nbsp;&middot;&nbsp; Qty: ${u.qty}<br><span style="font-size:11px;opacity:0.8">${u.reason}</span></span></div>`;
+    });
+  }
+  if (!matched.length && !unmatched.length) html = '<div class="import-result import-warn">No UPA products found — check this is an order invoice PDF.</div>';
+  resultEl.innerHTML = html;
 }
 
 loadSheet();
