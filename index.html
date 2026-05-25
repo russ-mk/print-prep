@@ -292,6 +292,24 @@
 
   <div id="app" style="display:none">
 
+    <!-- Order PDF import -->
+    <div class="card">
+      <div class="card-title">Import order PDF <span style="font-weight:400;color:var(--text3);text-transform:none;letter-spacing:0;font-size:11px">— optional, auto-fills garment details</span></div>
+      <div style="display:flex;align-items:center;gap:12px">
+        <div class="drop-zone" id="order-drop-zone" style="padding:14px 20px;flex:1;display:flex;align-items:center;gap:12px;text-align:left">
+          <input type="file" accept=".pdf" id="order-pdf-input" onchange="handleOrderPDF(this.files[0])">
+          <span style="font-size:22px;flex-shrink:0">📄</span>
+          <div>
+            <div class="drop-label" id="order-drop-label">Drop Soul2sole invoice PDF here</div>
+            <div class="drop-sub" id="order-drop-sub">or click to browse — reads garment, size and qty automatically</div>
+          </div>
+        </div>
+        <button class="btn btn-secondary" onclick="clearOrderImport()" id="order-clear-btn" style="display:none;width:auto;padding:7px 12px;font-size:12px;flex-shrink:0">✕ Clear</button>
+      </div>
+      <div id="order-import-result" style="display:none;margin-top:10px;font-size:12px;color:var(--accent);background:var(--accent-bg);padding:8px 12px;border-radius:8px;border:1px solid #b2d4bc"></div>
+      <div id="order-import-error" style="display:none;margin-top:10px;font-size:12px;color:var(--danger);background:var(--danger-bg);padding:8px 12px;border-radius:8px;border:1px solid #fca5a5"></div>
+    </div>
+
     <!-- Job setup card -->
     <div class="card">
       <div class="card-title">Add garment to batch</div>
@@ -339,6 +357,7 @@
           <div class="batch-count" id="batch-count">0 jobs</div>
         </div>
         <div class="batch-actions">
+          <button class="btn btn-secondary" onclick="copyAllFiles()" style="width:auto;padding:7px 14px;font-size:12px">&#128203; Copy all files</button>
           <button class="btn btn-secondary" onclick="clearBatch()" style="width:auto;padding:7px 14px;font-size:12px">&#215; Clear all</button>
           <button class="btn btn-secondary" onclick="downloadPDF()" id="pdf-btn" style="width:auto;padding:7px 14px;font-size:12px">&#8681; Download PDF</button>
         </div>
@@ -810,6 +829,129 @@ function legsSVG(rows,hasHip,hasBottomLeg){
     ${hasBottomLeg?botRows.map(r=>`<circle cx="152" cy="190" r="18" fill="#4c1d95" opacity="0.88"/><text x="152" y="195" class="gc">${logoLetter(cleanLogo(r['Logo']||''))}</text>`).join(''):''}
     <text x="120" y="255" class="gl">right leg</text>
   </svg>`;
+}
+
+// ── Copy ALL files across the whole batch ─────────────────────────────────
+function copyAllFiles() {
+  if (!batch.length) return;
+  const lines = [];
+  batch.forEach(job => {
+    job.rows.forEach(row => {
+      const logo = cleanLogo(row['Logo'] || '');
+      const loc = safeFile(row['Location'] || 'location');
+      for (let i = 1; i <= job.qty; i++) {
+        lines.push(`${safeFile(logo)}_${loc}_${String(i).padStart(3,'0')}.png`);
+      }
+    });
+  });
+  navigator.clipboard.writeText(lines.join('
+')).then(() => {
+    const btn = document.querySelector('[onclick="copyAllFiles()"]');
+    const orig = btn.innerHTML;
+    btn.innerHTML = '✓ Copied ' + lines.length + ' files!';
+    btn.style.color = 'var(--accent)';
+    setTimeout(() => { btn.innerHTML = orig; btn.style.color = ''; }, 2500);
+  });
+}
+
+// ── Order PDF import into Print Prep ──────────────────────────────────────
+async function handleOrderPDF(file) {
+  if (!file) return;
+  const resultEl = document.getElementById('order-import-result');
+  const errorEl  = document.getElementById('order-import-error');
+  const labelEl  = document.getElementById('order-drop-label');
+  const subEl    = document.getElementById('order-drop-sub');
+  resultEl.style.display = 'none';
+  errorEl.style.display  = 'none';
+
+  try {
+    labelEl.textContent = 'Reading ' + file.name + '…';
+    const text = await extractPDFText(file);
+
+    // Parse garment lines: "Arts1 T Shirt (Child)
+Size: Small (5/6)
+Qty 1" etc
+    // Also handles standard Soul2sole invoice format
+    const garmentRe = /Arts1[^
+]*/gi;
+    const sizeLineRe = /Size:\s*([^
+]+)/gi;
+    const qtyRe = /Quantity\s*[:\-]?\s*(\d+)/gi;
+
+    const garmentMatches = [...text.matchAll(/Arts1[^(
+]*\(\s*((?:XL\s+)?(?:Adult|Child))\s*\)/gi)];
+    const qtyMatches     = [...text.matchAll(/1|Quantity[:\s]+(\d+)/gi)];
+
+    // Extract item quantities from invoice table (look for the qty column)
+    // In Soul2sole invoices the pattern is: item name ... price ... QTY ... vat ... subtotal
+    const invoiceQtyRe = /Arts1[^
+]+
+[^
+]*£[\d.]+\s+(\d+)\s+\d+%/gi;
+    const invoiceQties = [...text.matchAll(invoiceQtyRe)].map(m => parseInt(m[1]));
+
+    if (!garmentMatches.length) {
+      errorEl.textContent = 'Could not find Arts1 garments in this PDF. Is this a Soul2sole invoice?';
+      errorEl.style.display = 'block';
+      labelEl.textContent = 'Drop Soul2sole invoice PDF here';
+      return;
+    }
+
+    let added = 0;
+    const problems = [];
+
+    garmentMatches.forEach((m, i) => {
+      const acRaw  = m[1];  // "Child" or "Adult" or "XL Adult"
+      const qty    = invoiceQties[i] || 1;
+
+      // Map to sheet values
+      const ac = acRaw.toLowerCase().includes('child') ? 'Child' : 'Adult';
+
+      // Find matching rows in the sheet
+      const matchingItems = [...new Set(
+        allRows.filter(r => r['Adult - Child'] === ac).map(r => r['Item'])
+      )].filter(item => /arts1/i.test(item) && /t.?shirt|tshirt|tee/i.test(item));
+
+      if (!matchingItems.length) {
+        problems.push(`No sheet match for ${ac} Arts1 T Shirt`);
+        return;
+      }
+
+      const item = matchingItems[0];
+
+      // Get available sizes for this item
+      const sizes = [...new Set(allRows.filter(r => r['Adult - Child'] === ac && r['Item'] === item).map(r => r['Size']))];
+      const size = sizes[0]; // default to first if can't detect
+
+      const rows = allRows.filter(r => r['Adult - Child'] === ac && r['Item'] === item && r['Size'] === size);
+      if (!rows.length) { problems.push(`No placement data for ${ac} ${item} ${size}`); return; }
+
+      batch.push({ id: Date.now() + i, ac, item, size, qty, rows, open: true });
+      added++;
+    });
+
+    renderBatch();
+    labelEl.textContent = file.name;
+    subEl.textContent   = 'Click to change';
+    document.getElementById('order-clear-btn').style.display = 'block';
+
+    resultEl.textContent = `✓ Added ${added} garment${added !== 1 ? 's' : ''} from invoice${problems.length ? ' — ' + problems.join(', ') : ''}`;
+    resultEl.style.display = 'block';
+
+  } catch(err) {
+    errorEl.textContent = 'Could not read PDF: ' + err.message;
+    errorEl.style.display = 'block';
+    labelEl.textContent = 'Drop Soul2sole invoice PDF here';
+  }
+}
+
+function clearOrderImport() {
+  document.getElementById('order-drop-label').textContent = 'Drop Soul2sole invoice PDF here';
+  document.getElementById('order-drop-sub').textContent   = 'or click to browse — reads garment, size and qty automatically';
+  document.getElementById('order-import-result').style.display = 'none';
+  document.getElementById('order-import-error').style.display  = 'none';
+  document.getElementById('order-clear-btn').style.display     = 'none';
+  document.getElementById('order-pdf-input').value = '';
 }
 
 // ── Tab switching ──────────────────────────────────────────────────────────
