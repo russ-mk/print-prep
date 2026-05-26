@@ -32,234 +32,397 @@
     --radius: 10px;
     --radius-lg: 16px;
   }
+
   * { box-sizing: border-box; margin: 0; padding: 0; }
-  body { font-family: var(--sans); background: var(--bg); color: var(--text); min-height: 100vh; }
+
+  body {
+    font-family: var(--sans);
+    background: var(--bg);
+    color: var(--text);
+    min-height: 100vh;
+    padding: 0;
+  }
 
   header {
-    background: var(--accent); color: white; padding: 20px 32px;
-    display: flex; align-items: center; justify-content: space-between;
+    background: var(--accent);
+    color: white;
+    padding: 20px 32px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
   }
-  .header-title { display: flex; align-items: center; gap: 14px; }
-  .header-logo {
-    width: 38px; height: 38px; background: rgba(255,255,255,0.15);
-    border-radius: 8px; display: flex; align-items: center; justify-content: center;
-    font-size: 18px; font-weight: 600; letter-spacing: -1px;
-  }
-  header h1 { font-size: 18px; font-weight: 600; letter-spacing: -0.3px; }
-  header p { font-size: 12px; opacity: 0.65; margin-top: 1px; }
-  .sheet-status {
-    font-size: 12px; font-family: var(--mono); background: rgba(255,255,255,0.12);
-    padding: 5px 12px; border-radius: 20px; display: flex; align-items: center; gap: 6px;
-  }
-  .dot-live { width:7px;height:7px;border-radius:50%;background:#4ade80;display:inline-block;animation:pulse 2s infinite; }
-  @keyframes pulse{0%,100%{opacity:1}50%{opacity:0.4}}
-  .refresh-btn {
-    background:none;border:none;color:rgba(255,255,255,0.6);font-size:12px;
-    cursor:pointer;font-family:var(--sans);display:flex;align-items:center;gap:5px;padding:0;
-  }
-  .refresh-btn:hover{color:white;}
 
-  .tab-nav {
-    background: var(--surface); border-bottom: 1px solid var(--border);
-    padding: 0 32px; display: flex; gap: 4px;
+  .header-title {
+    display: flex;
+    align-items: center;
+    gap: 14px;
   }
-  .tab-btn {
-    background:none;border:none;border-bottom:2px solid transparent;
-    padding:13px 18px;font-size:13px;font-weight:500;font-family:var(--sans);
-    color:var(--text2);cursor:pointer;margin-bottom:-1px;transition:color 0.15s,border-color 0.15s;
+
+  .header-logo {
+    width: 38px;
+    height: 38px;
+    background: rgba(255,255,255,0.15);
+    border-radius: 8px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 18px;
+    font-weight: 600;
+    letter-spacing: -1px;
   }
-  .tab-btn:hover{color:var(--text);}
-  .tab-btn.active{color:var(--accent);border-bottom-color:var(--accent);}
-  .tab-panel{display:none;}
-  .tab-panel.active{display:block;}
+
+  header h1 {
+    font-size: 18px;
+    font-weight: 600;
+    letter-spacing: -0.3px;
+  }
+
+  header p {
+    font-size: 12px;
+    opacity: 0.65;
+    margin-top: 1px;
+  }
+
+  .sheet-status {
+    font-size: 12px;
+    font-family: var(--mono);
+    background: rgba(255,255,255,0.12);
+    padding: 5px 12px;
+    border-radius: 20px;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+  }
+
+  .dot-live { width: 7px; height: 7px; border-radius: 50%; background: #4ade80; display: inline-block; animation: pulse 2s infinite; }
+  @keyframes pulse { 0%,100%{opacity:1} 50%{opacity:0.4} }
 
   main { max-width: 960px; margin: 0 auto; padding: 28px 24px; }
 
   .card {
-    background: var(--surface); border: 1px solid var(--border);
-    border-radius: var(--radius-lg); padding: 20px 24px; margin-bottom: 16px;
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: var(--radius-lg);
+    padding: 20px 24px;
+    margin-bottom: 16px;
   }
-  .card-title {
-    font-size:11px;font-weight:600;letter-spacing:0.8px;text-transform:uppercase;
-    color:var(--text3);margin-bottom:14px;
-  }
-  .selectors { display:grid;grid-template-columns:1fr 2fr 1fr 1fr;gap:12px;align-items:end; }
-  @media(max-width:680px){.selectors{grid-template-columns:1fr 1fr;}.sel-generate{grid-column:1/-1;}}
 
-  .field label { display:block;font-size:12px;font-weight:500;color:var(--text2);margin-bottom:6px; }
-  .field select,.field input {
-    width:100%;padding:9px 12px;border:1px solid var(--border);border-radius:var(--radius);
-    background:var(--surface2);color:var(--text);font-size:14px;font-family:var(--sans);
-    appearance:none;-webkit-appearance:none;outline:none;transition:border-color 0.15s;
+  .card-title {
+    font-size: 11px;
+    font-weight: 600;
+    letter-spacing: 0.8px;
+    text-transform: uppercase;
+    color: var(--text3);
+    margin-bottom: 14px;
   }
-  .field select:focus,.field input:focus{border-color:var(--accent2);background:white;}
-  .field select:disabled{opacity:0.45;cursor:not-allowed;}
-  .sel-wrap{position:relative;}
-  .sel-wrap::after{
-    content:'▾';position:absolute;right:11px;top:50%;transform:translateY(-50%);
-    font-size:11px;color:var(--text3);pointer-events:none;
+
+  .selectors {
+    display: grid;
+    grid-template-columns: 1fr 2fr 1fr 1fr;
+    gap: 12px;
+    align-items: end;
+  }
+
+  @media(max-width: 680px) {
+    .selectors { grid-template-columns: 1fr 1fr; }
+    .sel-generate { grid-column: 1/-1; }
+  }
+
+  .field label {
+    display: block;
+    font-size: 12px;
+    font-weight: 500;
+    color: var(--text2);
+    margin-bottom: 6px;
+  }
+
+  .field select, .field input {
+    width: 100%;
+    padding: 9px 12px;
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    background: var(--surface2);
+    color: var(--text);
+    font-size: 14px;
+    font-family: var(--sans);
+    appearance: none;
+    -webkit-appearance: none;
+    outline: none;
+    transition: border-color 0.15s;
+  }
+
+  .field select:focus, .field input:focus {
+    border-color: var(--accent2);
+    background: white;
+  }
+
+  .field select:disabled {
+    opacity: 0.45;
+    cursor: not-allowed;
+  }
+
+  .sel-wrap { position: relative; }
+  .sel-wrap::after {
+    content: '▾';
+    position: absolute;
+    right: 11px;
+    top: 50%;
+    transform: translateY(-50%);
+    font-size: 11px;
+    color: var(--text3);
+    pointer-events: none;
   }
 
   .btn {
-    padding:10px 20px;border-radius:var(--radius);font-size:14px;font-weight:500;
-    font-family:var(--sans);cursor:pointer;border:none;transition:all 0.15s;
-    display:inline-flex;align-items:center;gap:7px;width:100%;justify-content:center;
+    padding: 10px 20px;
+    border-radius: var(--radius);
+    font-size: 14px;
+    font-weight: 500;
+    font-family: var(--sans);
+    cursor: pointer;
+    border: none;
+    transition: all 0.15s;
+    display: inline-flex;
+    align-items: center;
+    gap: 7px;
+    width: 100%;
+    justify-content: center;
   }
-  .btn-primary{background:var(--accent);color:white;}
-  .btn-primary:hover{background:var(--accent2);}
-  .btn-primary:active{transform:scale(0.98);}
-  .btn-secondary{background:var(--surface2);color:var(--text);border:1px solid var(--border);}
-  .btn-secondary:hover{background:var(--border);}
-  .btn-danger{background:var(--danger-bg);color:var(--danger);border:1px solid #fca5a5;}
-  .btn-danger:hover{background:#fca5a5;}
+
+  .btn-primary {
+    background: var(--accent);
+    color: white;
+  }
+
+  .btn-primary:hover { background: var(--accent2); }
+  .btn-primary:active { transform: scale(0.98); }
+
+  .btn-secondary {
+    background: var(--surface2);
+    color: var(--text);
+    border: 1px solid var(--border);
+  }
+
+  .btn-secondary:hover { background: var(--border); }
 
   #error-bar {
-    display:none;background:var(--danger-bg);color:var(--danger);
-    border:1px solid #fca5a5;border-radius:var(--radius);padding:10px 14px;
-    font-size:13px;margin-top:12px;
+    display: none;
+    background: var(--danger-bg);
+    color: var(--danger);
+    border: 1px solid #fca5a5;
+    border-radius: var(--radius);
+    padding: 10px 14px;
+    font-size: 13px;
+    margin-top: 12px;
   }
-  #loading-bar{display:none;text-align:center;padding:40px;color:var(--text2);font-size:14px;}
-  .spinner{
-    width:22px;height:22px;border:2px solid var(--border);border-top-color:var(--accent);
-    border-radius:50%;animation:spin 0.7s linear infinite;display:inline-block;
-    vertical-align:middle;margin-right:8px;
-  }
-  @keyframes spin{to{transform:rotate(360deg);}}
 
-  /* ── Batch list ── */
-  .batch-header {
-    display:flex;align-items:center;justify-content:space-between;margin-bottom:16px;
+  #loading-bar {
+    display: none;
+    text-align: center;
+    padding: 40px;
+    color: var(--text2);
+    font-size: 14px;
   }
-  .batch-count {
-    font-size:12px;font-family:var(--mono);background:var(--accent);color:white;
-    padding:3px 10px;border-radius:20px;
-  }
-  .batch-actions { display:flex;gap:8px; }
 
-  .batch-item {
-    border:1px solid var(--border);border-radius:var(--radius-lg);
-    margin-bottom:12px;overflow:hidden;
+  .spinner {
+    width: 22px; height: 22px;
+    border: 2px solid var(--border);
+    border-top-color: var(--accent);
+    border-radius: 50%;
+    animation: spin 0.7s linear infinite;
+    display: inline-block;
+    vertical-align: middle;
+    margin-right: 8px;
   }
-  .batch-item-header {
-    display:flex;align-items:center;justify-content:space-between;
-    padding:12px 16px;background:var(--surface2);cursor:pointer;
-    user-select:none;
-  }
-  .batch-item-header:hover{background:var(--border);}
-  .batch-item-title{font-size:13px;font-weight:500;}
-  .batch-item-meta{font-size:11px;color:var(--text3);font-family:var(--mono);margin-top:2px;}
-  .batch-item-actions{display:flex;gap:6px;align-items:center;}
-  .batch-remove{
-    background:none;border:none;color:var(--text3);cursor:pointer;
-    font-size:14px;padding:2px 6px;border-radius:4px;
-  }
-  .batch-remove:hover{color:var(--danger);background:var(--danger-bg);}
-  .batch-item-body{display:none;padding:16px;border-top:1px solid var(--border);}
-  .batch-item-body.open{display:block;}
+  @keyframes spin { to { transform: rotate(360deg); } }
 
-  /* reuse existing stats/two-col/placement styles */
-  .stats{display:grid;grid-template-columns:repeat(3,1fr);gap:12px;margin-bottom:16px;}
-  .stat{background:var(--surface2);border-radius:var(--radius);padding:14px 16px;text-align:center;}
-  .stat-val{font-size:26px;font-weight:600;color:var(--text);line-height:1;}
-  .stat-lbl{font-size:11px;color:var(--text3);margin-top:5px;font-weight:500;letter-spacing:0.3px;}
-  .two-col{display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-bottom:16px;}
-  @media(max-width:640px){.two-col{grid-template-columns:1fr;}}
+  #results { display: none; }
 
-  .badge{
-    display:inline-block;font-size:10px;font-weight:600;letter-spacing:0.4px;
-    padding:2px 8px;border-radius:20px;text-transform:uppercase;margin-right:6px;
+  .stats {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 12px;
+    margin-bottom: 16px;
   }
-  .badge-front{background:var(--front-bg);color:var(--front);}
-  .badge-back{background:var(--back-bg);color:var(--back);}
-  .badge-other{background:var(--other-bg);color:var(--other);}
-  .warn-badge{
-    display:inline-flex;align-items:center;gap:4px;font-size:10px;font-weight:600;
-    background:var(--warn-bg);color:var(--warn);padding:2px 8px;border-radius:20px;
-  }
-  .placement-row{display:flex;gap:12px;padding:12px 0;border-bottom:1px solid var(--border);align-items:flex-start;}
-  .placement-row:last-child{border-bottom:none;}
-  .logo-letter{
-    width:34px;height:34px;border-radius:8px;background:var(--accent);color:white;
-    display:flex;align-items:center;justify-content:center;font-size:16px;
-    font-weight:600;flex-shrink:0;font-family:var(--mono);
-  }
-  .placement-detail{flex:1;}
-  .placement-name{font-size:13px;font-weight:500;color:var(--text);margin-bottom:3px;display:flex;flex-wrap:wrap;align-items:center;gap:4px;}
-  .placement-pos{font-size:12px;color:var(--text2);font-family:var(--mono);}
-  .press-info{font-size:11px;color:var(--text3);margin-top:4px;}
-  svg.garment{display:block;margin:0 auto;}
-  .file-item{
-    display:flex;align-items:center;justify-content:space-between;
-    padding:7px 0;border-bottom:1px solid var(--bg);font-size:12px;
-    font-family:var(--mono);color:var(--text2);
-  }
-  .file-item:last-child{border-bottom:none;}
-  .file-loc{font-size:10px;font-weight:600;letter-spacing:0.5px;text-transform:uppercase;color:var(--text3);min-width:60px;}
-  .copy-bar{display:flex;justify-content:space-between;align-items:center;margin-bottom:14px;}
-  .notice{
-    background:var(--warn-bg);border:1px solid #fcd34d;border-radius:var(--radius);
-    padding:10px 14px;font-size:12px;color:var(--warn);display:flex;gap:8px;
-    align-items:flex-start;margin-bottom:16px;
-  }
-  .notice-icon{font-size:14px;flex-shrink:0;margin-top:1px;}
 
-  /* PDF download button */
-  .pdf-download-bar{
-    display:none;position:sticky;bottom:20px;text-align:center;pointer-events:none;
-    z-index:100;margin-top:8px;
+  .stat {
+    background: var(--surface2);
+    border-radius: var(--radius);
+    padding: 14px 16px;
+    text-align: center;
   }
-  .pdf-download-bar.visible{display:block;}
-  .pdf-download-btn{
-    pointer-events:all;background:var(--accent);color:white;border:none;
-    padding:13px 28px;border-radius:30px;font-size:14px;font-weight:600;
-    font-family:var(--sans);cursor:pointer;box-shadow:0 4px 20px rgba(45,90,61,0.35);
-    display:inline-flex;align-items:center;gap:8px;transition:all 0.15s;
-  }
-  .pdf-download-btn:hover{background:var(--accent2);transform:translateY(-1px);}
 
-  /* ── Personalisation panel ── */
-  .pers-grid{display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-bottom:16px;}
-  @media(max-width:640px){.pers-grid{grid-template-columns:1fr;}}
-  .drop-zone{
-    border:2px dashed var(--border);border-radius:var(--radius-lg);padding:32px 20px;
-    text-align:center;cursor:pointer;transition:border-color 0.2s,background 0.2s;
-    background:var(--surface2);position:relative;
+  .stat-val {
+    font-size: 26px;
+    font-weight: 600;
+    color: var(--text);
+    line-height: 1;
   }
-  .drop-zone:hover,.drop-zone.over{border-color:var(--accent2);background:var(--accent-bg);}
-  .drop-zone input[type=file]{position:absolute;inset:0;opacity:0;cursor:pointer;width:100%;height:100%;}
-  .drop-icon{font-size:28px;margin-bottom:10px;}
-  .drop-label{font-size:13px;font-weight:500;color:var(--text2);}
-  .drop-sub{font-size:11px;color:var(--text3);margin-top:4px;}
-  .pers-entry{display:flex;gap:8px;align-items:center;padding:8px 0;border-bottom:1px solid var(--border);}
-  .pers-entry:last-child{border-bottom:none;}
-  .pers-name-input{
-    flex:1;padding:7px 10px;border:1px solid var(--border);border-radius:var(--radius);
-    font-size:13px;font-family:var(--sans);background:var(--surface2);color:var(--text);outline:none;
+
+  .stat-lbl {
+    font-size: 11px;
+    color: var(--text3);
+    margin-top: 5px;
+    font-weight: 500;
+    letter-spacing: 0.3px;
   }
-  .pers-name-input:focus{border-color:var(--accent2);background:white;}
-  .pers-size-sel{
-    padding:7px 10px;border:1px solid var(--border);border-radius:var(--radius);
-    font-size:13px;font-family:var(--sans);background:var(--surface2);color:var(--text);
-    outline:none;appearance:none;min-width:110px;
+
+  .two-col {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 16px;
+    margin-bottom: 16px;
   }
-  .pers-remove{background:none;border:none;color:var(--text3);cursor:pointer;font-size:16px;padding:0 4px;line-height:1;}
-  .pers-remove:hover{color:var(--danger);}
-  .cmd-box{
-    background:#1a1814;border-radius:var(--radius);padding:14px 16px;
-    font-family:var(--mono);font-size:13px;color:#a8e6b8;position:relative;
-    word-break:break-all;line-height:1.6;
+
+  @media(max-width: 640px) { .two-col { grid-template-columns: 1fr; } }
+
+  .badge {
+    display: inline-block;
+    font-size: 10px;
+    font-weight: 600;
+    letter-spacing: 0.4px;
+    padding: 2px 8px;
+    border-radius: 20px;
+    text-transform: uppercase;
+    margin-right: 6px;
   }
-  .cmd-copy{
-    position:absolute;top:10px;right:10px;background:rgba(255,255,255,0.1);border:none;
-    color:#a8e6b8;padding:4px 10px;border-radius:6px;font-size:11px;cursor:pointer;
-    font-family:var(--sans);transition:background 0.15s;
+
+  .badge-front { background: var(--front-bg); color: var(--front); }
+  .badge-back { background: var(--back-bg); color: var(--back); }
+  .badge-other { background: var(--other-bg); color: var(--other); }
+
+  .warn-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+    font-size: 10px;
+    font-weight: 600;
+    background: var(--warn-bg);
+    color: var(--warn);
+    padding: 2px 8px;
+    border-radius: 20px;
   }
-  .cmd-copy:hover{background:rgba(255,255,255,0.2);}
-  .extracted-tag{
-    display:inline-flex;align-items:center;gap:5px;background:var(--accent-bg);
-    color:var(--accent);border:1px solid #b2d4bc;border-radius:20px;
-    padding:3px 10px;font-size:12px;font-weight:500;margin:3px 3px 3px 0;
+
+  .placement-row {
+    display: flex;
+    gap: 12px;
+    padding: 12px 0;
+    border-bottom: 1px solid var(--border);
+    align-items: flex-start;
   }
+
+  .placement-row:last-child { border-bottom: none; }
+
+  .logo-letter {
+    width: 34px;
+    height: 34px;
+    border-radius: 8px;
+    background: var(--accent);
+    color: white;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 16px;
+    font-weight: 600;
+    flex-shrink: 0;
+    font-family: var(--mono);
+  }
+
+  .placement-detail {
+    flex: 1;
+  }
+
+  .placement-name {
+    font-size: 13px;
+    font-weight: 500;
+    color: var(--text);
+    margin-bottom: 3px;
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 4px;
+  }
+
+  .placement-pos {
+    font-size: 12px;
+    color: var(--text2);
+    font-family: var(--mono);
+  }
+
+  .press-info {
+    font-size: 11px;
+    color: var(--text3);
+    margin-top: 4px;
+  }
+
+  svg.garment { display: block; margin: 0 auto; }
+
+  .file-item {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 7px 0;
+    border-bottom: 1px solid var(--bg);
+    font-size: 12px;
+    font-family: var(--mono);
+    color: var(--text2);
+  }
+
+  .file-item:last-child { border-bottom: none; }
+
+  .file-loc {
+    font-size: 10px;
+    font-weight: 600;
+    letter-spacing: 0.5px;
+    text-transform: uppercase;
+    color: var(--text3);
+    min-width: 60px;
+  }
+
+  .copy-bar {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 14px;
+  }
+
+  .notice {
+    background: var(--warn-bg);
+    border: 1px solid #fcd34d;
+    border-radius: var(--radius);
+    padding: 10px 14px;
+    font-size: 12px;
+    color: var(--warn);
+    display: flex;
+    gap: 8px;
+    align-items: flex-start;
+    margin-bottom: 16px;
+  }
+
+  .notice-icon { font-size: 14px; flex-shrink: 0; margin-top: 1px; }
+
+  footer {
+    text-align: center;
+    padding: 24px;
+    font-size: 11px;
+    color: var(--text3);
+    font-family: var(--mono);
+  }
+
+  .refresh-btn {
+    background: none;
+    border: none;
+    color: rgba(255,255,255,0.6);
+    font-size: 12px;
+    cursor: pointer;
+    font-family: var(--sans);
+    display: flex;
+    align-items: center;
+    gap: 5px;
+    padding: 0;
+  }
+
+  .refresh-btn:hover { color: white; }
 </style>
 </head>
 <body>
@@ -273,46 +436,21 @@
     </div>
   </div>
   <div style="display:flex;align-items:center;gap:12px">
-    <div class="sheet-status" id="sheet-status"><span class="dot-live"></span> loading sheet...</div>
+    <div class="sheet-status" id="sheet-status">
+      <span class="dot-live"></span> loading sheet...
+    </div>
     <button class="refresh-btn" onclick="reloadSheet()" title="Reload sheet">&#8635; Refresh</button>
   </div>
 </header>
 
-<nav class="tab-nav">
-  <button class="tab-btn active" onclick="switchTab('print')" id="tab-print">&#9654; Print Prep</button>
-  <button class="tab-btn" onclick="switchTab('personalise')" id="tab-personalise">✦ Personalisation</button>
-</nav>
-
 <main>
-
-<!-- ══ PRINT PREP TAB ══════════════════════════════════════════════════ -->
-<div id="tab-panel-print" class="tab-panel active">
 
   <div id="loading-bar"><span class="spinner"></span> Fetching your Google Sheet...</div>
 
   <div id="app" style="display:none">
 
-    <!-- Order PDF import -->
     <div class="card">
-      <div class="card-title">Import order PDF <span style="font-weight:400;color:var(--text3);text-transform:none;letter-spacing:0;font-size:11px">— optional, auto-fills garment details</span></div>
-      <div style="display:flex;align-items:center;gap:12px">
-        <div class="drop-zone" id="order-drop-zone" style="padding:14px 20px;flex:1;display:flex;align-items:center;gap:12px;text-align:left">
-          <input type="file" accept=".pdf" id="order-pdf-input" onchange="handleOrderPDF(this.files[0])">
-          <span style="font-size:22px;flex-shrink:0">📄</span>
-          <div>
-            <div class="drop-label" id="order-drop-label">Drop Soul2sole invoice PDF here</div>
-            <div class="drop-sub" id="order-drop-sub">or click to browse — reads garment, size and qty automatically</div>
-          </div>
-        </div>
-        <button class="btn btn-secondary" onclick="clearOrderImport()" id="order-clear-btn" style="display:none;width:auto;padding:7px 12px;font-size:12px;flex-shrink:0">✕ Clear</button>
-      </div>
-      <div id="order-import-result" style="display:none;margin-top:10px;font-size:12px;color:var(--accent);background:var(--accent-bg);padding:8px 12px;border-radius:8px;border:1px solid #b2d4bc"></div>
-      <div id="order-import-error" style="display:none;margin-top:10px;font-size:12px;color:var(--danger);background:var(--danger-bg);padding:8px 12px;border-radius:8px;border:1px solid #fca5a5"></div>
-    </div>
-
-    <!-- Job setup card -->
-    <div class="card">
-      <div class="card-title">Add garment to batch</div>
+      <div class="card-title">Job setup</div>
       <div class="selectors">
         <div class="field">
           <label>Adult / Child</label>
@@ -342,734 +480,394 @@
           <label>Quantity</label>
           <div style="display:flex;gap:8px">
             <input type="number" id="qty" value="1" min="1" max="999" style="width:80px">
-            <button class="btn btn-primary" onclick="addToBatch()" style="flex:1">+ Add to batch</button>
+            <button class="btn btn-primary" onclick="generate()" style="flex:1">
+              &#9654; Generate job
+            </button>
           </div>
         </div>
       </div>
       <div id="error-bar"></div>
     </div>
 
-    <!-- Batch list -->
-    <div id="batch-section" style="display:none">
-      <div class="batch-header">
-        <div style="display:flex;align-items:center;gap:10px">
-          <div style="font-size:14px;font-weight:600">Batch</div>
-          <div class="batch-count" id="batch-count">0 jobs</div>
+    <div id="results">
+
+      <div class="stats">
+        <div class="stat">
+          <div class="stat-val" id="stat-logos">—</div>
+          <div class="stat-lbl">Logo placements</div>
         </div>
-        <div class="batch-actions">
-          <button class="btn btn-secondary" onclick="copyAllFiles()" style="width:auto;padding:7px 14px;font-size:12px">&#128203; Copy all files</button>
-          <button class="btn btn-secondary" onclick="clearBatch()" style="width:auto;padding:7px 14px;font-size:12px">&#215; Clear all</button>
-          <button class="btn btn-secondary" onclick="downloadPDF()" id="pdf-btn" style="width:auto;padding:7px 14px;font-size:12px">&#8681; Download PDF</button>
+        <div class="stat">
+          <div class="stat-val" id="stat-files">—</div>
+          <div class="stat-lbl">Files to copy</div>
+        </div>
+        <div class="stat">
+          <div class="stat-val" id="stat-press">—</div>
+          <div class="stat-lbl">Press temp / time</div>
         </div>
       </div>
-      <div id="batch-list"></div>
-    </div>
 
-    <div id="empty-state" style="text-align:center;padding:48px 24px;color:var(--text3);font-size:13px;display:none">
-      Add your first garment above to start building the batch.
-    </div>
-
-  </div>
-</div>
-
-<!-- ══ PERSONALISATION TAB ═════════════════════════════════════════════ -->
-<div id="tab-panel-personalise" class="tab-panel">
-  <div class="pers-grid">
-    <div class="card">
-      <div class="card-title">Upload order PDF</div>
-      <div class="drop-zone" id="drop-zone">
-        <input type="file" accept=".pdf" id="pdf-input" onchange="handlePDF(this.files[0])">
-        <div class="drop-icon">📄</div>
-        <div class="drop-label">Drop invoice PDF here</div>
-        <div class="drop-sub">or click to browse</div>
+      <div id="warn-notice" class="notice" style="display:none">
+        <span class="notice-icon">⚠</span>
+        <span>Some placements are marked with <strong>?</strong> in your sheet — measurements are unconfirmed. Double-check these before pressing.</span>
       </div>
-      <div id="pdf-result" style="margin-top:12px;display:none">
-        <div style="font-size:11px;font-weight:600;letter-spacing:0.6px;text-transform:uppercase;color:var(--text3);margin-bottom:8px">Extracted from PDF</div>
-        <div id="pdf-tags"></div>
+
+      <div class="two-col">
+        <div class="card">
+          <div class="card-title">Placement diagram</div>
+          <div id="diagram"></div>
+        </div>
+        <div class="card">
+          <div class="card-title">Logo placements</div>
+          <div id="placements"></div>
+        </div>
       </div>
-      <div id="pdf-error" style="display:none;margin-top:10px;font-size:12px;color:var(--danger);background:var(--danger-bg);padding:8px 12px;border-radius:8px;border:1px solid #fca5a5"></div>
-    </div>
-    <div class="card">
-      <div class="card-title">Manual entry</div>
-      <div id="manual-entries"></div>
-      <button class="btn btn-secondary" onclick="addManualRow()" style="margin-top:10px;font-size:12px;padding:7px 12px;width:auto">+ Add student</button>
+
+      <div class="card">
+        <div class="copy-bar">
+          <div class="card-title" style="margin:0">Files to copy to print folder</div>
+          <button class="btn btn-secondary" id="copy-btn" onclick="copyFiles()" style="width:auto;padding:7px 14px;font-size:13px">
+            &#128203; Copy list
+          </button>
+        </div>
+        <div id="files"></div>
+      </div>
+
     </div>
   </div>
-  <div class="card" id="cmd-card" style="display:none">
-    <div class="card-title" style="margin-bottom:12px">Terminal command — copy &amp; paste to run</div>
-    <div class="cmd-box" id="cmd-box">
-      <button class="cmd-copy" onclick="copyCmd()">Copy</button>
-      <span id="cmd-text"></span>
-    </div>
-    <p style="font-size:11px;color:var(--text3);margin-top:10px">
-      Open Terminal → paste → press Enter. Files will appear in your <code style="font-family:var(--mono);font-size:11px">print today</code> folder.
-    </p>
-  </div>
-</div>
 
 </main>
 
-<footer style="text-align:center;padding:24px;font-size:11px;color:var(--text3);font-family:var(--mono)">
-  UPA Print Prep &mdash; data loaded live from Google Sheets
-</footer>
+<footer>UPA Print Prep &mdash; data loaded live from Google Sheets</footer>
 
 <script>
 const SHEET_ID = '1e2bRbJwGPwEbXX8XXzQwYSFZVenGF8_1OoluX4ayBVA';
 const GID = '1102647217';
 let allRows = [];
-let batch = [];  // array of job objects
+let fileList = [];
 
-// ── CSV loading ────────────────────────────────────────────────────────────
 function csvToRows(text) {
   const lines = text.trim().split('\n');
   const headers = parseCSVLine(lines[0]);
   return lines.slice(1).map(line => {
     const vals = parseCSVLine(line);
     const obj = {};
-    headers.forEach((h,i) => obj[h.trim()] = (vals[i]||'').trim());
+    headers.forEach((h, i) => obj[h.trim()] = (vals[i] || '').trim());
     return obj;
   }).filter(r => r['Adult - Child'] && r['Item']);
 }
+
 function parseCSVLine(line) {
-  const result=[]; let cur=''; let inQ=false;
-  for(let i=0;i<line.length;i++){
-    if(line[i]==='"'){inQ=!inQ;}
-    else if(line[i]===','&&!inQ){result.push(cur);cur='';}
-    else cur+=line[i];
+  const result = []; let cur = ''; let inQ = false;
+  for (let i = 0; i < line.length; i++) {
+    if (line[i] === '"') { inQ = !inQ; }
+    else if (line[i] === ',' && !inQ) { result.push(cur); cur = ''; }
+    else cur += line[i];
   }
-  result.push(cur); return result;
+  result.push(cur);
+  return result;
 }
 
 async function loadSheet() {
-  document.getElementById('loading-bar').style.display='block';
-  document.getElementById('app').style.display='none';
-  document.getElementById('sheet-status').innerHTML='<span class="dot-live"></span> loading...';
-  const url=`https://docs.google.com/spreadsheets/d/${SHEET_ID}/export?format=csv&gid=${GID}`;
+  document.getElementById('loading-bar').style.display = 'block';
+  document.getElementById('loading-bar').innerHTML = '<span class="spinner"></span> Fetching your Google Sheet...';
+  document.getElementById('app').style.display = 'none';
+  document.getElementById('sheet-status').innerHTML = '<span class="dot-live"></span> loading...';
+
+  const url = `https://docs.google.com/spreadsheets/d/${SHEET_ID}/export?format=csv&gid=${GID}`;
+
+  const TIMEOUT_MS = 15000;
+  const controller = new AbortController();
+  const timer = setTimeout(() => controller.abort(), TIMEOUT_MS);
+
+  // Show a "taking a while" message after 5 seconds
+  const slowTimer = setTimeout(() => {
+    const lb = document.getElementById('loading-bar');
+    if (lb && lb.style.display !== 'none') {
+      lb.innerHTML = '<span class="spinner"></span> Still waiting for Google Sheets — it can be slow sometimes...';
+    }
+  }, 5000);
+
   try {
-    const r=await fetch(url);
-    if(!r.ok) throw new Error('Sheet returned '+r.status);
-    const text=await r.text();
-    allRows=csvToRows(text);
-    document.getElementById('loading-bar').style.display='none';
-    document.getElementById('app').style.display='block';
-    document.getElementById('sheet-status').innerHTML=`<span class="dot-live"></span> ${allRows.length} rows loaded`;
+    const r = await fetch(url, { signal: controller.signal });
+    clearTimeout(timer);
+    clearTimeout(slowTimer);
+    if (!r.ok) throw new Error('Sheet returned ' + r.status);
+    const text = await r.text();
+    allRows = csvToRows(text);
+    document.getElementById('loading-bar').style.display = 'none';
+    document.getElementById('app').style.display = 'block';
+    document.getElementById('sheet-status').innerHTML = `<span class="dot-live"></span> ${allRows.length} rows loaded`;
     initSelectors();
-    renderBatch();
   } catch(e) {
-    document.getElementById('loading-bar').innerHTML=`
+    clearTimeout(timer);
+    clearTimeout(slowTimer);
+    const isTimeout = e.name === 'AbortError';
+    document.getElementById('loading-bar').innerHTML = `
       <div style="color:#991b1b;background:#fee2e2;border:1px solid #fca5a5;border-radius:10px;padding:20px 24px;max-width:480px;margin:0 auto;text-align:left">
-        <strong style="display:block;margin-bottom:8px">Could not load Google Sheet</strong>
-        <p style="font-size:13px;margin-bottom:12px">Make sure the sheet is shared as "Anyone with the link — Viewer".</p>
-        <button class="btn btn-primary" onclick="reloadSheet()" style="width:auto">Try again</button>
+        <strong style="display:block;margin-bottom:8px">${isTimeout ? 'Google Sheets timed out' : 'Could not load Google Sheet'}</strong>
+        <p style="font-size:13px;margin-bottom:12px">${isTimeout
+          ? 'The sheet didn\'t respond within 15 seconds. Google may be slow — try again in a moment.'
+          : 'Make sure the sheet is shared as "Anyone with the link — Viewer".'
+        }</p>
+        <button class="btn btn-primary" onclick="reloadSheet()" style="width:auto">&#8635; Try again</button>
       </div>`;
-    document.getElementById('sheet-status').innerHTML='<span style="color:#fca5a5">&#9679;</span> error';
+    document.getElementById('sheet-status').innerHTML = '<span style="color:#fca5a5">&#9679;</span> ' + (isTimeout ? 'timed out' : 'error');
   }
 }
-function reloadSheet(){batch=[];loadSheet();}
 
-// ── Selectors ──────────────────────────────────────────────────────────────
+function reloadSheet() {
+  document.getElementById('results').style.display = 'none';
+  loadSheet();
+}
+
 function initSelectors() {
-  const acVals=[...new Set(allRows.map(r=>r['Adult - Child']))].filter(Boolean).sort();
-  const sel=document.getElementById('sel-ac');
-  sel.innerHTML='<option value="">Select...</option>';
-  acVals.forEach(v=>sel.appendChild(new Option(v,v)));
+  const acVals = [...new Set(allRows.map(r => r['Adult - Child']))].filter(Boolean).sort();
+  const sel = document.getElementById('sel-ac');
+  sel.innerHTML = '<option value="">Select...</option>';
+  acVals.forEach(v => sel.appendChild(new Option(v, v)));
 }
+
 function onACChange() {
-  const ac=document.getElementById('sel-ac').value;
-  const selItem=document.getElementById('sel-item');
-  selItem.innerHTML='<option value="">Select garment...</option>';
-  selItem.disabled=!ac;
-  document.getElementById('sel-size').innerHTML='<option value="">Select garment first</option>';
-  document.getElementById('sel-size').disabled=true;
-  if(!ac)return;
-  [...new Set(allRows.filter(r=>r['Adult - Child']===ac).map(r=>r['Item']))]
-    .forEach(v=>selItem.appendChild(new Option(v,v)));
+  const ac = document.getElementById('sel-ac').value;
+  const selItem = document.getElementById('sel-item');
+  selItem.innerHTML = '<option value="">Select garment...</option>';
+  selItem.disabled = !ac;
+  document.getElementById('sel-size').innerHTML = '<option value="">Select garment first</option>';
+  document.getElementById('sel-size').disabled = true;
+  document.getElementById('results').style.display = 'none';
+  if (!ac) return;
+  [...new Set(allRows.filter(r => r['Adult - Child'] === ac).map(r => r['Item']))]
+    .forEach(v => selItem.appendChild(new Option(v, v)));
 }
+
 function onItemChange() {
-  const ac=document.getElementById('sel-ac').value;
-  const item=document.getElementById('sel-item').value;
-  const selSize=document.getElementById('sel-size');
-  selSize.innerHTML='<option value="">Select size...</option>';
-  selSize.disabled=!item;
-  if(!item)return;
-  [...new Set(allRows.filter(r=>r['Adult - Child']===ac&&r['Item']===item).map(r=>r['Size']))]
-    .forEach(v=>selSize.appendChild(new Option(v,v)));
+  const ac = document.getElementById('sel-ac').value;
+  const item = document.getElementById('sel-item').value;
+  const selSize = document.getElementById('sel-size');
+  selSize.innerHTML = '<option value="">Select size...</option>';
+  selSize.disabled = !item;
+  document.getElementById('results').style.display = 'none';
+  if (!item) return;
+  [...new Set(allRows.filter(r => r['Adult - Child'] === ac && r['Item'] === item).map(r => r['Size']))]
+    .forEach(v => selSize.appendChild(new Option(v, v)));
 }
 
-// ── Helpers ────────────────────────────────────────────────────────────────
-function hasWarning(row){return['Logo','Position1','Postion2','Position3'].some(k=>(row[k]||'').includes('?'));}
-function cleanLogo(raw){return raw.replace(/^\?+/,'').trim();}
-function logoLetter(logo){const m=logo.match(/^([A-Z])/);return m?m[1]:'?';}
-function safeFile(s){return s.replace(/[<>:"/\\|?*]/g,'_').trim();}
-function locationBadge(loc){
-  const l=loc.toLowerCase();
-  if(l.includes('front'))return`<span class="badge badge-front">Front</span>`;
-  if(l.includes('back'))return`<span class="badge badge-back">Back</span>`;
-  return`<span class="badge badge-other">${loc}</span>`;
+function hasWarning(row) {
+  return ['Logo','Position1','Postion2','Position3'].some(k => (row[k]||'').includes('?'));
 }
 
-// ── Batch management ───────────────────────────────────────────────────────
-function addToBatch() {
-  const ac=document.getElementById('sel-ac').value;
-  const item=document.getElementById('sel-item').value;
-  const size=document.getElementById('sel-size').value;
-  const qty=parseInt(document.getElementById('qty').value)||1;
-  const errEl=document.getElementById('error-bar');
-  errEl.style.display='none';
+function cleanLogo(raw) { return raw.replace(/^\?+/, '').trim(); }
 
-  if(!ac||!item||!size){
-    errEl.textContent='Please select adult/child, garment and size before adding.';
-    errEl.style.display='block'; return;
-  }
-  const rows=allRows.filter(r=>r['Adult - Child']===ac&&r['Item']===item&&r['Size']===size);
-  if(!rows.length){
-    errEl.textContent='No data found for this combination — check your sheet.';
-    errEl.style.display='block'; return;
-  }
-
-  const job = { id: Date.now(), ac, item, size, qty, rows, open: true };
-  batch.push(job);
-  renderBatch();
-
-  // Reset selectors for next entry
-  document.getElementById('sel-ac').value='';
-  onACChange();
-  document.getElementById('qty').value='1';
+function logoLetter(logo) {
+  const m = logo.match(/^([A-Z])/);
+  return m ? m[1] : '?';
 }
 
-function removeFromBatch(id) {
-  batch=batch.filter(j=>j.id!==id);
-  renderBatch();
+function safeFile(s) { return s.replace(/[<>:"/\\|?*]/g, '_').trim(); }
+
+function locationBadge(loc) {
+  const l = loc.toLowerCase();
+  if (l.includes('front')) return `<span class="badge badge-front">Front</span>`;
+  if (l.includes('back')) return `<span class="badge badge-back">Back</span>`;
+  return `<span class="badge badge-other">${loc}</span>`;
 }
 
-function clearBatch() {
-  if(batch.length && !confirm('Clear all jobs from the batch?')) return;
-  batch=[];
-  renderBatch();
-}
+function generate() {
+  const ac = document.getElementById('sel-ac').value;
+  const item = document.getElementById('sel-item').value;
+  const size = document.getElementById('sel-size').value;
+  const qty = parseInt(document.getElementById('qty').value) || 1;
+  const errEl = document.getElementById('error-bar');
+  errEl.style.display = 'none';
 
-function toggleJob(id) {
-  const job=batch.find(j=>j.id===id);
-  if(job){ job.open=!job.open; renderBatch(); }
-}
-
-function renderBatch() {
-  const section=document.getElementById('batch-section');
-  const listEl=document.getElementById('batch-list');
-  const empty=document.getElementById('empty-state');
-  const countEl=document.getElementById('batch-count');
-
-  if(batch.length===0){
-    section.style.display='none';
-    empty.style.display='none'; // hide until at least one add attempted
+  if (!ac || !item || !size) {
+    errEl.textContent = 'Please select adult/child, garment and size before generating.';
+    errEl.style.display = 'block';
     return;
   }
 
-  section.style.display='block';
-  empty.style.display='none';
-  countEl.textContent=`${batch.length} job${batch.length!==1?'s':''}`;
+  const rows = allRows.filter(r =>
+    r['Adult - Child'] === ac && r['Item'] === item && r['Size'] === size
+  );
 
-  listEl.innerHTML=batch.map(job=>{
-    const anyWarn=job.rows.some(hasWarning);
-    const temps=[...new Set(job.rows.map(r=>r['Temp']).filter(Boolean))];
-    const times=[...new Set(job.rows.map(r=>r['Time']).filter(Boolean))];
-    const totalFiles=job.rows.length*job.qty;
+  if (!rows.length) {
+    errEl.textContent = 'No data found for this combination — check your sheet.';
+    errEl.style.display = 'block';
+    return;
+  }
 
-    const placementsHTML=job.rows.map(row=>{
-      const logo=cleanLogo(row['Logo']||'');
-      const letter=logoLetter(logo);
-      const positions=[row['Position1'],row['Postion2'],row['Position3']].filter(Boolean).join(' · ');
-      const warn=hasWarning(row);
-      return`<div class="placement-row">
-        <div class="logo-letter">${letter}</div>
-        <div class="placement-detail">
-          <div class="placement-name">
-            ${locationBadge(row['Location']||'')}
-            <span>${logo}</span>
-            ${warn?'<span class="warn-badge">&#9888; check</span>':''}
-          </div>
-          ${positions?`<div class="placement-pos">${positions}</div>`:''}
-          <div class="press-info">${row['Temp']||''} &middot; ${row['Time']||''}</div>
-        </div>
-      </div>`;
-    }).join('');
+  const anyWarn = rows.some(hasWarning);
+  document.getElementById('warn-notice').style.display = anyWarn ? 'flex' : 'none';
 
-    // Build file list
-    let files=[];
-    job.rows.forEach(row=>{
-      const logo=cleanLogo(row['Logo']||'');
-      const loc=safeFile(row['Location']||'location');
-      const letter=logoLetter(logo);
-      for(let i=1;i<=job.qty;i++){
-        files.push({name:`${safeFile(logo)}_${loc}_${String(i).padStart(3,'0')}.png`,loc:row['Location']||'',letter});
-      }
-    });
-    const filesHTML=files.map(f=>`<div class="file-item"><span class="file-loc">${f.letter} · ${f.loc}</span><span>${f.name}</span></div>`).join('');
+  const temps = [...new Set(rows.map(r => r['Temp']).filter(Boolean))];
+  const times = [...new Set(rows.map(r => r['Time']).filter(Boolean))];
 
-    const diagramHTML=buildDiagramHTML(job.rows, job.item);
+  document.getElementById('stat-logos').textContent = rows.length;
+  document.getElementById('stat-files').textContent = rows.length * qty;
+  document.getElementById('stat-press').textContent = (temps[0] || '—') + ' / ' + (times[0] || '—');
 
-    return`<div class="batch-item" id="job-${job.id}">
-      <div class="batch-item-header" onclick="toggleJob(${job.id})">
-        <div>
-          <div class="batch-item-title">${job.ac} &middot; ${job.item} &middot; Size ${job.size} &middot; Qty ${job.qty}
-            ${anyWarn?'<span class="warn-badge" style="margin-left:6px">&#9888;</span>':''}
-          </div>
-          <div class="batch-item-meta">${job.rows.length} placement${job.rows.length!==1?'s':''} &middot; ${totalFiles} file${totalFiles!==1?'s':''} &middot; ${temps[0]||'—'} / ${times[0]||'—'}</div>
+  buildPlacements(rows);
+  buildDiagram(rows, item);
+  buildFiles(rows, qty, item, size);
+
+  document.getElementById('results').style.display = 'block';
+  document.getElementById('results').scrollIntoView({ behavior: 'smooth', block: 'start' });
+}
+
+function buildPlacements(rows) {
+  document.getElementById('placements').innerHTML = rows.map(row => {
+    const logo = cleanLogo(row['Logo'] || '');
+    const letter = logoLetter(logo);
+    const pos1 = row['Position1'] || '';
+    const pos2 = row['Postion2'] || '';
+    const pos3 = row['Position3'] || '';
+    const positions = [pos1,pos2,pos3].filter(Boolean).join(' · ');
+    const warn = hasWarning(row);
+    return `<div class="placement-row">
+      <div class="logo-letter">${letter}</div>
+      <div class="placement-detail">
+        <div class="placement-name">
+          ${locationBadge(row['Location']||'')}
+          <span>${logo}</span>
+          ${warn ? '<span class="warn-badge">&#9888; check</span>' : ''}
         </div>
-        <div class="batch-item-actions">
-          <span style="font-size:11px;color:var(--text3)">${job.open?'▲':'▼'}</span>
-          <button class="batch-remove" onclick="event.stopPropagation();removeFromBatch(${job.id})" title="Remove">✕</button>
-        </div>
-      </div>
-      <div class="batch-item-body ${job.open?'open':''}">
-        ${anyWarn?`<div class="notice"><span class="notice-icon">⚠</span><span>Check measurements marked with ? before pressing.</span></div>`:''}
-        <div class="stats">
-          <div class="stat"><div class="stat-val">${job.rows.length}</div><div class="stat-lbl">Placements</div></div>
-          <div class="stat"><div class="stat-val">${totalFiles}</div><div class="stat-lbl">Files to copy</div></div>
-          <div class="stat"><div class="stat-val">${temps[0]||'—'}</div><div class="stat-lbl">Press temp</div></div>
-        </div>
-        <div class="two-col">
-          <div class="card" style="margin:0">${diagramHTML}</div>
-          <div class="card" style="margin:0"><div class="card-title">Placements</div>${placementsHTML}</div>
-        </div>
-        <div class="card" style="margin:0">
-          <div class="copy-bar">
-            <div class="card-title" style="margin:0">Files to copy</div>
-            <button class="btn btn-secondary" onclick="copyFileList(${job.id})" style="width:auto;padding:7px 14px;font-size:13px">&#128203; Copy list</button>
-          </div>
-          ${filesHTML}
-        </div>
+        ${positions ? `<div class="placement-pos">${positions}</div>` : ''}
+        <div class="press-info">${row['Temp']||''} &middot; ${row['Time']||''}</div>
       </div>
     </div>`;
   }).join('');
 }
 
-function copyFileList(jobId) {
-  const job=batch.find(j=>j.id===jobId);
-  if(!job)return;
-  const lines=[];
-  job.rows.forEach(row=>{
-    const logo=cleanLogo(row['Logo']||'');
-    const loc=safeFile(row['Location']||'location');
-    for(let i=1;i<=job.qty;i++) lines.push(`${safeFile(logo)}_${loc}_${String(i).padStart(3,'0')}.png`);
-  });
-  navigator.clipboard.writeText(lines.join('\n')).then(()=>{
-    // brief visual feedback via button text handled inline
-  });
-}
-
-// ── PDF Download ───────────────────────────────────────────────────────────
-function downloadPDF() {
-  if(!batch.length){alert('No jobs in batch.');return;}
-
-  // Build a print-friendly HTML page and open it
-  const date=new Date().toLocaleDateString('en-GB',{day:'2-digit',month:'short',year:'numeric'});
-  let html=`<!DOCTYPE html><html><head><meta charset="UTF-8">
-  <title>UPA Batch ${date}</title>
-  <style>
-    body{font-family:Arial,sans-serif;font-size:12px;color:#111;margin:0;padding:0;}
-    h1{font-size:18px;margin:0 0 4px;}
-    .sub{color:#666;font-size:11px;margin-bottom:20px;}
-    table{width:100%;border-collapse:collapse;margin-bottom:24px;}
-    th{background:#2d5a3d;color:white;padding:7px 10px;text-align:left;font-size:11px;}
-    td{padding:7px 10px;border-bottom:1px solid #e0e0e0;vertical-align:top;}
-    tr:nth-child(even) td{background:#f8f8f8;}
-    .page-break{page-break-before:always;}
-    .job-header{background:#2d5a3d;color:white;padding:12px 16px;margin-bottom:16px;}
-    .job-header h2{font-size:15px;margin:0 0 2px;}
-    .job-header p{font-size:11px;margin:0;opacity:0.75;}
-    .pl-table{width:100%;border-collapse:collapse;}
-    .pl-table th{background:#eaf2ec;color:#2d5a3d;padding:6px 10px;text-align:left;font-size:10px;border:1px solid #d0e8d8;}
-    .pl-table td{padding:6px 10px;border:1px solid #e8e8e8;font-size:11px;}
-    .warn{color:#92400e;font-weight:bold;}
-    .files{font-family:monospace;font-size:10px;color:#444;line-height:1.7;}
-    @media print{
-      body{margin:0;}
-      .no-print{display:none;}
+function buildFiles(rows, qty, item, size) {
+  fileList = [];
+  rows.forEach(row => {
+    const logo = cleanLogo(row['Logo'] || '');
+    const letter = logoLetter(logo);
+    const loc = safeFile(row['Location'] || 'location');
+    for (let i = 1; i <= qty; i++) {
+      fileList.push({
+        name: `${safeFile(logo)}_${loc}_${String(i).padStart(3,'0')}.png`,
+        loc: row['Location'] || '',
+        letter
+      });
     }
-  </style></head><body>`;
-
-  // Summary page
-  html+=`<div style="padding:24px">
-    <h1>UPA Print Batch</h1>
-    <div class="sub">${date} &nbsp;·&nbsp; ${batch.length} job${batch.length!==1?'s':''} &nbsp;·&nbsp; ${batch.reduce((s,j)=>s+j.rows.length*j.qty,0)} total files</div>
-    <table>
-      <thead><tr><th>#</th><th>Adult/Child</th><th>Garment</th><th>Size</th><th>Qty</th><th>Placements</th><th>Files</th><th>Press</th></tr></thead>
-      <tbody>`;
-  batch.forEach((job,i)=>{
-    const temps=[...new Set(job.rows.map(r=>r['Temp']).filter(Boolean))];
-    const times=[...new Set(job.rows.map(r=>r['Time']).filter(Boolean))];
-    const anyWarn=job.rows.some(hasWarning);
-    html+=`<tr>
-      <td>${i+1}</td>
-      <td>${job.ac}</td>
-      <td>${job.item}</td>
-      <td>${job.size}</td>
-      <td>${job.qty}</td>
-      <td>${job.rows.length}${anyWarn?' <span class="warn">⚠</span>':''}</td>
-      <td>${job.rows.length*job.qty}</td>
-      <td style="font-size:10px">${temps[0]||'—'} / ${times[0]||'—'}</td>
-    </tr>`;
-  });
-  html+=`</tbody></table></div>`;
-
-  // Detail page per job
-  batch.forEach((job,i)=>{
-    const temps=[...new Set(job.rows.map(r=>r['Temp']).filter(Boolean))];
-    const times=[...new Set(job.rows.map(r=>r['Time']).filter(Boolean))];
-    html+=`<div class="page-break"><div class="job-header">
-      <h2>Job ${i+1} &mdash; ${job.ac} · ${job.item} · Size ${job.size} · Qty ${job.qty}</h2>
-      <p>${temps[0]||'—'} &nbsp;/&nbsp; ${times[0]||'—'} &nbsp;·&nbsp; ${date}</p>
-    </div><div style="padding:0 24px 24px">
-    <table class="pl-table">
-      <thead><tr><th>Location</th><th>Logo</th><th>Position 1</th><th>Position 2</th><th>Position 3</th><th>Temp</th><th>Time</th></tr></thead>
-      <tbody>`;
-    job.rows.forEach(row=>{
-      const logo=cleanLogo(row['Logo']||'');
-      const warn=hasWarning(row);
-      html+=`<tr>
-        <td>${row['Location']||''}</td>
-        <td>${warn?`<span class="warn">⚠ </span>`:''} ${logo}</td>
-        <td>${row['Position1']||''}</td>
-        <td>${row['Postion2']||''}</td>
-        <td>${row['Position3']||''}</td>
-        <td>${row['Temp']||''}</td>
-        <td>${row['Time']||''}</td>
-      </tr>`;
-    });
-    html+=`</tbody></table>
-    <div style="margin-top:16px"><strong style="font-size:11px;text-transform:uppercase;letter-spacing:0.5px;color:#666">Files to copy</strong>
-    <div class="files" style="margin-top:8px">`;
-    job.rows.forEach(row=>{
-      const logo=cleanLogo(row['Logo']||'');
-      const loc=safeFile(row['Location']||'location');
-      for(let n=1;n<=job.qty;n++) html+=`${safeFile(logo)}_${loc}_${String(n).padStart(3,'0')}.png<br>`;
-    });
-    html+=`</div></div></div></div>`;
   });
 
-  html+=`<div class="no-print" style="text-align:center;padding:20px">
-    <button onclick="window.print()" style="padding:10px 24px;background:#2d5a3d;color:white;border:none;border-radius:8px;font-size:14px;cursor:pointer">🖨 Print / Save PDF</button>
-  </div></body></html>`;
-
-  const w=window.open('','_blank');
-  w.document.write(html);
-  w.document.close();
-  setTimeout(()=>w.print(),500);
+  document.getElementById('files').innerHTML = fileList.map(f =>
+    `<div class="file-item">
+      <span class="file-loc">${f.letter} · ${f.loc}</span>
+      <span>${f.name}</span>
+    </div>`
+  ).join('');
 }
 
-// ── Garment diagrams ───────────────────────────────────────────────────────
-function buildDiagramHTML(rows, item) {
-  const locs=rows.map(r=>(r['Location']||'').toLowerCase());
-  const hasFront=locs.some(l=>l.includes('front'));
-  const hasBack=locs.some(l=>l.includes('back'));
-  const hasHip=locs.some(l=>l.includes('hip')||l.includes('right leg'));
-  const hasBottomLeg=locs.some(l=>l.includes('bottom')||l.includes('botton'));
-  const isJacket=/jacket|zip/i.test(item);
-  const isHoodie=/hoodie|zoodie/i.test(item);
-
-  let svg='<div class="card-title">Placement diagram</div>';
-  if(hasFront||hasBack) svg+=torsoSVG(rows,hasFront,hasBack,isJacket,isHoodie);
-  else if(hasHip||hasBottomLeg) svg+=legsSVG(rows,hasHip,hasBottomLeg);
-  else svg+=torsoSVG(rows,true,false,isJacket,isHoodie);
-  return svg;
+function copyFiles() {
+  const text = fileList.map(f => f.name).join('\n');
+  navigator.clipboard.writeText(text).then(() => {
+    const btn = document.getElementById('copy-btn');
+    btn.textContent = '✓ Copied!';
+    btn.style.color = '#065f46';
+    setTimeout(() => { btn.innerHTML = '&#128203; Copy list'; btn.style.color = ''; }, 2000);
+  });
 }
 
-function torsoSVG(rows,hasFront,hasBack,isJacket,isHoodie){
-  const both=hasFront&&hasBack;
-  const W=both?480:240;
-  const frontRows=rows.filter(r=>(r['Location']||'').toLowerCase().includes('front'));
-  const backRows=rows.filter(r=>(r['Location']||'').toLowerCase().includes('back'));
-  let content='';
-  if(hasFront)content+=garmentShape(20,15,isJacket,isHoodie,'Front',frontRows);
-  if(hasBack)content+=garmentShape(both?255:20,15,isJacket,isHoodie,'Back',backRows);
-  return`<svg class="garment" viewBox="0 0 ${W} 270" width="${W}" height="270" xmlns="http://www.w3.org/2000/svg">
-    <defs><style>.gl{font-family:'DM Sans',sans-serif;font-size:11px;fill:#9e9890;text-anchor:middle}
-    .gc{font-family:'DM Mono',monospace;font-size:14px;font-weight:500;fill:white;text-anchor:middle}</style></defs>
-    ${content}</svg>`;
+function buildDiagram(rows, item) {
+  const locs = rows.map(r => (r['Location']||'').toLowerCase());
+  const hasFront = locs.some(l => l.includes('front'));
+  const hasBack = locs.some(l => l.includes('back'));
+  const hasHip = locs.some(l => l.includes('hip') || l.includes('right leg'));
+  const hasBottomLeg = locs.some(l => l.includes('bottom') || l.includes('botton'));
+  const isJacket = /jacket|zip/i.test(item);
+  const isHoodie = /hoodie|zoodie/i.test(item);
+
+  const el = document.getElementById('diagram');
+
+  if (hasFront || hasBack) {
+    el.innerHTML = torsoSVG(rows, hasFront, hasBack, isJacket, isHoodie);
+  } else if (hasHip || hasBottomLeg) {
+    el.innerHTML = legsSVG(rows, hasHip, hasBottomLeg);
+  } else {
+    el.innerHTML = torsoSVG(rows, true, false, isJacket, isHoodie);
+  }
 }
 
-function garmentShape(ox,oy,isJacket,isHoodie,label,rows){
-  const cx=ox+100;
-  const bodyFill='#e2ddd6',bodyStroke='#b5b0a8',sleeveFill='#d5d0c8';
-  const bodyPath=`M${ox+35},${oy+38} L${ox+15},${oy+58} L${ox+15},${oy+235} L${ox+185},${oy+235} L${ox+185},${oy+58} L${ox+165},${oy+38}`;
-  const lSleeve=`M${ox+35},${oy+38} L${ox+2},${oy+65} L${ox+2},${oy+145} L${ox+15},${oy+145} L${ox+15},${oy+58}`;
-  const rSleeve=`M${ox+165},${oy+38} L${ox+198},${oy+65} L${ox+198},${oy+145} L${ox+185},${oy+145} L${ox+185},${oy+58}`;
-  const neckPath=isHoodie
-    ?`<path d="M${ox+72},${oy+12} Q${cx},${oy+48} ${ox+128},${oy+12}" fill="${sleeveFill}" stroke="${bodyStroke}" stroke-width="1"/>`
-    :`<path d="M${ox+72},${oy+12} Q${cx},${oy+30} ${ox+128},${oy+12}" fill="${sleeveFill}" stroke="${bodyStroke}" stroke-width="1"/>`;
-  const zipLine=isJacket?`<line x1="${cx}" y1="${oy+28}" x2="${cx}" y2="${oy+235}" stroke="#b5b0a8" stroke-width="1" stroke-dasharray="4,3"/>`:'';
-  const labelEl=`<text x="${cx}" y="${oy+253}" class="gl">${label}</text>`;
-  const dots=rows.map(row=>{
-    const letter=logoLetter(cleanLogo(row['Logo']||''));
-    const loc=(row['Location']||'').toLowerCase();
-    let dx=cx,dy=oy+110;
-    if(loc.includes('front')&&isJacket){dx=cx-28;}
-    return`<circle cx="${dx}" cy="${dy}" r="18" fill="#2d5a3d" opacity="0.88"/><text x="${dx}" y="${dy+5}" class="gc">${letter}</text>`;
+function torsoSVG(rows, hasFront, hasBack, isJacket, isHoodie) {
+  const both = hasFront && hasBack;
+  const W = both ? 480 : 240;
+  const frontRows = rows.filter(r => (r['Location']||'').toLowerCase().includes('front'));
+  const backRows = rows.filter(r => (r['Location']||'').toLowerCase().includes('back'));
+
+  let content = '';
+  if (hasFront) content += garmentShape(20, 15, isJacket, isHoodie, 'Front', frontRows);
+  if (hasBack) content += garmentShape(both ? 255 : 20, 15, isJacket, isHoodie, 'Back', backRows);
+
+  return `<svg class="garment" viewBox="0 0 ${W} 270" width="${W}" height="270" xmlns="http://www.w3.org/2000/svg">
+    <defs>
+      <style>.gl{font-family:'DM Sans',sans-serif;font-size:11px;fill:#9e9890;text-anchor:middle}
+      .gc{font-family:'DM Mono',monospace;font-size:14px;font-weight:500;fill:white;text-anchor:middle}</style>
+    </defs>
+    ${content}
+  </svg>`;
+}
+
+function garmentShape(ox, oy, isJacket, isHoodie, label, rows) {
+  const cx = ox + 100;
+  const bodyFill = '#e2ddd6';
+  const bodyStroke = '#b5b0a8';
+  const sleeveFill = '#d5d0c8';
+
+  const bodyPath = `M${ox+35},${oy+38} L${ox+15},${oy+58} L${ox+15},${oy+235} L${ox+185},${oy+235} L${ox+185},${oy+58} L${ox+165},${oy+38}`;
+  const lSleeve = `M${ox+35},${oy+38} L${ox+2},${oy+65} L${ox+2},${oy+145} L${ox+15},${oy+145} L${ox+15},${oy+58}`;
+  const rSleeve = `M${ox+165},${oy+38} L${ox+198},${oy+65} L${ox+198},${oy+145} L${ox+185},${oy+145} L${ox+185},${oy+58}`;
+
+  let neckPath = '';
+  if (isHoodie) {
+    neckPath = `<path d="M${ox+72},${oy+12} Q${cx},${oy+48} ${ox+128},${oy+12}" fill="${sleeveFill}" stroke="${bodyStroke}" stroke-width="1"/>`;
+  } else {
+    neckPath = `<path d="M${ox+72},${oy+12} Q${cx},${oy+30} ${ox+128},${oy+12}" fill="${sleeveFill}" stroke="${bodyStroke}" stroke-width="1"/>`;
+  }
+
+  const zipLine = isJacket
+    ? `<line x1="${cx}" y1="${oy+28}" x2="${cx}" y2="${oy+235}" stroke="#b5b0a8" stroke-width="1" stroke-dasharray="4,3"/>`
+    : '';
+
+  const labelEl = `<text x="${cx}" y="${oy+253}" class="gl">${label}</text>`;
+
+  const dots = rows.map(row => {
+    const letter = logoLetter(cleanLogo(row['Logo']||''));
+    const loc = (row['Location']||'').toLowerCase();
+    let dx = cx, dy = oy + 110;
+    if (loc.includes('front') && isJacket) { dx = cx - 28; }
+    return `<circle cx="${dx}" cy="${dy}" r="18" fill="#2d5a3d" opacity="0.88"/>
+      <text x="${dx}" y="${dy+5}" class="gc">${letter}</text>`;
   }).join('');
-  return`<g>
+
+  return `<g>
     <path d="${bodyPath} Z" fill="${bodyFill}" stroke="${bodyStroke}" stroke-width="1"/>
     <path d="${lSleeve} Z" fill="${sleeveFill}" stroke="${bodyStroke}" stroke-width="1"/>
     <path d="${rSleeve} Z" fill="${sleeveFill}" stroke="${bodyStroke}" stroke-width="1"/>
-    ${neckPath}${zipLine}${dots}${labelEl}
+    ${neckPath}
+    ${zipLine}
+    ${dots}
+    ${labelEl}
   </g>`;
 }
 
-function legsSVG(rows,hasHip,hasBottomLeg){
-  const hipRows=rows.filter(r=>{const l=(r['Location']||'').toLowerCase();return l.includes('hip')||l.includes('right leg');});
-  const botRows=rows.filter(r=>{const l=(r['Location']||'').toLowerCase();return l.includes('bottom')||l.includes('botton');});
-  return`<svg class="garment" viewBox="0 0 240 300" width="240" height="300" xmlns="http://www.w3.org/2000/svg">
+function legsSVG(rows, hasHip, hasBottomLeg) {
+  const hipRows = rows.filter(r => { const l=(r['Location']||'').toLowerCase(); return l.includes('hip')||l.includes('right leg'); });
+  const botRows = rows.filter(r => { const l=(r['Location']||'').toLowerCase(); return l.includes('bottom')||l.includes('botton'); });
+
+  return `<svg class="garment" viewBox="0 0 240 300" width="240" height="300" xmlns="http://www.w3.org/2000/svg">
     <defs><style>.gl{font-family:'DM Sans',sans-serif;font-size:11px;fill:#9e9890;text-anchor:middle}
     .gc{font-family:'DM Mono',monospace;font-size:14px;font-weight:500;fill:white;text-anchor:middle}</style></defs>
     <rect x="30" y="10" width="75" height="22" rx="5" fill="#d5d0c8" stroke="#b5b0a8" stroke-width="1"/>
     <rect x="115" y="10" width="75" height="22" rx="5" fill="#d5d0c8" stroke="#b5b0a8" stroke-width="1"/>
     <path d="M30,32 L30,210 Q30,232 52,232 L83,232 Q105,232 105,210 L105,32 Z" fill="#e2ddd6" stroke="#b5b0a8" stroke-width="1"/>
     <path d="M115,32 L115,210 Q115,232 137,232 L168,232 Q190,232 190,210 L190,32 Z" fill="#e2ddd6" stroke="#b5b0a8" stroke-width="1"/>
-    ${hasHip?hipRows.map(r=>`<circle cx="152" cy="75" r="18" fill="#2d5a3d" opacity="0.88"/><text x="152" y="80" class="gc">${logoLetter(cleanLogo(r['Logo']||''))}</text>`).join(''):''}
-    ${hasBottomLeg?botRows.map(r=>`<circle cx="152" cy="190" r="18" fill="#4c1d95" opacity="0.88"/><text x="152" y="195" class="gc">${logoLetter(cleanLogo(r['Logo']||''))}</text>`).join(''):''}
+    ${hasHip ? hipRows.map(r => `<circle cx="152" cy="75" r="18" fill="#2d5a3d" opacity="0.88"/><text x="152" y="80" class="gc">${logoLetter(cleanLogo(r['Logo']||''))}</text>`).join('') : ''}
+    ${hasBottomLeg ? botRows.map(r => `<circle cx="152" cy="190" r="18" fill="#4c1d95" opacity="0.88"/><text x="152" y="195" class="gc">${logoLetter(cleanLogo(r['Logo']||''))}</text>`).join('') : ''}
     <text x="120" y="255" class="gl">right leg</text>
   </svg>`;
-}
-
-// ── Copy ALL files across the whole batch ─────────────────────────────────
-function copyAllFiles() {
-  if (!batch.length) return;
-  const lines = [];
-  batch.forEach(job => {
-    job.rows.forEach(row => {
-      const logo = cleanLogo(row['Logo'] || '');
-      const loc = safeFile(row['Location'] || 'location');
-      for (let i = 1; i <= job.qty; i++) {
-        lines.push(`${safeFile(logo)}_${loc}_${String(i).padStart(3,'0')}.png`);
-      }
-    });
-  });
-  navigator.clipboard.writeText(lines.join('
-')).then(() => {
-    const btn = document.querySelector('[onclick="copyAllFiles()"]');
-    const orig = btn.innerHTML;
-    btn.innerHTML = '✓ Copied ' + lines.length + ' files!';
-    btn.style.color = 'var(--accent)';
-    setTimeout(() => { btn.innerHTML = orig; btn.style.color = ''; }, 2500);
-  });
-}
-
-// ── Order PDF import into Print Prep ──────────────────────────────────────
-async function handleOrderPDF(file) {
-  if (!file) return;
-  const resultEl = document.getElementById('order-import-result');
-  const errorEl  = document.getElementById('order-import-error');
-  const labelEl  = document.getElementById('order-drop-label');
-  const subEl    = document.getElementById('order-drop-sub');
-  resultEl.style.display = 'none';
-  errorEl.style.display  = 'none';
-
-  try {
-    labelEl.textContent = 'Reading ' + file.name + '…';
-    const text = await extractPDFText(file);
-
-    // Parse garment lines: "Arts1 T Shirt (Child)
-Size: Small (5/6)
-Qty 1" etc
-    // Also handles standard Soul2sole invoice format
-    const garmentRe = /Arts1[^
-]*/gi;
-    const sizeLineRe = /Size:\s*([^
-]+)/gi;
-    const qtyRe = /Quantity\s*[:\-]?\s*(\d+)/gi;
-
-    const garmentMatches = [...text.matchAll(/Arts1[^(
-]*\(\s*((?:XL\s+)?(?:Adult|Child))\s*\)/gi)];
-    const qtyMatches     = [...text.matchAll(/1|Quantity[:\s]+(\d+)/gi)];
-
-    // Extract item quantities from invoice table (look for the qty column)
-    // In Soul2sole invoices the pattern is: item name ... price ... QTY ... vat ... subtotal
-    const invoiceQtyRe = /Arts1[^
-]+
-[^
-]*£[\d.]+\s+(\d+)\s+\d+%/gi;
-    const invoiceQties = [...text.matchAll(invoiceQtyRe)].map(m => parseInt(m[1]));
-
-    if (!garmentMatches.length) {
-      errorEl.textContent = 'Could not find Arts1 garments in this PDF. Is this a Soul2sole invoice?';
-      errorEl.style.display = 'block';
-      labelEl.textContent = 'Drop Soul2sole invoice PDF here';
-      return;
-    }
-
-    let added = 0;
-    const problems = [];
-
-    garmentMatches.forEach((m, i) => {
-      const acRaw  = m[1];  // "Child" or "Adult" or "XL Adult"
-      const qty    = invoiceQties[i] || 1;
-
-      // Map to sheet values
-      const ac = acRaw.toLowerCase().includes('child') ? 'Child' : 'Adult';
-
-      // Find matching rows in the sheet
-      const matchingItems = [...new Set(
-        allRows.filter(r => r['Adult - Child'] === ac).map(r => r['Item'])
-      )].filter(item => /arts1/i.test(item) && /t.?shirt|tshirt|tee/i.test(item));
-
-      if (!matchingItems.length) {
-        problems.push(`No sheet match for ${ac} Arts1 T Shirt`);
-        return;
-      }
-
-      const item = matchingItems[0];
-
-      // Get available sizes for this item
-      const sizes = [...new Set(allRows.filter(r => r['Adult - Child'] === ac && r['Item'] === item).map(r => r['Size']))];
-      const size = sizes[0]; // default to first if can't detect
-
-      const rows = allRows.filter(r => r['Adult - Child'] === ac && r['Item'] === item && r['Size'] === size);
-      if (!rows.length) { problems.push(`No placement data for ${ac} ${item} ${size}`); return; }
-
-      batch.push({ id: Date.now() + i, ac, item, size, qty, rows, open: true });
-      added++;
-    });
-
-    renderBatch();
-    labelEl.textContent = file.name;
-    subEl.textContent   = 'Click to change';
-    document.getElementById('order-clear-btn').style.display = 'block';
-
-    resultEl.textContent = `✓ Added ${added} garment${added !== 1 ? 's' : ''} from invoice${problems.length ? ' — ' + problems.join(', ') : ''}`;
-    resultEl.style.display = 'block';
-
-  } catch(err) {
-    errorEl.textContent = 'Could not read PDF: ' + err.message;
-    errorEl.style.display = 'block';
-    labelEl.textContent = 'Drop Soul2sole invoice PDF here';
-  }
-}
-
-function clearOrderImport() {
-  document.getElementById('order-drop-label').textContent = 'Drop Soul2sole invoice PDF here';
-  document.getElementById('order-drop-sub').textContent   = 'or click to browse — reads garment, size and qty automatically';
-  document.getElementById('order-import-result').style.display = 'none';
-  document.getElementById('order-import-error').style.display  = 'none';
-  document.getElementById('order-clear-btn').style.display     = 'none';
-  document.getElementById('order-pdf-input').value = '';
-}
-
-// ── Tab switching ──────────────────────────────────────────────────────────
-function switchTab(name){
-  ['print','personalise'].forEach(t=>{
-    document.getElementById('tab-panel-'+t).classList.toggle('active',t===name);
-    document.getElementById('tab-'+t).classList.toggle('active',t===name);
-  });
-  if(name==='personalise'&&document.getElementById('manual-entries').children.length===0) addManualRow();
-}
-
-// ── Personalisation ────────────────────────────────────────────────────────
-let pdfjsLib=null;
-async function loadPDFJS(){
-  if(pdfjsLib)return pdfjsLib;
-  return new Promise((resolve,reject)=>{
-    const s=document.createElement('script');
-    s.src='https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.min.js';
-    s.onload=()=>{
-      window['pdfjs-dist/build/pdf'].GlobalWorkerOptions.workerSrc=
-        'https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.worker.min.js';
-      pdfjsLib=window['pdfjs-dist/build/pdf'];resolve(pdfjsLib);
-    };
-    s.onerror=reject;document.head.appendChild(s);
-  });
-}
-async function extractPDFText(file){
-  const lib=await loadPDFJS();
-  const pdf=await lib.getDocument({data:await file.arrayBuffer()}).promise;
-  let text='';
-  for(let i=1;i<=pdf.numPages;i++){
-    const page=await pdf.getPage(i);
-    const content=await page.getTextContent();
-    text+=content.items.map(x=>x.str).join(' ')+'\n';
-  }
-  return text;
-}
-function parsePDFEntries(text){
-  const nameRe=/Personalisation:\s*([A-Za-z][A-Za-z\s'\-]{0,40}?)(?=\s{2,}|\n|Payment|$)/gi;
-  const garmentRe=/Arts1[^(\n]*\(\s*((?:XL\s+)?(?:Adult|Child))\s*\)/gi;
-  const names=[],garments=[];
-  let m;
-  while((m=nameRe.exec(text))!==null)names.push(m[1].trim());
-  while((m=garmentRe.exec(text))!==null)garments.push(m[1].trim());
-  return names.map((name,i)=>({name:name.replace(/\b\w/g,c=>c.toUpperCase()),size:classifySize(garments[i]||'Adult')}));
-}
-function classifySize(raw){
-  const s=(raw||'').toLowerCase();
-  if(s.includes('xl'))return'xl_adult';
-  if(s.includes('child')||s.includes('junior'))return'child';
-  return'adult';
-}
-async function handlePDF(file){
-  if(!file)return;
-  const errEl=document.getElementById('pdf-error');
-  const resEl=document.getElementById('pdf-result');
-  errEl.style.display='none';resEl.style.display='none';
-  try{
-    const dz=document.getElementById('drop-zone');
-    dz.querySelector('.drop-label').textContent='Reading '+file.name+'…';
-    const entries=parsePDFEntries(await extractPDFText(file));
-    dz.querySelector('.drop-label').textContent=file.name;
-    dz.querySelector('.drop-sub').textContent='Click to change';
-    if(!entries.length){errEl.textContent='Could not find "Personalisation: <name>" in this PDF.';errEl.style.display='block';return;}
-    document.getElementById('pdf-tags').innerHTML=entries.map(e=>`<span class="extracted-tag"><span class="badge ${e.size==='child'?'badge-front':e.size==='xl_adult'?'badge-back':'badge-other'}" style="margin:0;font-size:9px">${{child:'Child',adult:'Adult',xl_adult:'XL'}[e.size]}</span> ${e.name}</span>`).join('');
-    resEl.style.display='block';
-    entries.forEach(e=>addManualRow(e.name,e.size));
-    buildCommand();
-  }catch(err){
-    errEl.textContent='Could not read PDF: '+err.message;errEl.style.display='block';
-  }
-}
-document.addEventListener('DOMContentLoaded',()=>{
-  const dz=document.getElementById('drop-zone');
-  if(!dz)return;
-  dz.addEventListener('dragover',e=>{e.preventDefault();dz.classList.add('over');});
-  dz.addEventListener('dragleave',()=>dz.classList.remove('over'));
-  dz.addEventListener('drop',e=>{e.preventDefault();dz.classList.remove('over');const f=e.dataTransfer.files[0];if(f&&f.type==='application/pdf')handlePDF(f);});
-});
-
-let rowCount=0;
-function addManualRow(name='',size='adult'){
-  const id=++rowCount;
-  const container=document.getElementById('manual-entries');
-  const div=document.createElement('div');
-  div.className='pers-entry';div.id='row-'+id;
-  div.innerHTML=`<input class="pers-name-input" type="text" placeholder="Student name" value="${name}" oninput="buildCommand()"/>
-    <select class="pers-size-sel" onchange="buildCommand()">
-      <option value="child" ${size==='child'?'selected':''}>Child</option>
-      <option value="adult" ${size==='adult'?'selected':''}>Adult</option>
-      <option value="xl_adult" ${size==='xl_adult'?'selected':''}>XL Adult</option>
-    </select>
-    <button class="pers-remove" onclick="removeRow(${id})" title="Remove">✕</button>`;
-  container.appendChild(div);buildCommand();
-}
-function removeRow(id){const el=document.getElementById('row-'+id);if(el)el.remove();buildCommand();}
-function buildCommand(){
-  const rows=document.querySelectorAll('.pers-entry');
-  const entries=[];
-  rows.forEach(row=>{const name=row.querySelector('.pers-name-input').value.trim();const size=row.querySelector('.pers-size-sel').value;if(name)entries.push({name,size});});
-  const card=document.getElementById('cmd-card');
-  if(!entries.length){card.style.display='none';return;}
-  card.style.display='block';
-  const namesList=entries.map(e=>e.name).join(',');
-  let cmd;
-  if(new Set(entries.map(e=>e.size)).size===1){
-    cmd=`python3 upa_personalise.py --names "${namesList}" --size ${entries[0].size}`;
-  }else{
-    const lines=entries.map(e=>`${e.name},${e.size}`).join('\\n');
-    cmd=`printf '${lines}' > /tmp/upa_names.txt && python3 upa_personalise.py --list /tmp/upa_names.txt`;
-  }
-  document.getElementById('cmd-text').textContent=cmd;
-}
-function copyCmd(){
-  navigator.clipboard.writeText(document.getElementById('cmd-text').textContent).then(()=>{
-    const btn=document.querySelector('.cmd-copy');btn.textContent='✓ Copied!';
-    setTimeout(()=>{btn.textContent='Copy';},2000);
-  });
 }
 
 loadSheet();
