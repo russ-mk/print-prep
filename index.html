@@ -844,7 +844,8 @@ function copyAllFiles() {
       }
     });
   });
-  navigator.clipboard.writeText(lines.join('\n')).then(() => {
+  navigator.clipboard.writeText(lines.join('
+')).then(() => {
     const btn = document.querySelector('[onclick="copyAllFiles()"]');
     const orig = btn.innerHTML;
     btn.innerHTML = '✓ Copied ' + lines.length + ' files!';
