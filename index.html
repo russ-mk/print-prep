@@ -569,28 +569,12 @@ function parseCSVLine(line) {
 
 async function loadSheet() {
   document.getElementById('loading-bar').style.display = 'block';
-  document.getElementById('loading-bar').innerHTML = '<span class="spinner"></span> Fetching your Google Sheet...';
   document.getElementById('app').style.display = 'none';
   document.getElementById('sheet-status').innerHTML = '<span class="dot-live"></span> loading...';
 
   const url = `https://docs.google.com/spreadsheets/d/${SHEET_ID}/export?format=csv&gid=${GID}`;
-
-  const TIMEOUT_MS = 15000;
-  const controller = new AbortController();
-  const timer = setTimeout(() => controller.abort(), TIMEOUT_MS);
-
-  // Show a "taking a while" message after 5 seconds
-  const slowTimer = setTimeout(() => {
-    const lb = document.getElementById('loading-bar');
-    if (lb && lb.style.display !== 'none') {
-      lb.innerHTML = '<span class="spinner"></span> Still waiting for Google Sheets — it can be slow sometimes...';
-    }
-  }, 5000);
-
   try {
-    const r = await fetch(url, { signal: controller.signal });
-    clearTimeout(timer);
-    clearTimeout(slowTimer);
+    const r = await fetch(url);
     if (!r.ok) throw new Error('Sheet returned ' + r.status);
     const text = await r.text();
     allRows = csvToRows(text);
@@ -599,19 +583,13 @@ async function loadSheet() {
     document.getElementById('sheet-status').innerHTML = `<span class="dot-live"></span> ${allRows.length} rows loaded`;
     initSelectors();
   } catch(e) {
-    clearTimeout(timer);
-    clearTimeout(slowTimer);
-    const isTimeout = e.name === 'AbortError';
     document.getElementById('loading-bar').innerHTML = `
       <div style="color:#991b1b;background:#fee2e2;border:1px solid #fca5a5;border-radius:10px;padding:20px 24px;max-width:480px;margin:0 auto;text-align:left">
-        <strong style="display:block;margin-bottom:8px">${isTimeout ? 'Google Sheets timed out' : 'Could not load Google Sheet'}</strong>
-        <p style="font-size:13px;margin-bottom:12px">${isTimeout
-          ? 'The sheet didn\'t respond within 15 seconds. Google may be slow — try again in a moment.'
-          : 'Make sure the sheet is shared as "Anyone with the link — Viewer".'
-        }</p>
-        <button class="btn btn-primary" onclick="reloadSheet()" style="width:auto">&#8635; Try again</button>
+        <strong style="display:block;margin-bottom:8px">Could not load Google Sheet</strong>
+        <p style="font-size:13px;margin-bottom:12px">Make sure the sheet is shared as "Anyone with the link — Viewer".</p>
+        <button class="btn btn-primary" onclick="reloadSheet()" style="width:auto">Try again</button>
       </div>`;
-    document.getElementById('sheet-status').innerHTML = '<span style="color:#fca5a5">&#9679;</span> ' + (isTimeout ? 'timed out' : 'error');
+    document.getElementById('sheet-status').innerHTML = '<span style="color:#fca5a5">&#9679;</span> error';
   }
 }
 
