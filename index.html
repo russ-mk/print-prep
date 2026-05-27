@@ -241,7 +241,7 @@
 </main>
 
 <footer style="text-align:center;padding:24px;font-size:11px;color:var(--text3);font-family:var(--mono)">
-  UPA Print Prep &mdash; data loaded live from Google Sheets &mdash; <span style="color:var(--accent2);font-weight:500">version 2.1</span>
+  UPA Print Prep &mdash; data loaded live from Google Sheets &mdash; <span style="color:var(--accent2);font-weight:500">version 2.2</span>
 </footer>
 
 <script>
@@ -576,7 +576,7 @@ async function handleOrderPDF(file) {
     // Match UPA and Arts1 garment lines
     // UPA format: "UPA Child T Shirt" / "UPA Adult Show T Shirt"
     // Arts1 format: "Arts1 T Shirt (Child)"
-    const upaMatches=[...text.matchAll(/UPA\s+(Adult|Child)\s+([A-Za-z0-9 \-\/]+?)\s*(?=SKU|£|\n{2}|\d+\.\d+)/gi)];
+    const upaMatches=[...text.matchAll(/UPA\s+(Adult|Child)\s+([^\n£]+?)\s*(?=SKU|£|\n\n|\d+\.\d+)/gi)];
     const arts1Matches=[...text.matchAll(/Arts1[^(\n]*\(\s*((?:XL\s+)?(?:Adult|Child))\s*\)/gi)];
 
     // Build a unified list: [{acRaw, garmentRaw, qty}]
