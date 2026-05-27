@@ -573,27 +573,70 @@ async function handleOrderPDF(file) {
   try {
     labelEl.textContent='Reading '+file.name+'…';
     const text=await extractPDFText(file);
-    const garmentMatches=[...text.matchAll(/Arts1[^(\n]*\(\s*((?:XL\s+)?(?:Adult|Child))\s*\)/gi)];
-    const invoiceQties=[...text.matchAll(/Arts1[^\n]+\n[^\n]*£[\d.]+\s+(\d+)\s+\d+%/gi)].map(function(m){return parseInt(m[1]);});
-    if(!garmentMatches.length){
-      errorEl.textContent='Could not find Arts1 garments in this PDF. Is this a Soul2sole invoice?';
+    // Match UPA and Arts1 garment lines
+    // UPA format: "UPA Child T Shirt" / "UPA Adult Show T Shirt"
+    // Arts1 format: "Arts1 T Shirt (Child)"
+    const upaMatches=[...text.matchAll(/UPA\s+(Adult|Child)\s+([A-Za-z0-9 \-\/]+?)\s*(?=SKU|£|\n{2}|\d+\.\d+)/gi)];
+    const arts1Matches=[...text.matchAll(/Arts1[^(\n]*\(\s*((?:XL\s+)?(?:Adult|Child))\s*\)/gi)];
+
+    // Build a unified list: [{acRaw, garmentRaw, qty}]
+    const orderItems=[];
+
+    // Process UPA items
+    upaMatches.forEach(function(m){
+      const acRaw=m[1];  // "Adult" or "Child"
+      const garmentRaw=m[2].trim();
+      // Find qty — look for the SKU line then the quantity number
+      const pos=m.index;
+      const snippet=text.substring(pos, pos+200);
+      const qtyM=snippet.match(/£[\d.]+\s+(\d+)\s+\d+%/);
+      const qty=qtyM?parseInt(qtyM[1]):1;
+      orderItems.push({acRaw,garmentRaw,qty,source:'UPA'});
+    });
+
+    // Process Arts1 items
+    arts1Matches.forEach(function(m){
+      orderItems.push({acRaw:m[1],garmentRaw:'T Shirt',qty:1,source:'Arts1'});
+    });
+
+    if(!orderItems.length){
+      errorEl.textContent='Could not find UPA or Arts1 garments in this PDF. Is this a Soul2sole invoice?';
       errorEl.style.display='block';
       labelEl.textContent='Drop Soul2sole invoice PDF here';
       return;
     }
     let added=0;
     const problems=[];
-    garmentMatches.forEach(function(m,i){
-      const acRaw=m[1];
-      const qty=invoiceQties[i]||1;
-      const ac=acRaw.toLowerCase().includes('child')?'Child':'Adult';
-      const matchingItems=[...new Set(allRows.filter(function(r){return r['Adult - Child']===ac;}).map(function(r){return r['Item'];}))].filter(function(item){return /arts1/i.test(item)&&/t.?shirt|tshirt|tee/i.test(item);});
-      if(!matchingItems.length){problems.push('No sheet match for '+ac+' Arts1 T Shirt');return;}
-      const item=matchingItems[0];
+    orderItems.forEach(function(orderItem,i){
+      const ac=orderItem.acRaw.toLowerCase().includes('child')?'Child':'Adult';
+      const garmentRaw=orderItem.garmentRaw.toLowerCase();
+      const qty=orderItem.qty;
+
+      // Find best matching item in the sheet
+      // Try to match garment name keywords against sheet items
+      const sheetItems=[...new Set(allRows.filter(function(r){return r['Adult - Child']===ac;}).map(function(r){return r['Item'];}))];
+
+      let item=null;
+
+      // Score each sheet item by how many words from the invoice garment name it contains
+      let bestScore=-1;
+      sheetItems.forEach(function(sheetItem){
+        const sheetLower=sheetItem.toLowerCase();
+        const words=garmentRaw.split(/\s+/);
+        let score=0;
+        words.forEach(function(w){if(w.length>2&&sheetLower.includes(w))score++;});
+        if(score>bestScore){bestScore=score;item=sheetItem;}
+      });
+
+      if(!item||bestScore===0){
+        problems.push('No sheet match for '+ac+' '+orderItem.garmentRaw);
+        return;
+      }
+
       const sizes=[...new Set(allRows.filter(function(r){return r['Adult - Child']===ac&&r['Item']===item;}).map(function(r){return r['Size'];}))];
       const size=sizes[0];
       const rows=allRows.filter(function(r){return r['Adult - Child']===ac&&r['Item']===item&&r['Size']===size;});
-      if(!rows.length){problems.push('No placement data for '+ac+' '+item+' '+size);return;}
+      if(!rows.length){problems.push('No placement data for '+ac+' '+item);return;}
       batch.push({id:Date.now()+i,ac,item,size,qty,rows,open:true});
       added++;
     });
