@@ -22,98 +22,92 @@
   body { font-family: var(--sans); background: var(--bg); color: var(--text); min-height: 100vh; }
   header { background: var(--accent); color: white; padding: 20px 32px; display: flex; align-items: center; justify-content: space-between; }
   .header-title { display: flex; align-items: center; gap: 14px; }
-  .header-logo { width:38px; height:38px; background:rgba(255,255,255,0.15); border-radius:8px; display:flex; align-items:center; justify-content:center; font-size:18px; font-weight:600; letter-spacing:-1px; }
-  header h1 { font-size:18px; font-weight:600; letter-spacing:-0.3px; }
-  header p { font-size:12px; opacity:0.65; margin-top:1px; }
-  .sheet-status { font-size:12px; font-family:var(--mono); background:rgba(255,255,255,0.12); padding:5px 12px; border-radius:20px; display:flex; align-items:center; gap:6px; }
-  .dot-live { width:7px; height:7px; border-radius:50%; background:#4ade80; display:inline-block; animation:pulse 2s infinite; }
+  .header-logo { width: 38px; height: 38px; background: rgba(255,255,255,0.15); border-radius: 8px; display: flex; align-items: center; justify-content: center; font-size: 18px; font-weight: 600; letter-spacing: -1px; }
+  header h1 { font-size: 18px; font-weight: 600; letter-spacing: -0.3px; }
+  header p { font-size: 12px; opacity: 0.65; margin-top: 1px; }
+  .sheet-status { font-size: 12px; font-family: var(--mono); background: rgba(255,255,255,0.12); padding: 5px 12px; border-radius: 20px; display: flex; align-items: center; gap: 6px; }
+  .dot-live { width: 7px; height: 7px; border-radius: 50%; background: #4ade80; display: inline-block; animation: pulse 2s infinite; }
   @keyframes pulse { 0%,100%{opacity:1} 50%{opacity:0.4} }
-  .refresh-btn { background:none; border:none; color:rgba(255,255,255,0.6); font-size:12px; cursor:pointer; font-family:var(--sans); display:flex; align-items:center; gap:5px; padding:0; }
-  .refresh-btn:hover { color:white; }
-  .tab-nav { background:var(--surface); border-bottom:1px solid var(--border); padding:0 32px; display:flex; gap:4px; }
-  .tab-btn { background:none; border:none; border-bottom:2px solid transparent; padding:13px 18px; font-size:13px; font-weight:500; font-family:var(--sans); color:var(--text2); cursor:pointer; margin-bottom:-1px; transition:color 0.15s,border-color 0.15s; }
-  .tab-btn:hover { color:var(--text); }
-  .tab-btn.active { color:var(--accent); border-bottom-color:var(--accent); }
-  .tab-panel { display:none; }
-  .tab-panel.active { display:block; }
-  main { max-width:960px; margin:0 auto; padding:28px 24px; }
-  .card { background:var(--surface); border:1px solid var(--border); border-radius:var(--radius-lg); padding:20px 24px; margin-bottom:16px; }
-  .card-title { font-size:11px; font-weight:600; letter-spacing:0.8px; text-transform:uppercase; color:var(--text3); margin-bottom:14px; }
-  .selectors { display:grid; grid-template-columns:1fr 2fr 1fr 1fr; gap:12px; align-items:end; }
-  @media(max-width:680px) { .selectors { grid-template-columns:1fr 1fr; } .sel-generate { grid-column:1/-1; } }
-  .field label { display:block; font-size:12px; font-weight:500; color:var(--text2); margin-bottom:6px; }
-  .field select, .field input { width:100%; padding:9px 12px; border:1px solid var(--border); border-radius:var(--radius); background:var(--surface2); color:var(--text); font-size:14px; font-family:var(--sans); appearance:none; -webkit-appearance:none; outline:none; transition:border-color 0.15s; }
-  .field select:focus, .field input:focus { border-color:var(--accent2); background:white; }
-  .field select:disabled { opacity:0.45; cursor:not-allowed; }
-  .sel-wrap { position:relative; }
-  .sel-wrap::after { content:'▾'; position:absolute; right:11px; top:50%; transform:translateY(-50%); font-size:11px; color:var(--text3); pointer-events:none; }
-  .btn { padding:10px 20px; border-radius:var(--radius); font-size:14px; font-weight:500; font-family:var(--sans); cursor:pointer; border:none; transition:all 0.15s; display:inline-flex; align-items:center; gap:7px; width:100%; justify-content:center; }
-  .btn-primary { background:var(--accent); color:white; }
-  .btn-primary:hover { background:var(--accent2); }
-  .btn-primary:active { transform:scale(0.98); }
-  .btn-secondary { background:var(--surface2); color:var(--text); border:1px solid var(--border); }
-  .btn-secondary:hover { background:var(--border); }
-  #error-bar { display:none; background:var(--danger-bg); color:var(--danger); border:1px solid #fca5a5; border-radius:var(--radius); padding:10px 14px; font-size:13px; margin-top:12px; }
-  #loading-bar { display:none; text-align:center; padding:40px; color:var(--text2); font-size:14px; }
-  .spinner { width:22px; height:22px; border:2px solid var(--border); border-top-color:var(--accent); border-radius:50%; animation:spin 0.7s linear infinite; display:inline-block; vertical-align:middle; margin-right:8px; }
-  @keyframes spin { to { transform:rotate(360deg); } }
-  .batch-header { display:flex; align-items:center; justify-content:space-between; margin-bottom:16px; }
-  .batch-count { font-size:12px; font-family:var(--mono); background:var(--accent); color:white; padding:3px 10px; border-radius:20px; }
-  .batch-actions { display:flex; gap:8px; }
-  .batch-item { border:1px solid var(--border); border-radius:var(--radius-lg); margin-bottom:12px; overflow:hidden; }
-  .batch-item-header { display:flex; align-items:center; justify-content:space-between; padding:12px 16px; background:var(--surface2); cursor:pointer; user-select:none; }
-  .batch-item-header:hover { background:var(--border); }
-  .batch-item-title { font-size:13px; font-weight:500; }
-  .batch-item-meta { font-size:11px; color:var(--text3); font-family:var(--mono); margin-top:2px; }
-  .batch-item-actions { display:flex; gap:6px; align-items:center; }
-  .batch-remove { background:none; border:none; color:var(--text3); cursor:pointer; font-size:14px; padding:2px 6px; border-radius:4px; }
-  .batch-remove:hover { color:var(--danger); background:var(--danger-bg); }
-  .batch-item-body { display:none; padding:16px; border-top:1px solid var(--border); }
-  .batch-item-body.open { display:block; }
-  .stats { display:grid; grid-template-columns:repeat(3,1fr); gap:12px; margin-bottom:16px; }
-  .stat { background:var(--surface2); border-radius:var(--radius); padding:14px 16px; text-align:center; }
-  .stat-val { font-size:26px; font-weight:600; color:var(--text); line-height:1; }
-  .stat-lbl { font-size:11px; color:var(--text3); margin-top:5px; font-weight:500; letter-spacing:0.3px; }
-  .two-col { display:grid; grid-template-columns:1fr 1fr; gap:16px; margin-bottom:16px; }
-  @media(max-width:640px) { .two-col { grid-template-columns:1fr; } }
-  .badge { display:inline-block; font-size:10px; font-weight:600; letter-spacing:0.4px; padding:2px 8px; border-radius:20px; text-transform:uppercase; margin-right:6px; }
-  .badge-front { background:var(--front-bg); color:var(--front); }
-  .badge-back { background:var(--back-bg); color:var(--back); }
-  .badge-other { background:var(--other-bg); color:var(--other); }
-  .warn-badge { display:inline-flex; align-items:center; gap:4px; font-size:10px; font-weight:600; background:var(--warn-bg); color:var(--warn); padding:2px 8px; border-radius:20px; }
-  .placement-row { display:flex; gap:12px; padding:12px 0; border-bottom:1px solid var(--border); align-items:flex-start; }
-  .placement-row:last-child { border-bottom:none; }
-  .logo-letter { width:34px; height:34px; border-radius:8px; background:var(--accent); color:white; display:flex; align-items:center; justify-content:center; font-size:16px; font-weight:600; flex-shrink:0; font-family:var(--mono); }
-  .placement-detail { flex:1; }
-  .placement-name { font-size:13px; font-weight:500; color:var(--text); margin-bottom:3px; display:flex; flex-wrap:wrap; align-items:center; gap:4px; }
-  .placement-pos { font-size:12px; color:var(--text2); font-family:var(--mono); }
-  .press-info { font-size:11px; color:var(--text3); margin-top:4px; }
-  svg.garment { display:block; margin:0 auto; }
-  .file-item { display:flex; align-items:center; justify-content:space-between; padding:7px 0; border-bottom:1px solid var(--bg); font-size:12px; font-family:var(--mono); color:var(--text2); }
-  .file-item:last-child { border-bottom:none; }
-  .file-loc { font-size:10px; font-weight:600; letter-spacing:0.5px; text-transform:uppercase; color:var(--text3); min-width:60px; }
-  .copy-bar { display:flex; justify-content:space-between; align-items:center; margin-bottom:14px; }
-  .notice { background:var(--warn-bg); border:1px solid #fcd34d; border-radius:var(--radius); padding:10px 14px; font-size:12px; color:var(--warn); display:flex; gap:8px; align-items:flex-start; margin-bottom:16px; }
-  .notice-icon { font-size:14px; flex-shrink:0; margin-top:1px; }
-  .pers-grid { display:grid; grid-template-columns:1fr 1fr; gap:16px; margin-bottom:16px; }
-  @media(max-width:640px) { .pers-grid { grid-template-columns:1fr; } }
-  .drop-zone { border:2px dashed var(--border); border-radius:var(--radius-lg); padding:32px 20px; text-align:center; cursor:pointer; transition:border-color 0.2s,background 0.2s; background:var(--surface2); position:relative; }
-  .drop-zone:hover, .drop-zone.over { border-color:var(--accent2); background:var(--accent-bg); }
-  .drop-zone input[type=file] { position:absolute; inset:0; opacity:0; cursor:pointer; width:100%; height:100%; }
-  .drop-icon { font-size:28px; margin-bottom:10px; }
-  .drop-label { font-size:13px; font-weight:500; color:var(--text2); }
-  .drop-sub { font-size:11px; color:var(--text3); margin-top:4px; }
-  .pers-entry { display:flex; gap:8px; align-items:center; padding:8px 0; border-bottom:1px solid var(--border); }
-  .pers-entry:last-child { border-bottom:none; }
-  .pers-name-input { flex:1; padding:7px 10px; border:1px solid var(--border); border-radius:var(--radius); font-size:13px; font-family:var(--sans); background:var(--surface2); color:var(--text); outline:none; }
-  .pers-name-input:focus { border-color:var(--accent2); background:white; }
-  .pers-size-sel { padding:7px 10px; border:1px solid var(--border); border-radius:var(--radius); font-size:13px; font-family:var(--sans); background:var(--surface2); color:var(--text); outline:none; appearance:none; min-width:110px; }
-  .pers-remove { background:none; border:none; color:var(--text3); cursor:pointer; font-size:16px; padding:0 4px; line-height:1; }
-  .pers-remove:hover { color:var(--danger); }
-  .cmd-box { background:#1a1814; border-radius:var(--radius); padding:14px 16px; font-family:var(--mono); font-size:13px; color:#a8e6b8; position:relative; word-break:break-all; line-height:1.6; }
-  .cmd-copy { position:absolute; top:10px; right:10px; background:rgba(255,255,255,0.1); border:none; color:#a8e6b8; padding:4px 10px; border-radius:6px; font-size:11px; cursor:pointer; font-family:var(--sans); transition:background 0.15s; }
-  .cmd-copy:hover { background:rgba(255,255,255,0.2); }
-  .extracted-tag { display:inline-flex; align-items:center; gap:5px; background:var(--accent-bg); color:var(--accent); border:1px solid #b2d4bc; border-radius:20px; padding:3px 10px; font-size:12px; font-weight:500; margin:3px 3px 3px 0; }
+  main { max-width: 980px; margin: 0 auto; padding: 28px 24px; }
+  .card { background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius-lg); padding: 20px 24px; margin-bottom: 16px; }
+  .card-title { font-size: 11px; font-weight: 600; letter-spacing: 0.8px; text-transform: uppercase; color: var(--text3); margin-bottom: 14px; }
+  .selectors { display: grid; grid-template-columns: 1fr 2fr 1fr 1fr 1fr; gap: 12px; align-items: end; }
+  @media(max-width: 720px) { .selectors { grid-template-columns: 1fr 1fr; } .sel-add { grid-column: 1/-1; } }
+  .field label { display: block; font-size: 12px; font-weight: 500; color: var(--text2); margin-bottom: 6px; }
+  .field select, .field input { width: 100%; padding: 9px 12px; border: 1px solid var(--border); border-radius: var(--radius); background: var(--surface2); color: var(--text); font-size: 14px; font-family: var(--sans); appearance: none; -webkit-appearance: none; outline: none; transition: border-color 0.15s; }
+  .field select:focus, .field input:focus { border-color: var(--accent2); background: white; }
+  .field select:disabled { opacity: 0.45; cursor: not-allowed; }
+  .sel-wrap { position: relative; }
+  .sel-wrap::after { content: '▾'; position: absolute; right: 11px; top: 50%; transform: translateY(-50%); font-size: 11px; color: var(--text3); pointer-events: none; }
+  .btn { padding: 10px 20px; border-radius: var(--radius); font-size: 14px; font-weight: 500; font-family: var(--sans); cursor: pointer; border: none; transition: all 0.15s; display: inline-flex; align-items: center; gap: 7px; justify-content: center; }
+  .btn-primary { background: var(--accent); color: white; }
+  .btn-primary:hover { background: var(--accent2); }
+  .btn-primary:active { transform: scale(0.98); }
+  .btn-secondary { background: var(--surface2); color: var(--text); border: 1px solid var(--border); }
+  .btn-secondary:hover { background: var(--border); }
+  .btn-danger { background: #fee2e2; color: var(--danger); border: 1px solid #fca5a5; }
+  .btn-danger:hover { background: #fca5a5; }
+  #error-bar { display: none; background: var(--danger-bg); color: var(--danger); border: 1px solid #fca5a5; border-radius: var(--radius); padding: 10px 14px; font-size: 13px; margin-top: 12px; }
+  #loading-bar { display: none; text-align: center; padding: 40px; color: var(--text2); font-size: 14px; }
+  .spinner { width: 22px; height: 22px; border: 2px solid var(--border); border-top-color: var(--accent); border-radius: 50%; animation: spin 0.7s linear infinite; display: inline-block; vertical-align: middle; margin-right: 8px; }
+  @keyframes spin { to { transform: rotate(360deg); } }
+
+  /* Batch list */
+  #batch-section { display: none; }
+  .batch-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 14px; }
+  .batch-item { display: flex; align-items: center; gap: 12px; padding: 12px 16px; background: var(--surface2); border-radius: var(--radius); margin-bottom: 8px; }
+  .batch-item:last-child { margin-bottom: 0; }
+  .batch-num { font-size: 22px; font-weight: 600; color: var(--accent); min-width: 42px; text-align: center; font-family: var(--mono); }
+  .batch-detail { flex: 1; }
+  .batch-label { font-size: 14px; font-weight: 500; }
+  .batch-sub { font-size: 12px; color: var(--text2); margin-top: 2px; font-family: var(--mono); }
+  .batch-actions { display: flex; gap: 6px; }
+
+  /* Preview panel */
+  #preview-section { display: none; }
+  .stats { display: grid; grid-template-columns: repeat(4, 1fr); gap: 12px; margin-bottom: 16px; }
+  .stat { background: var(--surface2); border-radius: var(--radius); padding: 14px 16px; text-align: center; }
+  .stat-val { font-size: 26px; font-weight: 600; color: var(--text); line-height: 1; }
+  .stat-lbl { font-size: 11px; color: var(--text3); margin-top: 5px; font-weight: 500; letter-spacing: 0.3px; }
+  .two-col { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; margin-bottom: 16px; }
+  @media(max-width: 640px) { .two-col { grid-template-columns: 1fr; } .stats { grid-template-columns: 1fr 1fr; } }
+  .badge { display: inline-block; font-size: 10px; font-weight: 600; letter-spacing: 0.4px; padding: 2px 8px; border-radius: 20px; text-transform: uppercase; margin-right: 4px; }
+  .badge-front { background: var(--front-bg); color: var(--front); }
+  .badge-back { background: var(--back-bg); color: var(--back); }
+  .badge-other { background: var(--other-bg); color: var(--other); }
+  .warn-badge { display: inline-flex; align-items: center; gap: 4px; font-size: 10px; font-weight: 600; background: var(--warn-bg); color: var(--warn); padding: 2px 8px; border-radius: 20px; }
+  .placement-row { display: flex; gap: 12px; padding: 12px 0; border-bottom: 1px solid var(--border); align-items: flex-start; }
+  .placement-row:last-child { border-bottom: none; }
+  .logo-letter { width: 34px; height: 34px; border-radius: 8px; background: var(--accent); color: white; display: flex; align-items: center; justify-content: center; font-size: 16px; font-weight: 600; flex-shrink: 0; font-family: var(--mono); }
+  .placement-detail { flex: 1; }
+  .placement-name { font-size: 13px; font-weight: 500; color: var(--text); margin-bottom: 3px; display: flex; flex-wrap: wrap; align-items: center; gap: 4px; }
+  .placement-pos { font-size: 12px; color: var(--text2); font-family: var(--mono); }
+  .press-info { font-size: 11px; color: var(--text3); margin-top: 4px; }
+  svg.garment { display: block; margin: 0 auto; }
+
+  /* File list */
+  .file-table { width: 100%; border-collapse: collapse; font-size: 13px; }
+  .file-table th { font-size: 10px; font-weight: 600; letter-spacing: 0.5px; text-transform: uppercase; color: var(--text3); padding: 0 8px 10px 8px; text-align: left; border-bottom: 1px solid var(--border); }
+  .file-table td { padding: 9px 8px; border-bottom: 1px solid var(--surface2); vertical-align: middle; }
+  .file-table tr:last-child td { border-bottom: none; }
+  .file-table td:first-child { font-family: var(--mono); font-size: 12px; color: var(--text2); }
+  .qty-pill { display: inline-block; background: var(--accent); color: white; font-size: 12px; font-weight: 600; padding: 2px 10px; border-radius: 20px; font-family: var(--mono); min-width: 36px; text-align: center; }
+  .copy-bar { display: flex; justify-content: space-between; align-items: center; margin-bottom: 14px; }
+  .notice { background: var(--warn-bg); border: 1px solid #fcd34d; border-radius: var(--radius); padding: 10px 14px; font-size: 12px; color: var(--warn); display: flex; gap: 8px; align-items: flex-start; margin-bottom: 16px; }
+  .notice-icon { font-size: 14px; flex-shrink: 0; margin-top: 1px; }
+
+  /* PDF action bar */
+  .pdf-bar { display: flex; gap: 10px; align-items: center; margin-bottom: 20px; }
+
+  footer { text-align: center; padding: 24px; font-size: 11px; color: var(--text3); font-family: var(--mono); }
+  .refresh-btn { background: none; border: none; color: rgba(255,255,255,0.6); font-size: 12px; cursor: pointer; font-family: var(--sans); display: flex; align-items: center; gap: 5px; padding: 0; }
+  .refresh-btn:hover { color: white; }
+
+  /* Divider between preview jobs */
+  .preview-job { margin-bottom: 32px; padding-bottom: 24px; border-bottom: 2px dashed var(--border); }
+  .preview-job:last-child { border-bottom: none; }
+  .preview-job-title { font-size: 16px; font-weight: 600; margin-bottom: 16px; display: flex; align-items: center; gap: 10px; }
+  .job-index { background: var(--accent); color: white; border-radius: 50%; width: 28px; height: 28px; display: flex; align-items: center; justify-content: center; font-size: 13px; font-weight: 600; flex-shrink: 0; }
 </style>
 </head>
 <body>
@@ -121,135 +115,100 @@
 <header>
   <div class="header-title">
     <div class="header-logo">UP</div>
-    <div><h1>UPA Print Prep</h1><p>Uniform print job preparation</p></div>
+    <div>
+      <h1>UPA Print Prep</h1>
+      <p>Uniform print job preparation</p>
+    </div>
   </div>
   <div style="display:flex;align-items:center;gap:12px">
     <div class="sheet-status" id="sheet-status"><span class="dot-live"></span> loading sheet...</div>
-    <button class="refresh-btn" onclick="reloadSheet()" title="Reload sheet">&#8635; Refresh</button>
+    <button class="refresh-btn" onclick="reloadSheet()">&#8635; Refresh</button>
   </div>
 </header>
 
-<nav class="tab-nav">
-  <button class="tab-btn active" onclick="switchTab('print')" id="tab-print">&#9654; Print Prep</button>
-  <button class="tab-btn" onclick="switchTab('personalise')" id="tab-personalise">✦ Personalisation</button>
-</nav>
-
 <main>
-
-<!-- ══ PRINT PREP TAB ══════════════════════════════════════════════════ -->
-<div id="tab-panel-print" class="tab-panel active">
   <div id="loading-bar"><span class="spinner"></span> Fetching your Google Sheet...</div>
+
   <div id="app" style="display:none">
 
-    <!-- Order PDF import -->
-    <div class="card">
-      <div class="card-title">Import order PDF <span style="font-weight:400;color:var(--text3);text-transform:none;letter-spacing:0;font-size:11px">— optional, auto-fills garment details</span></div>
-      <div style="display:flex;align-items:center;gap:12px">
-        <div class="drop-zone" id="order-drop-zone" style="padding:14px 20px;flex:1;display:flex;align-items:center;gap:12px;text-align:left">
-          <input type="file" accept=".pdf" id="order-pdf-input" onchange="handleOrderPDF(this.files[0])">
-          <span style="font-size:22px;flex-shrink:0">📄</span>
-          <div>
-            <div class="drop-label" id="order-drop-label">Drop Soul2sole invoice PDF here</div>
-            <div class="drop-sub" id="order-drop-sub">or click to browse — reads garment, size and qty automatically</div>
-          </div>
-        </div>
-        <button class="btn btn-secondary" onclick="clearOrderImport()" id="order-clear-btn" style="display:none;width:auto;padding:7px 12px;font-size:12px;flex-shrink:0">✕ Clear</button>
-      </div>
-      <div id="order-import-result" style="display:none;margin-top:10px;font-size:12px;color:var(--accent);background:var(--accent-bg);padding:8px 12px;border-radius:8px;border:1px solid #b2d4bc"></div>
-      <div id="order-import-error" style="display:none;margin-top:10px;font-size:12px;color:var(--danger);background:var(--danger-bg);padding:8px 12px;border-radius:8px;border:1px solid #fca5a5"></div>
-    </div>
-
-    <!-- Job setup card -->
+    <!-- Job setup -->
     <div class="card">
       <div class="card-title">Add garment to batch</div>
       <div class="selectors">
         <div class="field">
           <label>Adult / Child</label>
-          <div class="sel-wrap"><select id="sel-ac" onchange="onACChange()"><option value="">Select...</option></select></div>
+          <div class="sel-wrap">
+            <select id="sel-ac" onchange="onACChange()"><option value="">Select...</option></select>
+          </div>
         </div>
         <div class="field">
           <label>Garment</label>
-          <div class="sel-wrap"><select id="sel-item" disabled onchange="onItemChange()"><option value="">Select adult/child first</option></select></div>
+          <div class="sel-wrap">
+            <select id="sel-item" disabled onchange="onItemChange()"><option value="">Select adult/child first</option></select>
+          </div>
         </div>
         <div class="field">
           <label>Size</label>
-          <div class="sel-wrap"><select id="sel-size" disabled><option value="">Select garment first</option></select></div>
-        </div>
-        <div class="field sel-generate">
-          <label>Quantity</label>
-          <div style="display:flex;gap:8px">
-            <input type="number" id="qty" value="1" min="1" max="999" style="width:80px">
-            <button class="btn btn-primary" onclick="addToBatch()" style="flex:1">+ Add to batch</button>
+          <div class="sel-wrap">
+            <select id="sel-size" disabled><option value="">Select garment first</option></select>
           </div>
+        </div>
+        <div class="field">
+          <label>Quantity</label>
+          <input type="number" id="qty" value="1" min="1" max="999">
+        </div>
+        <div class="field sel-add">
+          <label>&nbsp;</label>
+          <button class="btn btn-primary" onclick="addToBatch()" style="width:100%">+ Add to batch</button>
         </div>
       </div>
       <div id="error-bar"></div>
     </div>
 
     <!-- Batch list -->
-    <div id="batch-section" style="display:none">
+    <div id="batch-section" class="card">
       <div class="batch-header">
-        <div style="display:flex;align-items:center;gap:10px">
-          <div style="font-size:14px;font-weight:600">Batch</div>
-          <div class="batch-count" id="batch-count">0 jobs</div>
-        </div>
-        <div class="batch-actions">
-          <button class="btn btn-secondary" onclick="copyAllFiles()" style="width:auto;padding:7px 14px;font-size:12px">&#128203; Copy all files</button>
-          <button class="btn btn-secondary" onclick="clearBatch()" style="width:auto;padding:7px 14px;font-size:12px">&#215; Clear all</button>
-          <button class="btn btn-secondary" onclick="downloadPDF()" style="width:auto;padding:7px 14px;font-size:12px">&#8681; Download PDF</button>
+        <div class="card-title" style="margin:0">Current batch</div>
+        <div style="display:flex;gap:8px">
+          <button class="btn btn-secondary" onclick="clearBatch()" style="padding:6px 12px;font-size:12px">✕ Clear all</button>
+          <button class="btn btn-primary" onclick="previewBatch()" style="padding:6px 16px;font-size:13px">▶ Preview &amp; export</button>
         </div>
       </div>
       <div id="batch-list"></div>
     </div>
 
-  </div>
-</div>
+    <!-- Preview & export -->
+    <div id="preview-section">
 
-<!-- ══ PERSONALISATION TAB ═════════════════════════════════════════════ -->
-<div id="tab-panel-personalise" class="tab-panel">
-  <div class="pers-grid">
-    <div class="card">
-      <div class="card-title">Upload order PDF</div>
-      <div class="drop-zone" id="drop-zone">
-        <input type="file" accept=".pdf" id="pdf-input" onchange="handlePDF(this.files[0])">
-        <div class="drop-icon">📄</div>
-        <div class="drop-label">Drop invoice PDF here</div>
-        <div class="drop-sub">or click to browse</div>
+      <div class="pdf-bar">
+        <div style="font-size:15px;font-weight:600;flex:1">Batch preview</div>
+        <button class="btn btn-secondary" onclick="copyAllFiles()" style="padding:8px 16px;font-size:13px">&#128203; Copy all filenames</button>
+        <button class="btn btn-primary" onclick="downloadPDF()" style="padding:8px 18px;font-size:13px">&#8681; Download PDF</button>
       </div>
-      <div id="pdf-result" style="margin-top:12px;display:none">
-        <div style="font-size:11px;font-weight:600;letter-spacing:0.6px;text-transform:uppercase;color:var(--text3);margin-bottom:8px">Extracted from PDF</div>
-        <div id="pdf-tags"></div>
-      </div>
-      <div id="pdf-error" style="display:none;margin-top:10px;font-size:12px;color:var(--danger);background:var(--danger-bg);padding:8px 12px;border-radius:8px;border:1px solid #fca5a5"></div>
-    </div>
-    <div class="card">
-      <div class="card-title">Manual entry</div>
-      <div id="manual-entries"></div>
-      <button class="btn btn-secondary" onclick="addManualRow()" style="margin-top:10px;font-size:12px;padding:7px 12px;width:auto">+ Add student</button>
-    </div>
-  </div>
-  <div class="card" id="cmd-card" style="display:none">
-    <div class="card-title" style="margin-bottom:12px">Terminal command — copy &amp; paste to run</div>
-    <div class="cmd-box" id="cmd-box">
-      <button class="cmd-copy" onclick="copyCmd()">Copy</button>
-      <span id="cmd-text"></span>
-    </div>
-    <p style="font-size:11px;color:var(--text3);margin-top:10px">Open Terminal → paste → press Enter. Files will appear in your <code style="font-family:var(--mono);font-size:11px">print today</code> folder.</p>
-  </div>
-</div>
 
+      <!-- Batch summary table -->
+      <div class="card" id="summary-card">
+        <div class="card-title">Batch summary — all garments</div>
+        <div id="summary-table"></div>
+      </div>
+
+      <!-- Per-job previews -->
+      <div id="job-previews"></div>
+
+    </div>
+
+  </div>
 </main>
 
-<footer style="text-align:center;padding:24px;font-size:11px;color:var(--text3);font-family:var(--mono)">
-  UPA Print Prep &mdash; data loaded live from Google Sheets &mdash; <span style="color:var(--accent2);font-weight:500">version 2.2</span>
-</footer>
+<footer>UPA Print Prep &mdash; data loaded live from Google Sheets</footer>
 
 <script>
 const SHEET_ID = '1e2bRbJwGPwEbXX8XXzQwYSFZVenGF8_1OoluX4ayBVA';
 const GID = '1102647217';
 let allRows = [];
-let batch = [];
+let batch = []; // [{ac, item, size, qty, rows}]
 
+// ── Sheet loading ─────────────────────────────────────────────────────────────
 function csvToRows(text) {
   const lines = text.trim().split('\n');
   const headers = parseCSVLine(lines[0]);
@@ -260,527 +219,468 @@ function csvToRows(text) {
     return obj;
   }).filter(r => r['Adult - Child'] && r['Item']);
 }
+
 function parseCSVLine(line) {
-  const result=[]; let cur=''; let inQ=false;
-  for(let i=0;i<line.length;i++){
-    if(line[i]==='"'){inQ=!inQ;}
-    else if(line[i]===','&&!inQ){result.push(cur);cur='';}
+  const result = []; let cur = ''; let inQ = false;
+  for (let i = 0; i < line.length; i++) {
+    if (line[i]==='"') { inQ=!inQ; }
+    else if (line[i]===','&&!inQ) { result.push(cur); cur=''; }
     else cur+=line[i];
   }
   result.push(cur); return result;
 }
 
 async function loadSheet() {
-  document.getElementById('loading-bar').style.display='block';
-  document.getElementById('app').style.display='none';
-  document.getElementById('sheet-status').innerHTML='<span class="dot-live"></span> loading...';
-  const url=`https://docs.google.com/spreadsheets/d/${SHEET_ID}/export?format=csv&gid=${GID}`;
+  document.getElementById('loading-bar').style.display = 'block';
+  document.getElementById('app').style.display = 'none';
+  document.getElementById('sheet-status').innerHTML = '<span class="dot-live"></span> loading...';
+  const url = `https://docs.google.com/spreadsheets/d/${SHEET_ID}/export?format=csv&gid=${GID}`;
   try {
-    const r=await fetch(url);
-    if(!r.ok) throw new Error('Sheet returned '+r.status);
-    const text=await r.text();
-    allRows=csvToRows(text);
-    document.getElementById('loading-bar').style.display='none';
-    document.getElementById('app').style.display='block';
-    document.getElementById('sheet-status').innerHTML=`<span class="dot-live"></span> ${allRows.length} rows loaded`;
+    const r = await fetch(url);
+    if (!r.ok) throw new Error('Sheet returned '+r.status);
+    const text = await r.text();
+    allRows = csvToRows(text);
+    document.getElementById('loading-bar').style.display = 'none';
+    document.getElementById('app').style.display = 'block';
+    document.getElementById('sheet-status').innerHTML = `<span class="dot-live"></span> ${allRows.length} rows loaded`;
     initSelectors();
-    renderBatch();
   } catch(e) {
-    document.getElementById('loading-bar').innerHTML=`
+    document.getElementById('loading-bar').innerHTML = `
       <div style="color:#991b1b;background:#fee2e2;border:1px solid #fca5a5;border-radius:10px;padding:20px 24px;max-width:480px;margin:0 auto;text-align:left">
         <strong style="display:block;margin-bottom:8px">Could not load Google Sheet</strong>
         <p style="font-size:13px;margin-bottom:12px">Make sure the sheet is shared as "Anyone with the link — Viewer".</p>
         <button class="btn btn-primary" onclick="reloadSheet()" style="width:auto">Try again</button>
       </div>`;
-    document.getElementById('sheet-status').innerHTML='<span style="color:#fca5a5">&#9679;</span> error';
+    document.getElementById('sheet-status').innerHTML = '<span style="color:#fca5a5">&#9679;</span> error';
   }
 }
-function reloadSheet(){batch=[];loadSheet();}
 
+function reloadSheet() { loadSheet(); }
+
+// ── Selectors ─────────────────────────────────────────────────────────────────
 function initSelectors() {
-  const acVals=[...new Set(allRows.map(r=>r['Adult - Child']))].filter(Boolean).sort();
-  const sel=document.getElementById('sel-ac');
-  sel.innerHTML='<option value="">Select...</option>';
-  acVals.forEach(v=>sel.appendChild(new Option(v,v)));
+  const acVals = [...new Set(allRows.map(r => r['Adult - Child']))].filter(Boolean).sort();
+  const sel = document.getElementById('sel-ac');
+  sel.innerHTML = '<option value="">Select...</option>';
+  acVals.forEach(v => sel.appendChild(new Option(v,v)));
 }
+
 function onACChange() {
-  const ac=document.getElementById('sel-ac').value;
-  const selItem=document.getElementById('sel-item');
-  selItem.innerHTML='<option value="">Select garment...</option>';
-  selItem.disabled=!ac;
-  document.getElementById('sel-size').innerHTML='<option value="">Select garment first</option>';
-  document.getElementById('sel-size').disabled=true;
-  if(!ac)return;
+  const ac = document.getElementById('sel-ac').value;
+  const selItem = document.getElementById('sel-item');
+  selItem.innerHTML = '<option value="">Select garment...</option>';
+  selItem.disabled = !ac;
+  document.getElementById('sel-size').innerHTML = '<option value="">Select garment first</option>';
+  document.getElementById('sel-size').disabled = true;
+  if (!ac) return;
   [...new Set(allRows.filter(r=>r['Adult - Child']===ac).map(r=>r['Item']))]
-    .forEach(v=>selItem.appendChild(new Option(v,v)));
+    .forEach(v => selItem.appendChild(new Option(v,v)));
 }
+
 function onItemChange() {
-  const ac=document.getElementById('sel-ac').value;
-  const item=document.getElementById('sel-item').value;
-  const selSize=document.getElementById('sel-size');
-  selSize.innerHTML='<option value="">Select size...</option>';
-  selSize.disabled=!item;
-  if(!item)return;
+  const ac = document.getElementById('sel-ac').value;
+  const item = document.getElementById('sel-item').value;
+  const selSize = document.getElementById('sel-size');
+  selSize.innerHTML = '<option value="">Select size...</option>';
+  selSize.disabled = !item;
+  if (!item) return;
   [...new Set(allRows.filter(r=>r['Adult - Child']===ac&&r['Item']===item).map(r=>r['Size']))]
-    .forEach(v=>selSize.appendChild(new Option(v,v)));
+    .forEach(v => selSize.appendChild(new Option(v,v)));
 }
 
-function hasWarning(row){return['Logo','Position1','Postion2','Position3'].some(k=>(row[k]||'').includes('?'));}
-function cleanLogo(raw){return raw.replace(/^\?+/,'').trim();}
-function logoLetter(logo){const m=logo.match(/^([A-Z])/);return m?m[1]:'?';}
-function safeFile(s){return s.replace(/[<>:"/\\|?*]/g,'_').trim();}
-function locationBadge(loc){
+// ── Helpers ───────────────────────────────────────────────────────────────────
+function hasWarning(row) { return ['Logo','Position1','Postion2','Position3'].some(k=>(row[k]||'').includes('?')); }
+function cleanLogo(raw) { return raw.replace(/^\?+/,'').trim(); }
+function logoLetter(logo) { const m=logo.match(/^([A-Z])/); return m?m[1]:'?'; }
+function safeFile(s) { return s.replace(/[<>:"/\\|?*]/g,'_').trim(); }
+function locationBadge(loc) {
   const l=loc.toLowerCase();
-  if(l.includes('front'))return'<span class="badge badge-front">Front</span>';
-  if(l.includes('back'))return'<span class="badge badge-back">Back</span>';
-  return'<span class="badge badge-other">'+loc+'</span>';
+  if(l.includes('front')) return `<span class="badge badge-front">Front</span>`;
+  if(l.includes('back')) return `<span class="badge badge-back">Back</span>`;
+  return `<span class="badge badge-other">${loc}</span>`;
 }
 
-function addToBatch() {
-  const ac=document.getElementById('sel-ac').value;
-  const item=document.getElementById('sel-item').value;
-  const size=document.getElementById('sel-size').value;
-  const qty=parseInt(document.getElementById('qty').value)||1;
-  const errEl=document.getElementById('error-bar');
-  errEl.style.display='none';
-  if(!ac||!item||!size){errEl.textContent='Please select adult/child, garment and size before adding.';errEl.style.display='block';return;}
-  const rows=allRows.filter(r=>r['Adult - Child']===ac&&r['Item']===item&&r['Size']===size);
-  if(!rows.length){errEl.textContent='No data found for this combination — check your sheet.';errEl.style.display='block';return;}
-  batch.push({id:Date.now(),ac,item,size,qty,rows,open:true});
-  renderBatch();
-  document.getElementById('sel-ac').value='';
-  onACChange();
-  document.getElementById('qty').value='1';
+// Build the file list for a job — ONE file per placement (not per qty)
+function buildFileList(jobRows) {
+  return jobRows.map(row => {
+    const logo = cleanLogo(row['Logo']||'');
+    const loc  = safeFile(row['Location']||'location');
+    return {
+      name: `${safeFile(logo)}_${loc}.png`,
+      logo,
+      loc: row['Location']||'',
+      letter: logoLetter(logo),
+      pos1: row['Position1']||'',
+      pos2: row['Postion2']||'',
+      pos3: row['Position3']||'',
+      temp: row['Temp']||'',
+      time: row['Time']||'',
+      warn: hasWarning(row)
+    };
+  });
 }
-function removeFromBatch(id){batch=batch.filter(j=>j.id!==id);renderBatch();}
-function clearBatch(){if(batch.length&&!confirm('Clear all jobs from the batch?'))return;batch=[];renderBatch();}
-function toggleJob(id){const job=batch.find(j=>j.id===id);if(job){job.open=!job.open;renderBatch();}}
+
+// ── Batch management ──────────────────────────────────────────────────────────
+function addToBatch() {
+  const ac   = document.getElementById('sel-ac').value;
+  const item = document.getElementById('sel-item').value;
+  const size = document.getElementById('sel-size').value;
+  const qty  = parseInt(document.getElementById('qty').value)||1;
+  const errEl = document.getElementById('error-bar');
+  errEl.style.display = 'none';
+
+  if (!ac||!item||!size) {
+    errEl.textContent = 'Please select adult/child, garment and size.';
+    errEl.style.display = 'block'; return;
+  }
+
+  const rows = allRows.filter(r => r['Adult - Child']===ac && r['Item']===item && r['Size']===size);
+  if (!rows.length) {
+    errEl.textContent = 'No data found for this combination — check your sheet.';
+    errEl.style.display = 'block'; return;
+  }
+
+  batch.push({ ac, item, size, qty, rows });
+  renderBatch();
+  document.getElementById('preview-section').style.display = 'none';
+
+  // Reset selectors
+  document.getElementById('sel-ac').value = '';
+  document.getElementById('sel-item').innerHTML = '<option value="">Select adult/child first</option>';
+  document.getElementById('sel-item').disabled = true;
+  document.getElementById('sel-size').innerHTML = '<option value="">Select garment first</option>';
+  document.getElementById('sel-size').disabled = true;
+  document.getElementById('qty').value = 1;
+}
+
+function removeFromBatch(i) {
+  batch.splice(i,1);
+  renderBatch();
+  document.getElementById('preview-section').style.display = 'none';
+}
+
+function clearBatch() {
+  batch = [];
+  renderBatch();
+  document.getElementById('preview-section').style.display = 'none';
+}
 
 function renderBatch() {
-  const section=document.getElementById('batch-section');
-  const listEl=document.getElementById('batch-list');
-  const countEl=document.getElementById('batch-count');
-  if(batch.length===0){section.style.display='none';return;}
-  section.style.display='block';
-  countEl.textContent=batch.length+' job'+(batch.length!==1?'s':'');
-  listEl.innerHTML=batch.map(job=>{
-    const anyWarn=job.rows.some(hasWarning);
-    const temps=[...new Set(job.rows.map(r=>r['Temp']).filter(Boolean))];
-    const times=[...new Set(job.rows.map(r=>r['Time']).filter(Boolean))];
-    const totalFiles=job.rows.length*job.qty;
-    const placementsHTML=job.rows.map(row=>{
-      const logo=cleanLogo(row['Logo']||'');
-      const letter=logoLetter(logo);
-      const positions=[row['Position1'],row['Postion2'],row['Position3']].filter(Boolean).join(' · ');
-      const warn=hasWarning(row);
-      return '<div class="placement-row"><div class="logo-letter">'+letter+'</div><div class="placement-detail"><div class="placement-name">'+locationBadge(row['Location']||'')+'<span>'+logo+'</span>'+(warn?'<span class="warn-badge">&#9888; check</span>':'')+'</div>'+(positions?'<div class="placement-pos">'+positions+'</div>':'')+'<div class="press-info">'+(row['Temp']||'')+'&middot;'+(row['Time']||'')+'</div></div></div>';
-    }).join('');
-    let files=[];
-    job.rows.forEach(row=>{
-      const logo=cleanLogo(row['Logo']||'');
-      const loc=safeFile(row['Location']||'location');
-      const letter=logoLetter(logo);
-      for(let i=1;i<=job.qty;i++) files.push({name:safeFile(logo)+'_'+loc+'_'+String(i).padStart(3,'0')+'.png',loc:row['Location']||'',letter});
-    });
-    const filesHTML=files.map(f=>'<div class="file-item"><span class="file-loc">'+f.letter+' · '+f.loc+'</span><span>'+f.name+'</span></div>').join('');
-    const diagramHTML=buildDiagramHTML(job.rows,job.item);
-    return '<div class="batch-item" id="job-'+job.id+'">'
-      +'<div class="batch-item-header" onclick="toggleJob('+job.id+')">'
-      +'<div><div class="batch-item-title">'+job.ac+' &middot; '+job.item+' &middot; Size '+job.size+' &middot; Qty '+job.qty+(anyWarn?' <span class="warn-badge">&#9888;</span>':'')+'</div>'
-      +'<div class="batch-item-meta">'+job.rows.length+' placement'+(job.rows.length!==1?'s':'')+' &middot; '+totalFiles+' file'+(totalFiles!==1?'s':'')+' &middot; '+(temps[0]||'—')+' / '+(times[0]||'—')+'</div></div>'
-      +'<div class="batch-item-actions"><span style="font-size:11px;color:var(--text3)">'+(job.open?'▲':'▼')+'</span>'
-      +'<button class="batch-remove" onclick="event.stopPropagation();removeFromBatch('+job.id+')" title="Remove">✕</button></div></div>'
-      +'<div class="batch-item-body '+(job.open?'open':'')+'">'
-      +(anyWarn?'<div class="notice"><span class="notice-icon">⚠</span><span>Check measurements marked with ? before pressing.</span></div>':'')
-      +'<div class="stats"><div class="stat"><div class="stat-val">'+job.rows.length+'</div><div class="stat-lbl">Placements</div></div>'
-      +'<div class="stat"><div class="stat-val">'+totalFiles+'</div><div class="stat-lbl">Files to copy</div></div>'
-      +'<div class="stat"><div class="stat-val">'+(temps[0]||'—')+'</div><div class="stat-lbl">Press temp</div></div></div>'
-      +'<div class="two-col"><div class="card" style="margin:0">'+diagramHTML+'</div>'
-      +'<div class="card" style="margin:0"><div class="card-title">Placements</div>'+placementsHTML+'</div></div>'
-      +'<div class="card" style="margin:0"><div class="copy-bar"><div class="card-title" style="margin:0">Files to copy</div>'
-      +'<button class="btn btn-secondary" onclick="copyFileList('+job.id+')" style="width:auto;padding:7px 14px;font-size:13px">&#128203; Copy list</button></div>'
-      +filesHTML+'</div></div></div>';
+  const sec = document.getElementById('batch-section');
+  const list = document.getElementById('batch-list');
+  if (!batch.length) { sec.style.display='none'; return; }
+  sec.style.display = 'block';
+  list.innerHTML = batch.map((job,i) => {
+    const files = buildFileList(job.rows);
+    return `<div class="batch-item">
+      <div class="batch-num">×${job.qty}</div>
+      <div class="batch-detail">
+        <div class="batch-label">${job.ac} · ${job.item} · Size ${job.size}</div>
+        <div class="batch-sub">${files.length} placement${files.length!==1?'s':''} · ${files.length} file${files.length!==1?'s':''} to import</div>
+      </div>
+      <div class="batch-actions">
+        <button class="btn btn-danger" onclick="removeFromBatch(${i})" style="padding:5px 10px;font-size:12px">✕</button>
+      </div>
+    </div>`;
   }).join('');
 }
 
-function copyFileList(jobId) {
-  const job=batch.find(j=>j.id===jobId);
-  if(!job)return;
-  const lines=[];
-  job.rows.forEach(row=>{
-    const logo=cleanLogo(row['Logo']||'');
-    const loc=safeFile(row['Location']||'location');
-    for(let i=1;i<=job.qty;i++) lines.push(safeFile(logo)+'_'+loc+'_'+String(i).padStart(3,'0')+'.png');
-  });
-  navigator.clipboard.writeText(lines.join('\n'));
+// ── Preview ───────────────────────────────────────────────────────────────────
+function previewBatch() {
+  if (!batch.length) return;
+
+  // Summary table
+  const allFiles = [];
+  batch.forEach(job => buildFileList(job.rows).forEach(f => {
+    allFiles.push({...f, qty: job.qty, item: job.item, size: job.size, ac: job.ac});
+  }));
+
+  document.getElementById('summary-table').innerHTML = `
+    <table class="file-table">
+      <thead><tr>
+        <th>File to import into Digital Factory</th>
+        <th>Location</th>
+        <th>Garment</th>
+        <th>Size</th>
+        <th style="text-align:center">Copies</th>
+        <th>Press</th>
+      </tr></thead>
+      <tbody>
+        ${allFiles.map(f => `<tr>
+          <td>${f.name}</td>
+          <td>${locationBadge(f.loc)}</td>
+          <td>${f.ac} ${f.item}</td>
+          <td>${f.size}</td>
+          <td style="text-align:center"><span class="qty-pill">×${f.qty}</span></td>
+          <td style="font-size:12px;color:var(--text2)">${f.temp} / ${f.time}</td>
+        </tr>`).join('')}
+      </tbody>
+    </table>`;
+
+  // Per-job detail panels
+  document.getElementById('job-previews').innerHTML = batch.map((job,i) => {
+    const files = buildFileList(job.rows);
+    const anyWarn = job.rows.some(hasWarning);
+    const temps = [...new Set(job.rows.map(r=>r['Temp']).filter(Boolean))];
+    const times = [...new Set(job.rows.map(r=>r['Time']).filter(Boolean))];
+    return `<div class="preview-job">
+      <div class="preview-job-title">
+        <div class="job-index">${i+1}</div>
+        ${job.ac} · ${job.item} · Size ${job.size} · <span style="color:var(--accent)">×${job.qty}</span>
+      </div>
+      ${anyWarn ? `<div class="notice"><span class="notice-icon">⚠</span><span>Some placements have unconfirmed measurements — double-check before pressing.</span></div>` : ''}
+      <div class="stats" style="grid-template-columns:repeat(3,1fr)">
+        <div class="stat"><div class="stat-val">${files.length}</div><div class="stat-lbl">Placements</div></div>
+        <div class="stat"><div class="stat-val">${files.length}</div><div class="stat-lbl">Files to import</div></div>
+        <div class="stat"><div class="stat-val" style="font-size:16px">${temps[0]||'—'} / ${times[0]||'—'}</div><div class="stat-lbl">Press temp / time</div></div>
+      </div>
+      <div class="two-col">
+        <div class="card">
+          <div class="card-title">Placement diagram</div>
+          ${buildDiagramHTML(job.rows, job.item)}
+        </div>
+        <div class="card">
+          <div class="card-title">Logo placements</div>
+          ${buildPlacementsHTML(job.rows)}
+        </div>
+      </div>
+      <div class="card">
+        <div class="card-title" style="margin-bottom:10px">Files — set each to ×${job.qty} copies in Digital Factory</div>
+        <table class="file-table">
+          <thead><tr><th>Filename</th><th>Location</th><th>Placement</th><th>Press</th><th style="text-align:center">DF copies</th></tr></thead>
+          <tbody>
+            ${files.map(f => {
+              const positions = [f.pos1,f.pos2,f.pos3].filter(Boolean).join(' · ');
+              return `<tr>
+                <td>${f.name}${f.warn?' <span class="warn-badge">⚠ check</span>':''}</td>
+                <td>${locationBadge(f.loc)}</td>
+                <td style="font-size:11px;color:var(--text2);font-family:var(--mono)">${positions}</td>
+                <td style="font-size:12px;color:var(--text2)">${f.temp} / ${f.time}</td>
+                <td style="text-align:center"><span class="qty-pill">×${job.qty}</span></td>
+              </tr>`;
+            }).join('')}
+          </tbody>
+        </table>
+      </div>
+    </div>`;
+  }).join('');
+
+  document.getElementById('preview-section').style.display = 'block';
+  document.getElementById('preview-section').scrollIntoView({ behavior:'smooth', block:'start' });
 }
 
+// ── Copy all filenames ────────────────────────────────────────────────────────
 function copyAllFiles() {
-  if(!batch.length)return;
-  const lines=[];
-  batch.forEach(job=>{
-    job.rows.forEach(row=>{
-      const logo=cleanLogo(row['Logo']||'');
-      const loc=safeFile(row['Location']||'location');
-      for(let i=1;i<=job.qty;i++) lines.push(safeFile(logo)+'_'+loc+'_'+String(i).padStart(3,'0')+'.png');
-    });
+  const lines = [];
+  batch.forEach(job => {
+    buildFileList(job.rows).forEach(f => lines.push(f.name));
   });
-  navigator.clipboard.writeText(lines.join('\n')).then(function(){
-    const btn=document.querySelector('[onclick="copyAllFiles()"]');
-    const orig=btn.innerHTML;
-    btn.innerHTML='✓ Copied '+lines.length+' files!';
-    btn.style.color='var(--accent)';
-    setTimeout(function(){btn.innerHTML=orig;btn.style.color='';},2500);
+  navigator.clipboard.writeText(lines.join('\n')).then(() => {
+    const btn = event.target;
+    const orig = btn.innerHTML;
+    btn.textContent = '✓ Copied!';
+    btn.style.color = '#065f46';
+    setTimeout(() => { btn.innerHTML = orig; btn.style.color = ''; }, 2000);
   });
 }
 
-function downloadPDF() {
-  if(!batch.length){alert('No jobs in batch.');return;}
-  const date=new Date().toLocaleDateString('en-GB',{day:'2-digit',month:'short',year:'numeric'});
-  let html='<!DOCTYPE html><html><head><meta charset="UTF-8"><title>UPA Batch '+date+'</title>'
-    +'<style>body{font-family:Arial,sans-serif;font-size:12px;color:#111;margin:0;padding:0;}'
-    +'h1{font-size:18px;margin:0 0 4px;}.sub{color:#666;font-size:11px;margin-bottom:20px;}'
-    +'table{width:100%;border-collapse:collapse;margin-bottom:24px;}'
-    +'th{background:#2d5a3d;color:white;padding:7px 10px;text-align:left;font-size:11px;}'
-    +'td{padding:7px 10px;border-bottom:1px solid #e0e0e0;vertical-align:top;}'
-    +'tr:nth-child(even) td{background:#f8f8f8;}'
-    +'.page-break{page-break-before:always;}'
-    +'.job-header{background:#2d5a3d;color:white;padding:12px 16px;margin-bottom:16px;}'
-    +'.job-header h2{font-size:15px;margin:0 0 2px;}.job-header p{font-size:11px;margin:0;opacity:0.75;}'
-    +'.pl-table{width:100%;border-collapse:collapse;}'
-    +'.pl-table th{background:#eaf2ec;color:#2d5a3d;padding:6px 10px;text-align:left;font-size:10px;border:1px solid #d0e8d8;}'
-    +'.pl-table td{padding:6px 10px;border:1px solid #e8e8e8;font-size:11px;}'
-    +'.warn{color:#92400e;font-weight:bold;}.files{font-family:monospace;font-size:10px;color:#444;line-height:1.7;}'
-    +'@media print{body{margin:0;}.no-print{display:none;}}'
-    +'</style></head><body>';
-  html+='<div style="padding:24px"><h1>UPA Print Batch</h1>'
-    +'<div class="sub">'+date+' &nbsp;&middot;&nbsp; '+batch.length+' job'+(batch.length!==1?'s':'')+' &nbsp;&middot;&nbsp; '+batch.reduce(function(s,j){return s+j.rows.length*j.qty;},0)+' total files</div>'
-    +'<table><thead><tr><th>#</th><th>Adult/Child</th><th>Garment</th><th>Size</th><th>Qty</th><th>Placements</th><th>Files</th><th>Press</th></tr></thead><tbody>';
-  batch.forEach(function(job,i){
-    const temps=[...new Set(job.rows.map(function(r){return r['Temp'];}).filter(Boolean))];
-    const times=[...new Set(job.rows.map(function(r){return r['Time'];}).filter(Boolean))];
-    const anyWarn=job.rows.some(hasWarning);
-    html+='<tr><td>'+(i+1)+'</td><td>'+job.ac+'</td><td>'+job.item+'</td><td>'+job.size+'</td><td>'+job.qty+'</td>'
-      +'<td>'+job.rows.length+(anyWarn?' <span class="warn">⚠</span>':'')+'</td>'
-      +'<td>'+job.rows.length*job.qty+'</td>'
-      +'<td style="font-size:10px">'+(temps[0]||'—')+' / '+(times[0]||'—')+'</td></tr>';
-  });
-  html+='</tbody></table></div>';
-  batch.forEach(function(job,i){
-    const temps=[...new Set(job.rows.map(function(r){return r['Temp'];}).filter(Boolean))];
-    const times=[...new Set(job.rows.map(function(r){return r['Time'];}).filter(Boolean))];
-    html+='<div class="page-break"><div class="job-header"><h2>Job '+(i+1)+' &mdash; '+job.ac+' &middot; '+job.item+' &middot; Size '+job.size+' &middot; Qty '+job.qty+'</h2>'
-      +'<p>'+(temps[0]||'—')+' &nbsp;/&nbsp; '+(times[0]||'—')+' &nbsp;&middot;&nbsp; '+date+'</p></div>'
-      +'<div style="padding:0 24px 24px"><table class="pl-table"><thead><tr><th>Location</th><th>Logo</th><th>Position 1</th><th>Position 2</th><th>Position 3</th><th>Temp</th><th>Time</th></tr></thead><tbody>';
-    job.rows.forEach(function(row){
-      const logo=cleanLogo(row['Logo']||'');
-      const warn=hasWarning(row);
-      html+='<tr><td>'+(row['Location']||'')+'</td><td>'+(warn?'<span class="warn">⚠ </span>':'')+logo+'</td>'
-        +'<td>'+(row['Position1']||'')+'</td><td>'+(row['Postion2']||'')+'</td><td>'+(row['Position3']||'')+'</td>'
-        +'<td>'+(row['Temp']||'')+'</td><td>'+(row['Time']||'')+'</td></tr>';
-    });
-    html+='</tbody></table><div style="margin-top:16px"><strong style="font-size:11px;text-transform:uppercase;letter-spacing:0.5px;color:#666">Files to copy</strong>'
-      +'<div class="files" style="margin-top:8px">';
-    job.rows.forEach(function(row){
-      const logo=cleanLogo(row['Logo']||'');
-      const loc=safeFile(row['Location']||'location');
-      for(let n=1;n<=job.qty;n++) html+=safeFile(logo)+'_'+loc+'_'+String(n).padStart(3,'0')+'.png<br>';
-    });
-    html+='</div></div></div></div>';
-  });
-  html+='<div class="no-print" style="text-align:center;padding:20px">'
-    +'<button onclick="window.print()" style="padding:10px 24px;background:#2d5a3d;color:white;border:none;border-radius:8px;font-size:14px;cursor:pointer">&#128424; Print / Save PDF</button>'
-    +'</div></body></html>';
-  const w=window.open('','_blank');
-  w.document.write(html);
-  w.document.close();
-  setTimeout(function(){w.print();},500);
-}
-
-function buildDiagramHTML(rows,item) {
-  const locs=rows.map(function(r){return(r['Location']||'').toLowerCase();});
-  const hasFront=locs.some(function(l){return l.includes('front');});
-  const hasBack=locs.some(function(l){return l.includes('back');});
-  const hasHip=locs.some(function(l){return l.includes('hip')||l.includes('right leg');});
-  const hasBottomLeg=locs.some(function(l){return l.includes('bottom')||l.includes('botton');});
-  const isJacket=/jacket|zip/i.test(item);
-  const isHoodie=/hoodie|zoodie/i.test(item);
-  let svg='<div class="card-title">Placement diagram</div>';
-  if(hasFront||hasBack) svg+=torsoSVG(rows,hasFront,hasBack,isJacket,isHoodie);
-  else if(hasHip||hasBottomLeg) svg+=legsSVG(rows,hasHip,hasBottomLeg);
-  else svg+=torsoSVG(rows,true,false,isJacket,isHoodie);
-  return svg;
-}
-function torsoSVG(rows,hasFront,hasBack,isJacket,isHoodie){
-  const both=hasFront&&hasBack;
-  const W=both?480:240;
-  const frontRows=rows.filter(function(r){return(r['Location']||'').toLowerCase().includes('front');});
-  const backRows=rows.filter(function(r){return(r['Location']||'').toLowerCase().includes('back');});
-  let content='';
-  if(hasFront)content+=garmentShape(20,15,isJacket,isHoodie,'Front',frontRows);
-  if(hasBack)content+=garmentShape(both?255:20,15,isJacket,isHoodie,'Back',backRows);
-  return'<svg class="garment" viewBox="0 0 '+W+' 270" width="'+W+'" height="270" xmlns="http://www.w3.org/2000/svg">'
-    +'<defs><style>.gl{font-family:\'DM Sans\',sans-serif;font-size:11px;fill:#9e9890;text-anchor:middle}'
-    +'.gc{font-family:\'DM Mono\',monospace;font-size:14px;font-weight:500;fill:white;text-anchor:middle}</style></defs>'
-    +content+'</svg>';
-}
-function garmentShape(ox,oy,isJacket,isHoodie,label,rows){
-  const cx=ox+100;
-  const bodyFill='#e2ddd6',bodyStroke='#b5b0a8',sleeveFill='#d5d0c8';
-  const bodyPath='M'+(ox+35)+','+(oy+38)+' L'+(ox+15)+','+(oy+58)+' L'+(ox+15)+','+(oy+235)+' L'+(ox+185)+','+(oy+235)+' L'+(ox+185)+','+(oy+58)+' L'+(ox+165)+','+(oy+38);
-  const lSleeve='M'+(ox+35)+','+(oy+38)+' L'+(ox+2)+','+(oy+65)+' L'+(ox+2)+','+(oy+145)+' L'+(ox+15)+','+(oy+145)+' L'+(ox+15)+','+(oy+58);
-  const rSleeve='M'+(ox+165)+','+(oy+38)+' L'+(ox+198)+','+(oy+65)+' L'+(ox+198)+','+(oy+145)+' L'+(ox+185)+','+(oy+145)+' L'+(ox+185)+','+(oy+58);
-  const neckPath=isHoodie
-    ?'<path d="M'+(ox+72)+','+(oy+12)+' Q'+cx+','+(oy+48)+' '+(ox+128)+','+(oy+12)+'" fill="'+sleeveFill+'" stroke="'+bodyStroke+'" stroke-width="1"/>'
-    :'<path d="M'+(ox+72)+','+(oy+12)+' Q'+cx+','+(oy+30)+' '+(ox+128)+','+(oy+12)+'" fill="'+sleeveFill+'" stroke="'+bodyStroke+'" stroke-width="1"/>';
-  const zipLine=isJacket?'<line x1="'+cx+'" y1="'+(oy+28)+'" x2="'+cx+'" y2="'+(oy+235)+'" stroke="#b5b0a8" stroke-width="1" stroke-dasharray="4,3"/>':'';
-  const labelEl='<text x="'+cx+'" y="'+(oy+253)+'" class="gl">'+label+'</text>';
-  const dots=rows.map(function(row){
-    const letter=logoLetter(cleanLogo(row['Logo']||''));
-    const loc=(row['Location']||'').toLowerCase();
-    let dx=cx,dy=oy+110;
-    if(loc.includes('front')&&isJacket){dx=cx-28;}
-    return'<circle cx="'+dx+'" cy="'+dy+'" r="18" fill="#2d5a3d" opacity="0.88"/><text x="'+dx+'" y="'+(dy+5)+'" class="gc">'+letter+'</text>';
+// ── Placements HTML ───────────────────────────────────────────────────────────
+function buildPlacementsHTML(rows) {
+  return rows.map(row => {
+    const logo = cleanLogo(row['Logo']||'');
+    const pos1=row['Position1']||'', pos2=row['Postion2']||'', pos3=row['Position3']||'';
+    const positions=[pos1,pos2,pos3].filter(Boolean).join(' · ');
+    const warn=hasWarning(row);
+    return `<div class="placement-row">
+      <div class="logo-letter">${logoLetter(logo)}</div>
+      <div class="placement-detail">
+        <div class="placement-name">
+          ${locationBadge(row['Location']||'')}
+          <span>${logo}</span>
+          ${warn?'<span class="warn-badge">⚠ check</span>':''}
+        </div>
+        ${positions?`<div class="placement-pos">${positions}</div>`:''}
+        <div class="press-info">${row['Temp']||''} · ${row['Time']||''}</div>
+      </div>
+    </div>`;
   }).join('');
-  return'<g><path d="'+bodyPath+' Z" fill="'+bodyFill+'" stroke="'+bodyStroke+'" stroke-width="1"/>'
-    +'<path d="'+lSleeve+' Z" fill="'+sleeveFill+'" stroke="'+bodyStroke+'" stroke-width="1"/>'
-    +'<path d="'+rSleeve+' Z" fill="'+sleeveFill+'" stroke="'+bodyStroke+'" stroke-width="1"/>'
-    +neckPath+zipLine+dots+labelEl+'</g>';
-}
-function legsSVG(rows,hasHip,hasBottomLeg){
-  const hipRows=rows.filter(function(r){const l=(r['Location']||'').toLowerCase();return l.includes('hip')||l.includes('right leg');});
-  const botRows=rows.filter(function(r){const l=(r['Location']||'').toLowerCase();return l.includes('bottom')||l.includes('botton');});
-  return'<svg class="garment" viewBox="0 0 240 300" width="240" height="300" xmlns="http://www.w3.org/2000/svg">'
-    +'<defs><style>.gl{font-family:\'DM Sans\',sans-serif;font-size:11px;fill:#9e9890;text-anchor:middle}'
-    +'.gc{font-family:\'DM Mono\',monospace;font-size:14px;font-weight:500;fill:white;text-anchor:middle}</style></defs>'
-    +'<rect x="30" y="10" width="75" height="22" rx="5" fill="#d5d0c8" stroke="#b5b0a8" stroke-width="1"/>'
-    +'<rect x="115" y="10" width="75" height="22" rx="5" fill="#d5d0c8" stroke="#b5b0a8" stroke-width="1"/>'
-    +'<path d="M30,32 L30,210 Q30,232 52,232 L83,232 Q105,232 105,210 L105,32 Z" fill="#e2ddd6" stroke="#b5b0a8" stroke-width="1"/>'
-    +'<path d="M115,32 L115,210 Q115,232 137,232 L168,232 Q190,232 190,210 L190,32 Z" fill="#e2ddd6" stroke="#b5b0a8" stroke-width="1"/>'
-    +(hasHip?hipRows.map(function(r){return'<circle cx="152" cy="75" r="18" fill="#2d5a3d" opacity="0.88"/><text x="152" y="80" class="gc">'+logoLetter(cleanLogo(r['Logo']||''))+'</text>';}).join(''):'')
-    +(hasBottomLeg?botRows.map(function(r){return'<circle cx="152" cy="190" r="18" fill="#4c1d95" opacity="0.88"/><text x="152" y="195" class="gc">'+logoLetter(cleanLogo(r['Logo']||''))+'</text>';}).join(''):'')
-    +'<text x="120" y="255" class="gl">right leg</text></svg>';
 }
 
-async function handleOrderPDF(file) {
-  if(!file)return;
-  const resultEl=document.getElementById('order-import-result');
-  const errorEl=document.getElementById('order-import-error');
-  const labelEl=document.getElementById('order-drop-label');
-  const subEl=document.getElementById('order-drop-sub');
-  resultEl.style.display='none';
-  errorEl.style.display='none';
-  try {
-    labelEl.textContent='Reading '+file.name+'…';
-    const text=await extractPDFText(file);
-    // Match UPA and Arts1 garment lines
-    // UPA format: "UPA Child T Shirt" / "UPA Adult Show T Shirt"
-    // Arts1 format: "Arts1 T Shirt (Child)"
-    const upaMatches=[...text.matchAll(/UPA\s+(Adult|Child)\s+([^\n£]+?)\s*(?=SKU|£|\n\n|\d+\.\d+)/gi)];
-    const arts1Matches=[...text.matchAll(/Arts1[^(\n]*\(\s*((?:XL\s+)?(?:Adult|Child))\s*\)/gi)];
+// ── Diagram ───────────────────────────────────────────────────────────────────
+function buildDiagramHTML(rows, item) {
+  const locs = rows.map(r=>(r['Location']||'').toLowerCase());
+  const hasFront = locs.some(l=>l.includes('front'));
+  const hasBack  = locs.some(l=>l.includes('back'));
+  const hasHip   = locs.some(l=>l.includes('hip')||l.includes('right leg'));
+  const hasBotLeg= locs.some(l=>l.includes('bottom')||l.includes('botton'));
+  const isJacket = /jacket|zip/i.test(item);
+  const isHoodie = /hoodie|zoodie/i.test(item);
+  if (hasFront||hasBack) return torsoSVG(rows,hasFront,hasBack,isJacket,isHoodie);
+  if (hasHip||hasBotLeg) return legsSVG(rows,hasHip,hasBotLeg);
+  return torsoSVG(rows,true,false,isJacket,isHoodie);
+}
 
-    // Build a unified list: [{acRaw, garmentRaw, qty}]
-    const orderItems=[];
+function torsoSVG(rows,hasFront,hasBack,isJacket,isHoodie) {
+  const both=hasFront&&hasBack, W=both?480:240;
+  const frontRows=rows.filter(r=>(r['Location']||'').toLowerCase().includes('front'));
+  const backRows=rows.filter(r=>(r['Location']||'').toLowerCase().includes('back'));
+  let content='';
+  if(hasFront) content+=garmentShape(20,15,isJacket,isHoodie,'Front',frontRows);
+  if(hasBack)  content+=garmentShape(both?255:20,15,isJacket,isHoodie,'Back',backRows);
+  return `<svg class="garment" viewBox="0 0 ${W} 270" width="${W}" height="270" xmlns="http://www.w3.org/2000/svg">
+    <defs><style>.gl{font-family:'DM Sans',sans-serif;font-size:11px;fill:#9e9890;text-anchor:middle}
+    .gc{font-family:'DM Mono',monospace;font-size:14px;font-weight:500;fill:white;text-anchor:middle}</style></defs>
+    ${content}</svg>`;
+}
 
-    // Process UPA items
-    upaMatches.forEach(function(m){
-      const acRaw=m[1];  // "Adult" or "Child"
-      const garmentRaw=m[2].trim();
-      // Find qty — look for the SKU line then the quantity number
-      const pos=m.index;
-      const snippet=text.substring(pos, pos+200);
-      const qtyM=snippet.match(/£[\d.]+\s+(\d+)\s+\d+%/);
-      const qty=qtyM?parseInt(qtyM[1]):1;
-      orderItems.push({acRaw,garmentRaw,qty,source:'UPA'});
+function garmentShape(ox,oy,isJacket,isHoodie,label,rows) {
+  const cx=ox+100;
+  const bodyPath=`M${ox+35},${oy+38} L${ox+15},${oy+58} L${ox+15},${oy+235} L${ox+185},${oy+235} L${ox+185},${oy+58} L${ox+165},${oy+38}`;
+  const lSleeve=`M${ox+35},${oy+38} L${ox+2},${oy+65} L${ox+2},${oy+145} L${ox+15},${oy+145} L${ox+15},${oy+58}`;
+  const rSleeve=`M${ox+165},${oy+38} L${ox+198},${oy+65} L${ox+198},${oy+145} L${ox+185},${oy+145} L${ox+185},${oy+58}`;
+  const neckPath=isHoodie
+    ?`<path d="M${ox+72},${oy+12} Q${cx},${oy+48} ${ox+128},${oy+12}" fill="#d5d0c8" stroke="#b5b0a8" stroke-width="1"/>`
+    :`<path d="M${ox+72},${oy+12} Q${cx},${oy+30} ${ox+128},${oy+12}" fill="#d5d0c8" stroke="#b5b0a8" stroke-width="1"/>`;
+  const zipLine=isJacket?`<line x1="${cx}" y1="${oy+28}" x2="${cx}" y2="${oy+235}" stroke="#b5b0a8" stroke-width="1" stroke-dasharray="4,3"/>`:'';
+  const dots=rows.map(row=>{
+    const letter=logoLetter(cleanLogo(row['Logo']||''));
+    let dx=cx,dy=oy+110;
+    if((row['Location']||'').toLowerCase().includes('front')&&isJacket) dx=cx-28;
+    return `<circle cx="${dx}" cy="${dy}" r="18" fill="#2d5a3d" opacity="0.88"/><text x="${dx}" y="${dy+5}" class="gc">${letter}</text>`;
+  }).join('');
+  return `<g>
+    <path d="${bodyPath} Z" fill="#e2ddd6" stroke="#b5b0a8" stroke-width="1"/>
+    <path d="${lSleeve} Z" fill="#d5d0c8" stroke="#b5b0a8" stroke-width="1"/>
+    <path d="${rSleeve} Z" fill="#d5d0c8" stroke="#b5b0a8" stroke-width="1"/>
+    ${neckPath}${zipLine}${dots}
+    <text x="${cx}" y="${oy+253}" class="gl">${label}</text>
+  </g>`;
+}
+
+function legsSVG(rows,hasHip,hasBottomLeg) {
+  const hipRows=rows.filter(r=>{const l=(r['Location']||'').toLowerCase();return l.includes('hip')||l.includes('right leg');});
+  const botRows=rows.filter(r=>{const l=(r['Location']||'').toLowerCase();return l.includes('bottom')||l.includes('botton');});
+  return `<svg class="garment" viewBox="0 0 240 300" width="240" height="300" xmlns="http://www.w3.org/2000/svg">
+    <defs><style>.gl{font-family:'DM Sans',sans-serif;font-size:11px;fill:#9e9890;text-anchor:middle}
+    .gc{font-family:'DM Mono',monospace;font-size:14px;font-weight:500;fill:white;text-anchor:middle}</style></defs>
+    <rect x="30" y="10" width="75" height="22" rx="5" fill="#d5d0c8" stroke="#b5b0a8" stroke-width="1"/>
+    <rect x="115" y="10" width="75" height="22" rx="5" fill="#d5d0c8" stroke="#b5b0a8" stroke-width="1"/>
+    <path d="M30,32 L30,210 Q30,232 52,232 L83,232 Q105,232 105,210 L105,32 Z" fill="#e2ddd6" stroke="#b5b0a8" stroke-width="1"/>
+    <path d="M115,32 L115,210 Q115,232 137,232 L168,232 Q190,232 190,210 L190,32 Z" fill="#e2ddd6" stroke="#b5b0a8" stroke-width="1"/>
+    ${hasHip?hipRows.map(r=>`<circle cx="152" cy="75" r="18" fill="#2d5a3d" opacity="0.88"/><text x="152" y="80" class="gc">${logoLetter(cleanLogo(r['Logo']||''))}</text>`).join(''):''}
+    ${hasBottomLeg?botRows.map(r=>`<circle cx="152" cy="190" r="18" fill="#4c1d95" opacity="0.88"/><text x="152" y="195" class="gc">${logoLetter(cleanLogo(r['Logo']||''))}</text>`).join(''):''}
+    <text x="120" y="255" class="gl">right leg</text>
+  </svg>`;
+}
+
+// ── PDF generation ────────────────────────────────────────────────────────────
+function downloadPDF() {
+  const today = new Date().toLocaleDateString('en-GB',{day:'2-digit',month:'short',year:'numeric'});
+
+  // Collect all files across batch
+  const allFiles = [];
+  batch.forEach(job => {
+    buildFileList(job.rows).forEach(f => {
+      allFiles.push({...f, qty: job.qty, item: job.item, size: job.size, ac: job.ac});
     });
+  });
 
-    // Process Arts1 items
-    arts1Matches.forEach(function(m){
-      orderItems.push({acRaw:m[1],garmentRaw:'T Shirt',qty:1,source:'Arts1'});
-    });
+  const summaryRows = allFiles.map(f => {
+    const positions=[f.pos1,f.pos2,f.pos3].filter(Boolean).join(' · ');
+    return `<tr>
+      <td style="font-family:monospace;font-size:11px;padding:7px 10px;border-bottom:1px solid #e5e7eb">${f.name}</td>
+      <td style="padding:7px 10px;border-bottom:1px solid #e5e7eb">${f.ac} ${f.item}</td>
+      <td style="padding:7px 10px;border-bottom:1px solid #e5e7eb">${f.size}</td>
+      <td style="padding:7px 10px;border-bottom:1px solid #e5e7eb;text-align:center;font-weight:700;color:#2d5a3d">×${f.qty}</td>
+      <td style="padding:7px 10px;border-bottom:1px solid #e5e7eb;font-size:11px;color:#6b7280">${f.loc}</td>
+      <td style="padding:7px 10px;border-bottom:1px solid #e5e7eb;font-size:11px;color:#6b7280">${positions}</td>
+      <td style="padding:7px 10px;border-bottom:1px solid #e5e7eb;font-size:11px;color:#6b7280">${f.temp} / ${f.time}</td>
+    </tr>`;
+  }).join('');
 
-    if(!orderItems.length){
-      errorEl.textContent='Could not find UPA or Arts1 garments in this PDF. Is this a Soul2sole invoice?';
-      errorEl.style.display='block';
-      labelEl.textContent='Drop Soul2sole invoice PDF here';
-      return;
+  const jobPages = batch.map((job, ji) => {
+    const files = buildFileList(job.rows);
+    const fileRows = files.map(f => {
+      const positions=[f.pos1,f.pos2,f.pos3].filter(Boolean).join(' · ');
+      return `<tr>
+        <td style="font-family:monospace;font-size:11px;padding:7px 10px;border-bottom:1px solid #e5e7eb">${f.name}${f.warn?' ⚠':''}</td>
+        <td style="padding:7px 10px;border-bottom:1px solid #e5e7eb;text-align:center;font-weight:700;font-size:16px;color:#2d5a3d">×${job.qty}</td>
+        <td style="padding:7px 10px;border-bottom:1px solid #e5e7eb;font-size:11px;color:#374151">${f.loc}</td>
+        <td style="padding:7px 10px;border-bottom:1px solid #e5e7eb;font-size:11px;color:#6b7280">${positions}</td>
+        <td style="padding:7px 10px;border-bottom:1px solid #e5e7eb;font-size:11px;color:#6b7280">${f.temp} / ${f.time}</td>
+      </tr>`;
+    }).join('');
+
+    return `<div style="page-break-before:always;padding:32px 36px;font-family:'Helvetica Neue',Arial,sans-serif">
+      <div style="display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:20px">
+        <div>
+          <div style="font-size:11px;font-weight:600;letter-spacing:0.8px;text-transform:uppercase;color:#9ca3af;margin-bottom:4px">Job ${ji+1} of ${batch.length}</div>
+          <div style="font-size:20px;font-weight:700;color:#1a1814">${job.ac} · ${job.item}</div>
+          <div style="font-size:14px;color:#6b7280;margin-top:2px">Size ${job.size} · <strong style="color:#2d5a3d">×${job.qty} copies in Digital Factory</strong></div>
+        </div>
+        <div style="text-align:right;font-size:12px;color:#9ca3af">${today}</div>
+      </div>
+      <table style="width:100%;border-collapse:collapse;margin-bottom:24px">
+        <thead>
+          <tr style="background:#f3f4f6">
+            <th style="padding:8px 10px;text-align:left;font-size:10px;letter-spacing:0.5px;text-transform:uppercase;color:#6b7280;font-weight:600">File — import into Digital Factory</th>
+            <th style="padding:8px 10px;text-align:center;font-size:10px;letter-spacing:0.5px;text-transform:uppercase;color:#6b7280;font-weight:600">DF copies</th>
+            <th style="padding:8px 10px;text-align:left;font-size:10px;letter-spacing:0.5px;text-transform:uppercase;color:#6b7280;font-weight:600">Location</th>
+            <th style="padding:8px 10px;text-align:left;font-size:10px;letter-spacing:0.5px;text-transform:uppercase;color:#6b7280;font-weight:600">Placement / measurement</th>
+            <th style="padding:8px 10px;text-align:left;font-size:10px;letter-spacing:0.5px;text-transform:uppercase;color:#6b7280;font-weight:600">Press temp / time</th>
+          </tr>
+        </thead>
+        <tbody>${fileRows}</tbody>
+      </table>
+      ${job.rows.some(hasWarning)?`<div style="background:#fef3c7;border:1px solid #fcd34d;border-radius:8px;padding:10px 14px;font-size:12px;color:#92400e;margin-bottom:16px">⚠ Some placements have unconfirmed measurements — double check before pressing.</div>`:''}
+    </div>`;
+  }).join('');
+
+  const html = `<!DOCTYPE html><html><head><meta charset="UTF-8">
+  <title>UPA Batch ${today}</title>
+  <style>
+    @media print {
+      body { margin: 0; }
+      .no-print { display: none !important; }
     }
-    let added=0;
-    const problems=[];
-    orderItems.forEach(function(orderItem,i){
-      const ac=orderItem.acRaw.toLowerCase().includes('child')?'Child':'Adult';
-      const garmentRaw=orderItem.garmentRaw.toLowerCase();
-      const qty=orderItem.qty;
+    body { font-family: 'Helvetica Neue', Arial, sans-serif; margin: 0; color: #1a1814; }
+  </style>
+  </head><body>
+  <!-- Summary page -->
+  <div style="padding:32px 36px">
+    <div style="display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:24px;padding-bottom:16px;border-bottom:2px solid #1a1814">
+      <div>
+        <div style="font-size:22px;font-weight:700">UPA Print Batch</div>
+        <div style="font-size:13px;color:#6b7280;margin-top:3px">${today} · ${batch.length} garment type${batch.length!==1?'s':''} · ${allFiles.length} files to import</div>
+      </div>
+      <div style="font-size:28px;font-weight:800;color:#2d5a3d">UP</div>
+    </div>
+    <div style="font-size:10px;font-weight:600;letter-spacing:0.8px;text-transform:uppercase;color:#9ca3af;margin-bottom:10px">All files — Digital Factory import list</div>
+    <table style="width:100%;border-collapse:collapse">
+      <thead>
+        <tr style="background:#f3f4f6">
+          <th style="padding:8px 10px;text-align:left;font-size:10px;letter-spacing:0.5px;text-transform:uppercase;color:#6b7280;font-weight:600">Filename</th>
+          <th style="padding:8px 10px;text-align:left;font-size:10px;letter-spacing:0.5px;text-transform:uppercase;color:#6b7280;font-weight:600">Garment</th>
+          <th style="padding:8px 10px;text-align:left;font-size:10px;letter-spacing:0.5px;text-transform:uppercase;color:#6b7280;font-weight:600">Size</th>
+          <th style="padding:8px 10px;text-align:center;font-size:10px;letter-spacing:0.5px;text-transform:uppercase;color:#6b7280;font-weight:600">Copies</th>
+          <th style="padding:8px 10px;text-align:left;font-size:10px;letter-spacing:0.5px;text-transform:uppercase;color:#6b7280;font-weight:600">Location</th>
+          <th style="padding:8px 10px;text-align:left;font-size:10px;letter-spacing:0.5px;text-transform:uppercase;color:#6b7280;font-weight:600">Placement</th>
+          <th style="padding:8px 10px;text-align:left;font-size:10px;letter-spacing:0.5px;text-transform:uppercase;color:#6b7280;font-weight:600">Press</th>
+        </tr>
+      </thead>
+      <tbody>${summaryRows}</tbody>
+    </table>
+  </div>
+  ${jobPages}
+  </body></html>`;
 
-      // Find best matching item in the sheet
-      // Try to match garment name keywords against sheet items
-      const sheetItems=[...new Set(allRows.filter(function(r){return r['Adult - Child']===ac;}).map(function(r){return r['Item'];}))];
-
-      let item=null;
-
-      // Score each sheet item by how many words from the invoice garment name it contains
-      let bestScore=-1;
-      sheetItems.forEach(function(sheetItem){
-        const sheetLower=sheetItem.toLowerCase();
-        const words=garmentRaw.split(/\s+/);
-        let score=0;
-        words.forEach(function(w){if(w.length>2&&sheetLower.includes(w))score++;});
-        if(score>bestScore){bestScore=score;item=sheetItem;}
-      });
-
-      if(!item||bestScore===0){
-        problems.push('No sheet match for '+ac+' '+orderItem.garmentRaw);
-        return;
-      }
-
-      const sizes=[...new Set(allRows.filter(function(r){return r['Adult - Child']===ac&&r['Item']===item;}).map(function(r){return r['Size'];}))];
-      const size=sizes[0];
-      const rows=allRows.filter(function(r){return r['Adult - Child']===ac&&r['Item']===item&&r['Size']===size;});
-      if(!rows.length){problems.push('No placement data for '+ac+' '+item);return;}
-      batch.push({id:Date.now()+i,ac,item,size,qty,rows,open:true});
-      added++;
-    });
-    renderBatch();
-    labelEl.textContent=file.name;
-    subEl.textContent='Click to change';
-    document.getElementById('order-clear-btn').style.display='block';
-    resultEl.textContent='✓ Added '+added+' garment'+(added!==1?'s':'')+' from invoice'+(problems.length?' — '+problems.join(', '):'');
-    resultEl.style.display='block';
-  } catch(err){
-    errorEl.textContent='Could not read PDF: '+err.message;
-    errorEl.style.display='block';
-    labelEl.textContent='Drop Soul2sole invoice PDF here';
-  }
-}
-function clearOrderImport(){
-  document.getElementById('order-drop-label').textContent='Drop Soul2sole invoice PDF here';
-  document.getElementById('order-drop-sub').textContent='or click to browse — reads garment, size and qty automatically';
-  document.getElementById('order-import-result').style.display='none';
-  document.getElementById('order-import-error').style.display='none';
-  document.getElementById('order-clear-btn').style.display='none';
-  document.getElementById('order-pdf-input').value='';
-}
-
-function switchTab(name){
-  ['print','personalise'].forEach(function(t){
-    document.getElementById('tab-panel-'+t).classList.toggle('active',t===name);
-    document.getElementById('tab-'+t).classList.toggle('active',t===name);
-  });
-  if(name==='personalise'&&document.getElementById('manual-entries').children.length===0)addManualRow();
-}
-
-let pdfjsLib=null;
-async function loadPDFJS(){
-  if(pdfjsLib)return pdfjsLib;
-  return new Promise(function(resolve,reject){
-    const s=document.createElement('script');
-    s.src='https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.min.js';
-    s.onload=function(){
-      window['pdfjs-dist/build/pdf'].GlobalWorkerOptions.workerSrc='https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.worker.min.js';
-      pdfjsLib=window['pdfjs-dist/build/pdf'];resolve(pdfjsLib);
-    };
-    s.onerror=reject;document.head.appendChild(s);
-  });
-}
-async function extractPDFText(file){
-  const lib=await loadPDFJS();
-  const pdf=await lib.getDocument({data:await file.arrayBuffer()}).promise;
-  let text='';
-  for(let i=1;i<=pdf.numPages;i++){
-    const page=await pdf.getPage(i);
-    const content=await page.getTextContent();
-    text+=content.items.map(function(x){return x.str;}).join(' ')+'\n';
-  }
-  return text;
-}
-function parsePDFEntries(text){
-  const nameRe=/Personalisation:\s*([A-Za-z][A-Za-z\s'\-]{0,40}?)(?=\s{2,}|\n|Payment|$)/gi;
-  const garmentRe=/Arts1[^(\n]*\(\s*((?:XL\s+)?(?:Adult|Child))\s*\)/gi;
-  const names=[],garments=[];
-  let m;
-  while((m=nameRe.exec(text))!==null)names.push(m[1].trim());
-  while((m=garmentRe.exec(text))!==null)garments.push(m[1].trim());
-  return names.map(function(name,i){return{name:name.replace(/\b\w/g,function(c){return c.toUpperCase();}),size:classifySize(garments[i]||'Adult')};});
-}
-function classifySize(raw){
-  const s=(raw||'').toLowerCase();
-  if(s.includes('xl'))return'xl_adult';
-  if(s.includes('child')||s.includes('junior'))return'child';
-  return'adult';
-}
-async function handlePDF(file){
-  if(!file)return;
-  const errEl=document.getElementById('pdf-error');
-  const resEl=document.getElementById('pdf-result');
-  errEl.style.display='none';resEl.style.display='none';
-  try{
-    const dz=document.getElementById('drop-zone');
-    dz.querySelector('.drop-label').textContent='Reading '+file.name+'…';
-    const entries=parsePDFEntries(await extractPDFText(file));
-    dz.querySelector('.drop-label').textContent=file.name;
-    dz.querySelector('.drop-sub').textContent='Click to change';
-    if(!entries.length){errEl.textContent='Could not find "Personalisation: <name>" in this PDF.';errEl.style.display='block';return;}
-    const sizeLabels={child:'Child',adult:'Adult',xl_adult:'XL'};
-    const sizeBadge={child:'badge-front',adult:'badge-other',xl_adult:'badge-back'};
-    document.getElementById('pdf-tags').innerHTML=entries.map(function(e){return'<span class="extracted-tag"><span class="badge '+sizeBadge[e.size]+'" style="margin:0;font-size:9px">'+sizeLabels[e.size]+'</span> '+e.name+'</span>';}).join('');
-    resEl.style.display='block';
-    entries.forEach(function(e){addManualRow(e.name,e.size);});
-    buildCommand();
-  }catch(err){
-    errEl.textContent='Could not read PDF: '+err.message;errEl.style.display='block';
-  }
-}
-document.addEventListener('DOMContentLoaded',function(){
-  const dz=document.getElementById('drop-zone');
-  if(!dz)return;
-  dz.addEventListener('dragover',function(e){e.preventDefault();dz.classList.add('over');});
-  dz.addEventListener('dragleave',function(){dz.classList.remove('over');});
-  dz.addEventListener('drop',function(e){e.preventDefault();dz.classList.remove('over');const f=e.dataTransfer.files[0];if(f&&f.type==='application/pdf')handlePDF(f);});
-});
-
-let rowCount=0;
-function addManualRow(name,size){
-  name=name||'';size=size||'adult';
-  const id=++rowCount;
-  const container=document.getElementById('manual-entries');
-  const div=document.createElement('div');
-  div.className='pers-entry';div.id='row-'+id;
-  div.innerHTML='<input class="pers-name-input" type="text" placeholder="Student name" value="'+name+'" oninput="buildCommand()"/>'
-    +'<select class="pers-size-sel" onchange="buildCommand()">'
-    +'<option value="child"'+(size==='child'?' selected':'')+'>Child</option>'
-    +'<option value="adult"'+(size==='adult'?' selected':'')+'>Adult</option>'
-    +'<option value="xl_adult"'+(size==='xl_adult'?' selected':'')+'>XL Adult</option>'
-    +'</select>'
-    +'<button class="pers-remove" onclick="removeRow('+id+')" title="Remove">✕</button>';
-  container.appendChild(div);buildCommand();
-}
-function removeRow(id){const el=document.getElementById('row-'+id);if(el)el.remove();buildCommand();}
-function buildCommand(){
-  const rows=document.querySelectorAll('.pers-entry');
-  const entries=[];
-  rows.forEach(function(row){
-    const name=row.querySelector('.pers-name-input').value.trim();
-    const size=row.querySelector('.pers-size-sel').value;
-    if(name)entries.push({name,size});
-  });
-  const card=document.getElementById('cmd-card');
-  if(!entries.length){card.style.display='none';return;}
-  card.style.display='block';
-  const namesList=entries.map(function(e){return e.name;}).join(',');
-  let cmd;
-  if(new Set(entries.map(function(e){return e.size;})).size===1){
-    cmd='python3 upa_personalise.py --names "'+namesList+'" --size '+entries[0].size;
-  }else{
-    const lines=entries.map(function(e){return e.name+','+e.size;}).join('\\n');
-    cmd="printf '"+lines+"' > /tmp/upa_names.txt && python3 upa_personalise.py --list /tmp/upa_names.txt";
-  }
-  document.getElementById('cmd-text').textContent=cmd;
-}
-function copyCmd(){
-  navigator.clipboard.writeText(document.getElementById('cmd-text').textContent).then(function(){
-    const btn=document.querySelector('.cmd-copy');btn.textContent='✓ Copied!';
-    setTimeout(function(){btn.textContent='Copy';},2000);
-  });
+  const blob = new Blob([html], {type:'text/html'});
+  const url  = URL.createObjectURL(blob);
+  const a    = document.createElement('a');
+  a.href = url;
+  a.download = `UPA_Batch_${new Date().toISOString().slice(0,10)}.html`;
+  a.click();
+  URL.revokeObjectURL(url);
 }
 
 loadSheet();
