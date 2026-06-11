@@ -5,6 +5,11 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>UPA Print Prep</title>
 <link href="https://fonts.googleapis.com/css2?family=DM+Mono:wght@400;500&family=DM+Sans:wght@300;400;500;600&display=swap" rel="stylesheet">
+<!-- PDF.js for invoice import -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.min.js"></script>
+<!-- jsPDF + AutoTable for real PDF export -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf-autotable/3.8.2/jspdf.plugin.autotable.min.js"></script>
 <style>
   :root {
     --bg: #f5f3ef; --surface: #ffffff; --surface2: #f0ede8; --border: #e2ddd6;
@@ -20,17 +25,47 @@
   }
   * { box-sizing: border-box; margin: 0; padding: 0; }
   body { font-family: var(--sans); background: var(--bg); color: var(--text); min-height: 100vh; }
-  header { background: var(--accent); color: white; padding: 20px 32px; display: flex; align-items: center; justify-content: space-between; }
+
+  header { background: var(--accent); color: white; padding: 20px 32px; display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 10px; }
   .header-title { display: flex; align-items: center; gap: 14px; }
   .header-logo { width: 38px; height: 38px; background: rgba(255,255,255,0.15); border-radius: 8px; display: flex; align-items: center; justify-content: center; font-size: 18px; font-weight: 600; letter-spacing: -1px; }
   header h1 { font-size: 18px; font-weight: 600; letter-spacing: -0.3px; }
   header p { font-size: 12px; opacity: 0.65; margin-top: 1px; }
+  .header-right { display: flex; align-items: center; gap: 12px; }
   .sheet-status { font-size: 12px; font-family: var(--mono); background: rgba(255,255,255,0.12); padding: 5px 12px; border-radius: 20px; display: flex; align-items: center; gap: 6px; }
   .dot-live { width: 7px; height: 7px; border-radius: 50%; background: #4ade80; display: inline-block; animation: pulse 2s infinite; }
   @keyframes pulse { 0%,100%{opacity:1} 50%{opacity:0.4} }
+
   main { max-width: 980px; margin: 0 auto; padding: 28px 24px; }
   .card { background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius-lg); padding: 20px 24px; margin-bottom: 16px; }
   .card-title { font-size: 11px; font-weight: 600; letter-spacing: 0.8px; text-transform: uppercase; color: var(--text3); margin-bottom: 14px; }
+
+  /* Tabs */
+  .tabs { display: flex; gap: 4px; margin-bottom: 16px; background: var(--surface2); border-radius: var(--radius); padding: 4px; border: 1px solid var(--border); }
+  .tab { flex: 1; padding: 9px 14px; border-radius: 7px; border: none; font-size: 13px; font-weight: 500; font-family: var(--sans); cursor: pointer; background: none; color: var(--text2); transition: all 0.15s; text-align: center; }
+  .tab.active { background: var(--surface); color: var(--text); box-shadow: 0 1px 3px rgba(0,0,0,0.08); }
+  .tab:hover:not(.active) { color: var(--text); }
+
+  /* PDF import drop zone */
+  .drop-zone { border: 2px dashed var(--border); border-radius: var(--radius-lg); padding: 36px 24px; text-align: center; transition: all 0.15s; cursor: pointer; background: var(--surface2); }
+  .drop-zone:hover, .drop-zone.drag-over { border-color: var(--accent2); background: var(--accent-bg); }
+  .drop-zone-icon { font-size: 32px; margin-bottom: 10px; }
+  .drop-zone-label { font-size: 15px; font-weight: 500; margin-bottom: 4px; }
+  .drop-zone-sub { font-size: 12px; color: var(--text2); }
+  #pdf-input { display: none; }
+
+  /* Parsed items from PDF */
+  .parsed-item { display: flex; align-items: center; gap: 10px; padding: 10px 14px; background: var(--surface2); border-radius: var(--radius); margin-bottom: 6px; }
+  .parsed-check { width: 20px; height: 20px; accent-color: var(--accent); cursor: pointer; }
+  .parsed-detail { flex: 1; }
+  .parsed-name { font-size: 13px; font-weight: 500; }
+  .parsed-sub { font-size: 12px; color: var(--text2); font-family: var(--mono); margin-top: 2px; }
+  .parsed-status { font-size: 11px; font-weight: 600; padding: 2px 8px; border-radius: 20px; }
+  .status-matched { background: var(--accent-bg); color: var(--accent); }
+  .status-unmatched { background: var(--danger-bg); color: var(--danger); }
+  .status-noprint { background: var(--surface2); color: var(--text3); border: 1px solid var(--border); }
+
+  /* Manual selectors */
   .selectors { display: grid; grid-template-columns: 1fr 2fr 1fr 1fr 1fr; gap: 12px; align-items: end; }
   @media(max-width: 720px) { .selectors { grid-template-columns: 1fr 1fr; } .sel-add { grid-column: 1/-1; } }
   .field label { display: block; font-size: 12px; font-weight: 500; color: var(--text2); margin-bottom: 6px; }
@@ -39,6 +74,7 @@
   .field select:disabled { opacity: 0.45; cursor: not-allowed; }
   .sel-wrap { position: relative; }
   .sel-wrap::after { content: '▾'; position: absolute; right: 11px; top: 50%; transform: translateY(-50%); font-size: 11px; color: var(--text3); pointer-events: none; }
+
   .btn { padding: 10px 20px; border-radius: var(--radius); font-size: 14px; font-weight: 500; font-family: var(--sans); cursor: pointer; border: none; transition: all 0.15s; display: inline-flex; align-items: center; gap: 7px; justify-content: center; }
   .btn-primary { background: var(--accent); color: white; }
   .btn-primary:hover { background: var(--accent2); }
@@ -47,14 +83,15 @@
   .btn-secondary:hover { background: var(--border); }
   .btn-danger { background: #fee2e2; color: var(--danger); border: 1px solid #fca5a5; }
   .btn-danger:hover { background: #fca5a5; }
+
   #error-bar { display: none; background: var(--danger-bg); color: var(--danger); border: 1px solid #fca5a5; border-radius: var(--radius); padding: 10px 14px; font-size: 13px; margin-top: 12px; }
-  #loading-bar { display: none; text-align: center; padding: 40px; color: var(--text2); font-size: 14px; }
+  #loading-bar { display: block; text-align: center; padding: 40px; color: var(--text2); font-size: 14px; }
   .spinner { width: 22px; height: 22px; border: 2px solid var(--border); border-top-color: var(--accent); border-radius: 50%; animation: spin 0.7s linear infinite; display: inline-block; vertical-align: middle; margin-right: 8px; }
   @keyframes spin { to { transform: rotate(360deg); } }
 
-  /* Batch list */
+  /* Batch */
   #batch-section { display: none; }
-  .batch-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 14px; }
+  .batch-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 14px; flex-wrap: wrap; gap: 8px; }
   .batch-item { display: flex; align-items: center; gap: 12px; padding: 12px 16px; background: var(--surface2); border-radius: var(--radius); margin-bottom: 8px; }
   .batch-item:last-child { margin-bottom: 0; }
   .batch-num { font-size: 22px; font-weight: 600; color: var(--accent); min-width: 42px; text-align: center; font-family: var(--mono); }
@@ -63,19 +100,21 @@
   .batch-sub { font-size: 12px; color: var(--text2); margin-top: 2px; font-family: var(--mono); }
   .batch-actions { display: flex; gap: 6px; }
 
-  /* Preview panel */
+  /* Preview */
   #preview-section { display: none; }
-  .stats { display: grid; grid-template-columns: repeat(4, 1fr); gap: 12px; margin-bottom: 16px; }
+  .stats { display: grid; grid-template-columns: repeat(3, 1fr); gap: 12px; margin-bottom: 16px; }
   .stat { background: var(--surface2); border-radius: var(--radius); padding: 14px 16px; text-align: center; }
   .stat-val { font-size: 26px; font-weight: 600; color: var(--text); line-height: 1; }
   .stat-lbl { font-size: 11px; color: var(--text3); margin-top: 5px; font-weight: 500; letter-spacing: 0.3px; }
   .two-col { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; margin-bottom: 16px; }
   @media(max-width: 640px) { .two-col { grid-template-columns: 1fr; } .stats { grid-template-columns: 1fr 1fr; } }
+
   .badge { display: inline-block; font-size: 10px; font-weight: 600; letter-spacing: 0.4px; padding: 2px 8px; border-radius: 20px; text-transform: uppercase; margin-right: 4px; }
   .badge-front { background: var(--front-bg); color: var(--front); }
   .badge-back { background: var(--back-bg); color: var(--back); }
   .badge-other { background: var(--other-bg); color: var(--other); }
   .warn-badge { display: inline-flex; align-items: center; gap: 4px; font-size: 10px; font-weight: 600; background: var(--warn-bg); color: var(--warn); padding: 2px 8px; border-radius: 20px; }
+
   .placement-row { display: flex; gap: 12px; padding: 12px 0; border-bottom: 1px solid var(--border); align-items: flex-start; }
   .placement-row:last-child { border-bottom: none; }
   .logo-letter { width: 34px; height: 34px; border-radius: 8px; background: var(--accent); color: white; display: flex; align-items: center; justify-content: center; font-size: 16px; font-weight: 600; flex-shrink: 0; font-family: var(--mono); }
@@ -85,29 +124,26 @@
   .press-info { font-size: 11px; color: var(--text3); margin-top: 4px; }
   svg.garment { display: block; margin: 0 auto; }
 
-  /* File list */
   .file-table { width: 100%; border-collapse: collapse; font-size: 13px; }
   .file-table th { font-size: 10px; font-weight: 600; letter-spacing: 0.5px; text-transform: uppercase; color: var(--text3); padding: 0 8px 10px 8px; text-align: left; border-bottom: 1px solid var(--border); }
   .file-table td { padding: 9px 8px; border-bottom: 1px solid var(--surface2); vertical-align: middle; }
   .file-table tr:last-child td { border-bottom: none; }
   .file-table td:first-child { font-family: var(--mono); font-size: 12px; color: var(--text2); }
   .qty-pill { display: inline-block; background: var(--accent); color: white; font-size: 12px; font-weight: 600; padding: 2px 10px; border-radius: 20px; font-family: var(--mono); min-width: 36px; text-align: center; }
-  .copy-bar { display: flex; justify-content: space-between; align-items: center; margin-bottom: 14px; }
+
   .notice { background: var(--warn-bg); border: 1px solid #fcd34d; border-radius: var(--radius); padding: 10px 14px; font-size: 12px; color: var(--warn); display: flex; gap: 8px; align-items: flex-start; margin-bottom: 16px; }
   .notice-icon { font-size: 14px; flex-shrink: 0; margin-top: 1px; }
-
-  /* PDF action bar */
-  .pdf-bar { display: flex; gap: 10px; align-items: center; margin-bottom: 20px; }
+  .pdf-bar { display: flex; gap: 10px; align-items: center; margin-bottom: 20px; flex-wrap: wrap; }
+  .preview-job { margin-bottom: 32px; padding-bottom: 24px; border-bottom: 2px dashed var(--border); }
+  .preview-job:last-child { border-bottom: none; }
+  .preview-job-title { font-size: 16px; font-weight: 600; margin-bottom: 16px; display: flex; align-items: center; gap: 10px; }
+  .job-index { background: var(--accent); color: white; border-radius: 50%; width: 28px; height: 28px; display: flex; align-items: center; justify-content: center; font-size: 13px; font-weight: 600; flex-shrink: 0; }
 
   footer { text-align: center; padding: 24px; font-size: 11px; color: var(--text3); font-family: var(--mono); }
   .refresh-btn { background: none; border: none; color: rgba(255,255,255,0.6); font-size: 12px; cursor: pointer; font-family: var(--sans); display: flex; align-items: center; gap: 5px; padding: 0; }
   .refresh-btn:hover { color: white; }
 
-  /* Divider between preview jobs */
-  .preview-job { margin-bottom: 32px; padding-bottom: 24px; border-bottom: 2px dashed var(--border); }
-  .preview-job:last-child { border-bottom: none; }
-  .preview-job-title { font-size: 16px; font-weight: 600; margin-bottom: 16px; display: flex; align-items: center; gap: 10px; }
-  .job-index { background: var(--accent); color: white; border-radius: 50%; width: 28px; height: 28px; display: flex; align-items: center; justify-content: center; font-size: 13px; font-weight: 600; flex-shrink: 0; }
+  .order-ref { font-size: 12px; font-family: var(--mono); background: rgba(255,255,255,0.12); padding: 3px 10px; border-radius: 20px; color: rgba(255,255,255,0.7); }
 </style>
 </head>
 <body>
@@ -120,7 +156,8 @@
       <p>Uniform print job preparation</p>
     </div>
   </div>
-  <div style="display:flex;align-items:center;gap:12px">
+  <div class="header-right">
+    <span id="order-ref-badge" class="order-ref" style="display:none"></span>
     <div class="sheet-status" id="sheet-status"><span class="dot-live"></span> loading sheet...</div>
     <button class="refresh-btn" onclick="reloadSheet()">&#8635; Refresh</button>
   </div>
@@ -131,9 +168,38 @@
 
   <div id="app" style="display:none">
 
-    <!-- Job setup -->
-    <div class="card">
-      <div class="card-title">Add garment to batch</div>
+    <!-- Input method tabs -->
+    <div class="tabs">
+      <button class="tab active" id="tab-pdf" onclick="switchTab('pdf')">📄 Import from invoice PDF</button>
+      <button class="tab" id="tab-manual" onclick="switchTab('manual')">✏️ Add garment manually</button>
+    </div>
+
+    <!-- PDF import panel -->
+    <div id="panel-pdf" class="card">
+      <div class="card-title">Import order from invoice PDF</div>
+      <div class="drop-zone" id="drop-zone" onclick="document.getElementById('pdf-input').click()"
+           ondragover="event.preventDefault();this.classList.add('drag-over')"
+           ondragleave="this.classList.remove('drag-over')"
+           ondrop="handleDrop(event)">
+        <div class="drop-zone-icon">📄</div>
+        <div class="drop-zone-label">Drop an invoice PDF here, or click to browse</div>
+        <div class="drop-zone-sub">Reads garment names and sizes from your Soul2sole invoice automatically</div>
+      </div>
+      <input type="file" id="pdf-input" accept=".pdf" onchange="handlePDFFile(this.files[0])">
+      <div id="pdf-parse-status" style="display:none;margin-top:14px"></div>
+      <div id="pdf-parsed-items" style="display:none;margin-top:14px">
+        <div style="font-size:12px;font-weight:600;color:var(--text2);margin-bottom:10px;text-transform:uppercase;letter-spacing:0.5px">Garments found in invoice — untick any you don't want to add</div>
+        <div id="parsed-list"></div>
+        <div style="margin-top:14px;display:flex;gap:8px;flex-wrap:wrap">
+          <button class="btn btn-primary" onclick="addParsedToBatch()">+ Add ticked items to batch</button>
+          <button class="btn btn-secondary" onclick="clearPDFImport()">✕ Clear</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- Manual panel -->
+    <div id="panel-manual" class="card" style="display:none">
+      <div class="card-title">Add garment to batch manually</div>
       <div class="selectors">
         <div class="field">
           <label>Adult / Child</label>
@@ -169,7 +235,7 @@
     <div id="batch-section" class="card">
       <div class="batch-header">
         <div class="card-title" style="margin:0">Current batch</div>
-        <div style="display:flex;gap:8px">
+        <div style="display:flex;gap:8px;flex-wrap:wrap">
           <button class="btn btn-secondary" onclick="clearBatch()" style="padding:6px 12px;font-size:12px">✕ Clear all</button>
           <button class="btn btn-primary" onclick="previewBatch()" style="padding:6px 16px;font-size:13px">▶ Preview &amp; export</button>
         </div>
@@ -179,22 +245,16 @@
 
     <!-- Preview & export -->
     <div id="preview-section">
-
       <div class="pdf-bar">
-        <div style="font-size:15px;font-weight:600;flex:1">Batch preview</div>
+        <div style="font-size:15px;font-weight:600;flex:1" id="preview-title">Batch preview</div>
         <button class="btn btn-secondary" onclick="copyAllFiles()" style="padding:8px 16px;font-size:13px">&#128203; Copy all filenames</button>
         <button class="btn btn-primary" onclick="downloadPDF()" style="padding:8px 18px;font-size:13px">&#8681; Download PDF</button>
       </div>
-
-      <!-- Batch summary table -->
       <div class="card" id="summary-card">
         <div class="card-title">Batch summary — all garments</div>
         <div id="summary-table"></div>
       </div>
-
-      <!-- Per-job previews -->
       <div id="job-previews"></div>
-
     </div>
 
   </div>
@@ -203,10 +263,23 @@
 <footer>UPA Print Prep &mdash; data loaded live from Google Sheets</footer>
 
 <script>
+// ── Config ────────────────────────────────────────────────────────────────────
 const SHEET_ID = '1e2bRbJwGPwEbXX8XXzQwYSFZVenGF8_1OoluX4ayBVA';
 const GID = '1102647217';
+pdfjsLib.GlobalWorkerOptions.workerSrc = 'https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.worker.min.js';
+
 let allRows = [];
-let batch = []; // [{ac, item, size, qty, rows}]
+let batch = [];
+let parsedInvoiceItems = [];
+let currentOrderRef = '';
+
+// ── Tab switching ─────────────────────────────────────────────────────────────
+function switchTab(tab) {
+  document.getElementById('tab-pdf').classList.toggle('active', tab === 'pdf');
+  document.getElementById('tab-manual').classList.toggle('active', tab === 'manual');
+  document.getElementById('panel-pdf').style.display = tab === 'pdf' ? 'block' : 'none';
+  document.getElementById('panel-manual').style.display = tab === 'manual' ? 'block' : 'none';
+}
 
 // ── Sheet loading ─────────────────────────────────────────────────────────────
 function csvToRows(text) {
@@ -288,6 +361,203 @@ function onItemChange() {
     .forEach(v => selSize.appendChild(new Option(v,v)));
 }
 
+// ── PDF Invoice Import ────────────────────────────────────────────────────────
+function handleDrop(e) {
+  e.preventDefault();
+  document.getElementById('drop-zone').classList.remove('drag-over');
+  const file = e.dataTransfer.files[0];
+  if (file && file.type === 'application/pdf') handlePDFFile(file);
+}
+
+async function handlePDFFile(file) {
+  if (!file) return;
+  const status = document.getElementById('pdf-parse-status');
+  status.style.display = 'block';
+  status.innerHTML = '<span class="spinner"></span> Reading invoice...';
+
+  try {
+    const arrayBuffer = await file.arrayBuffer();
+    const pdf = await pdfjsLib.getDocument({ data: arrayBuffer }).promise;
+    let fullText = '';
+    for (let i = 1; i <= pdf.numPages; i++) {
+      const page = await pdf.getPage(i);
+      const content = await page.getTextContent();
+      fullText += content.items.map(it => it.str).join(' ') + '\n';
+    }
+    parseInvoiceText(fullText);
+    status.style.display = 'none';
+  } catch(e) {
+    status.innerHTML = `<span style="color:var(--danger)">Could not read PDF: ${e.message}</span>`;
+  }
+}
+
+// Garment name normalisation — maps invoice text → sheet Item names
+const GARMENT_MAP = [
+  { pattern: /child.{0,6}show.{0,6}t.?shirt/i,          item: 'Show T Shirt',                ac: 'Child' },
+  { pattern: /child.{0,6}t.?shirt/i,                     item: 'T Shirt',                     ac: 'Child' },
+  { pattern: /adult.{0,6}t.?shirt/i,                     item: 'T Shirt',                     ac: 'Adult' },
+  { pattern: /child.{0,10}full.{0,6}zip.{0,6}jacket/i,  item: 'Full Zip Jacket',              ac: 'Child' },
+  { pattern: /child.{0,10}half.{0,6}zip|1.?2.{0,6}zip.{0,6}crop/i, item: '1/2 Zip Crop Top', ac: 'Child' },
+  { pattern: /child.{0,10}short.{0,6}sleeve.{0,6}crop/i, item: 'Short Sleeved Crop Top',      ac: 'Child' },
+  { pattern: /child.{0,10}cycling.{0,6}short/i,          item: 'High Waist Cycling Shorts',   ac: 'Child' },
+  { pattern: /child.{0,10}legging/i,                     item: 'Leggings',                    ac: 'Child' },
+  { pattern: /child.{0,10}hoodie/i,                      item: 'Hoodie',                      ac: 'Child' },
+  { pattern: /adult.{0,10}hoodie/i,                      item: 'Hoodie',                      ac: 'Adult' },
+  { pattern: /child.{0,10}zoodie/i,                      item: 'Zoodie',                      ac: 'Child' },
+  { pattern: /adult.{0,10}zoodie/i,                      item: 'Zoodie',                      ac: 'Adult' },
+  { pattern: /child.{0,10}jacket/i,                      item: 'Jacket',                      ac: 'Child' },
+  { pattern: /adult.{0,10}jacket/i,                      item: 'Jacket',                      ac: 'Adult' },
+  { pattern: /child.{0,10}jogger/i,                      item: 'Joggers',                     ac: 'Child' },
+  { pattern: /adult.{0,10}jogger/i,                      item: 'Joggers',                     ac: 'Adult' },
+];
+
+function parseInvoiceText(text) {
+  // Extract order number
+  const orderMatch = text.match(/(?:Invoice\s*)?Number\s+(\d+)/i) ||
+                     text.match(/ORDER-(\d+)/i);
+  currentOrderRef = orderMatch ? `Order #${orderMatch[1]}` : '';
+  if (currentOrderRef) {
+    const badge = document.getElementById('order-ref-badge');
+    badge.textContent = currentOrderRef;
+    badge.style.display = 'inline-block';
+  }
+
+  parsedInvoiceItems = [];
+
+  // Collapse whitespace and split into per-garment blocks
+  const fullText = text.replace(/\s+/g, ' ');
+
+  // Extract all UPA item blocks
+  const itemBlocks = fullText.split(/(?=UPA (?:Child|Adult))/i).filter(b => /UPA (?:Child|Adult)/i.test(b));
+
+  itemBlocks.forEach(block => {
+    // Garment name from start of block
+    const nameMatch = block.match(/^(UPA (?:Child|Adult)[^S]*?)(?:SKU|£|\d{4,})/i);
+    const rawName = nameMatch ? nameMatch[1].trim() : block.substring(0, 60);
+
+    // Size
+    const sizeMatch = block.match(/Size:\s*([A-Za-z0-9\s\-\/\(\)]+?)(?:\s*£|\s*SKU|\s{3,}|$)/i);
+    const rawSize = sizeMatch ? sizeMatch[1].trim() : '';
+
+    // Qty — look for pattern like "£13.00 1 0%" 
+    const qtyMatch = block.match(/£[\d.]+\s+(\d+)\s+\d+%/);
+    const qty = qtyMatch ? parseInt(qtyMatch[1]) : 1;
+
+    // Match to sheet
+    let matched = null;
+    for (const m of GARMENT_MAP) {
+      if (m.pattern.test(rawName)) {
+        matched = m;
+        break;
+      }
+    }
+
+    // Shipping / non-garment items to skip
+    if (/royal mail|shipping|delivery/i.test(rawName)) return;
+
+    // Try to find the best size match in the sheet
+    let sheetSize = null;
+    let sheetRows = [];
+    if (matched) {
+      sheetRows = allRows.filter(r => r['Adult - Child'] === matched.ac && r['Item'] === matched.item);
+      const sheetSizes = [...new Set(sheetRows.map(r => r['Size']))];
+      // Direct match first
+      sheetSize = sheetSizes.find(s => s.toLowerCase() === rawSize.toLowerCase());
+      // Partial match
+      if (!sheetSize) {
+        sheetSize = sheetSizes.find(s =>
+          s.toLowerCase().includes(rawSize.toLowerCase()) ||
+          rawSize.toLowerCase().includes(s.toLowerCase())
+        );
+      }
+      // Fuzzy: strip non-alphanumeric
+      if (!sheetSize) {
+        const stripped = rawSize.replace(/[^a-z0-9]/gi,'').toLowerCase();
+        sheetSize = sheetSizes.find(s => s.replace(/[^a-z0-9]/gi,'').toLowerCase() === stripped);
+      }
+    }
+
+    const printRows = sheetSize ? sheetRows.filter(r => r['Size'] === sheetSize) : [];
+
+    parsedInvoiceItems.push({
+      rawName,
+      rawSize,
+      qty,
+      matched,
+      sheetSize,
+      printRows,
+      checked: matched && sheetSize ? true : false
+    });
+  });
+
+  renderParsedItems();
+}
+
+function renderParsedItems() {
+  const container = document.getElementById('pdf-parsed-items');
+  const list = document.getElementById('parsed-list');
+
+  if (!parsedInvoiceItems.length) {
+    document.getElementById('pdf-parse-status').style.display = 'block';
+    document.getElementById('pdf-parse-status').innerHTML = '<span style="color:var(--danger)">No UPA garments found in this PDF. Check it is a Soul2sole invoice.</span>';
+    return;
+  }
+
+  container.style.display = 'block';
+  list.innerHTML = parsedInvoiceItems.map((item, i) => {
+    const hasMatch = item.matched && item.sheetSize;
+    const isPrintable = hasMatch && item.printRows.length > 0;
+    let statusHtml;
+    if (isPrintable) {
+      statusHtml = `<span class="parsed-status status-matched">✓ matched — ${item.printRows.length} placement${item.printRows.length!==1?'s':''}</span>`;
+    } else if (hasMatch && !item.printRows.length) {
+      statusHtml = `<span class="parsed-status status-noprint">no print data</span>`;
+    } else {
+      statusHtml = `<span class="parsed-status status-unmatched">⚠ not matched</span>`;
+    }
+
+    return `<div class="parsed-item">
+      <input type="checkbox" class="parsed-check" id="pcheck-${i}" ${item.checked && isPrintable ? 'checked' : ''} ${!isPrintable ? 'disabled' : ''}>
+      <div class="parsed-detail">
+        <div class="parsed-name">${item.rawName}</div>
+        <div class="parsed-sub">Size: ${item.rawSize || '—'} · Qty: ${item.qty}${item.matched ? ` → ${item.matched.ac} · ${item.matched.item}${item.sheetSize ? ' · ' + item.sheetSize : ''}` : ''}</div>
+      </div>
+      ${statusHtml}
+    </div>`;
+  }).join('');
+}
+
+function addParsedToBatch() {
+  let added = 0;
+  parsedInvoiceItems.forEach((item, i) => {
+    const cb = document.getElementById(`pcheck-${i}`);
+    if (!cb || !cb.checked) return;
+    if (!item.printRows.length) return;
+    batch.push({
+      ac: item.matched.ac,
+      item: item.matched.item,
+      size: item.sheetSize,
+      qty: item.qty,
+      rows: item.printRows,
+      orderRef: currentOrderRef
+    });
+    added++;
+  });
+
+  if (added) {
+    renderBatch();
+    document.getElementById('preview-section').style.display = 'none';
+    clearPDFImport();
+  }
+}
+
+function clearPDFImport() {
+  parsedInvoiceItems = [];
+  document.getElementById('pdf-input').value = '';
+  document.getElementById('pdf-parsed-items').style.display = 'none';
+  document.getElementById('pdf-parse-status').style.display = 'none';
+}
+
 // ── Helpers ───────────────────────────────────────────────────────────────────
 function hasWarning(row) { return ['Logo','Position1','Postion2','Position3'].some(k=>(row[k]||'').includes('?')); }
 function cleanLogo(raw) { return raw.replace(/^\?+/,'').trim(); }
@@ -300,7 +570,6 @@ function locationBadge(loc) {
   return `<span class="badge badge-other">${loc}</span>`;
 }
 
-// Build the file list for a job — ONE file per placement (not per qty)
 function buildFileList(jobRows) {
   return jobRows.map(row => {
     const logo = cleanLogo(row['Logo']||'');
@@ -343,8 +612,6 @@ function addToBatch() {
   batch.push({ ac, item, size, qty, rows });
   renderBatch();
   document.getElementById('preview-section').style.display = 'none';
-
-  // Reset selectors
   document.getElementById('sel-ac').value = '';
   document.getElementById('sel-item').innerHTML = '<option value="">Select adult/child first</option>';
   document.getElementById('sel-item').disabled = true;
@@ -361,6 +628,8 @@ function removeFromBatch(i) {
 
 function clearBatch() {
   batch = [];
+  currentOrderRef = '';
+  document.getElementById('order-ref-badge').style.display = 'none';
   renderBatch();
   document.getElementById('preview-section').style.display = 'none';
 }
@@ -388,8 +657,10 @@ function renderBatch() {
 // ── Preview ───────────────────────────────────────────────────────────────────
 function previewBatch() {
   if (!batch.length) return;
+  const orderRef = batch.find(j=>j.orderRef)?.orderRef || '';
+  const titleEl = document.getElementById('preview-title');
+  titleEl.textContent = orderRef ? `Batch preview — ${orderRef}` : 'Batch preview';
 
-  // Summary table
   const allFiles = [];
   batch.forEach(job => buildFileList(job.rows).forEach(f => {
     allFiles.push({...f, qty: job.qty, item: job.item, size: job.size, ac: job.ac});
@@ -406,7 +677,7 @@ function previewBatch() {
         <th>Press</th>
       </tr></thead>
       <tbody>
-        ${allFiles.map(f => `<tr>
+        ${allFiles.map(f=>`<tr>
           <td>${f.name}</td>
           <td>${locationBadge(f.loc)}</td>
           <td>${f.ac} ${f.item}</td>
@@ -417,7 +688,6 @@ function previewBatch() {
       </tbody>
     </table>`;
 
-  // Per-job detail panels
   document.getElementById('job-previews').innerHTML = batch.map((job,i) => {
     const files = buildFileList(job.rows);
     const anyWarn = job.rows.some(hasWarning);
@@ -429,7 +699,7 @@ function previewBatch() {
         ${job.ac} · ${job.item} · Size ${job.size} · <span style="color:var(--accent)">×${job.qty}</span>
       </div>
       ${anyWarn ? `<div class="notice"><span class="notice-icon">⚠</span><span>Some placements have unconfirmed measurements — double-check before pressing.</span></div>` : ''}
-      <div class="stats" style="grid-template-columns:repeat(3,1fr)">
+      <div class="stats">
         <div class="stat"><div class="stat-val">${files.length}</div><div class="stat-lbl">Placements</div></div>
         <div class="stat"><div class="stat-val">${files.length}</div><div class="stat-lbl">Files to import</div></div>
         <div class="stat"><div class="stat-val" style="font-size:16px">${temps[0]||'—'} / ${times[0]||'—'}</div><div class="stat-lbl">Press temp / time</div></div>
@@ -449,8 +719,8 @@ function previewBatch() {
         <table class="file-table">
           <thead><tr><th>Filename</th><th>Location</th><th>Placement</th><th>Press</th><th style="text-align:center">DF copies</th></tr></thead>
           <tbody>
-            ${files.map(f => {
-              const positions = [f.pos1,f.pos2,f.pos3].filter(Boolean).join(' · ');
+            ${files.map(f=>{
+              const positions=[f.pos1,f.pos2,f.pos3].filter(Boolean).join(' · ');
               return `<tr>
                 <td>${f.name}${f.warn?' <span class="warn-badge">⚠ check</span>':''}</td>
                 <td>${locationBadge(f.loc)}</td>
@@ -472,9 +742,7 @@ function previewBatch() {
 // ── Copy all filenames ────────────────────────────────────────────────────────
 function copyAllFiles() {
   const lines = [];
-  batch.forEach(job => {
-    buildFileList(job.rows).forEach(f => lines.push(f.name));
-  });
+  batch.forEach(job => buildFileList(job.rows).forEach(f => lines.push(f.name)));
   navigator.clipboard.writeText(lines.join('\n')).then(() => {
     const btn = event.target;
     const orig = btn.innerHTML;
@@ -573,114 +841,159 @@ function legsSVG(rows,hasHip,hasBottomLeg) {
   </svg>`;
 }
 
-// ── PDF generation ────────────────────────────────────────────────────────────
+// ── PDF Export (real PDF via jsPDF) ───────────────────────────────────────────
 function downloadPDF() {
+  const { jsPDF } = window.jspdf;
+  const doc = new jsPDF({ orientation: 'portrait', unit: 'mm', format: 'a4' });
   const today = new Date().toLocaleDateString('en-GB',{day:'2-digit',month:'short',year:'numeric'});
+  const orderRef = batch.find(j=>j.orderRef)?.orderRef || '';
+  const pageW = doc.internal.pageSize.getWidth();
+  const margin = 16;
+  const contentW = pageW - margin * 2;
+  const accentRGB = [45,90,61];
+  const greyRGB = [107,101,96];
+  const lightRGB = [240,237,232];
 
-  // Collect all files across batch
+  // ── Page 1: Summary ───────────────────────────────────────────────────────
+  // Header block
+  doc.setFillColor(...accentRGB);
+  doc.rect(0, 0, pageW, 28, 'F');
+  doc.setFont('helvetica','bold');
+  doc.setFontSize(16);
+  doc.setTextColor(255,255,255);
+  doc.text('UPA Print Batch', margin, 12);
+  doc.setFont('helvetica','normal');
+  doc.setFontSize(9);
+  doc.setTextColor(200,220,210);
+  const subtitle = [today, orderRef, `${batch.length} garment type${batch.length!==1?'s':''}`, `${batch.reduce((a,j)=>a+buildFileList(j.rows).length,0)} files`].filter(Boolean).join('  ·  ');
+  doc.text(subtitle, margin, 19);
+  doc.setFont('helvetica','bold');
+  doc.setFontSize(18);
+  doc.setTextColor(255,255,255);
+  doc.text('UP', pageW - margin - 2, 16, {align:'right'});
+
+  // Summary table
   const allFiles = [];
-  batch.forEach(job => {
-    buildFileList(job.rows).forEach(f => {
-      allFiles.push({...f, qty: job.qty, item: job.item, size: job.size, ac: job.ac});
+  batch.forEach(job => buildFileList(job.rows).forEach(f => {
+    allFiles.push({...f, qty: job.qty, item: job.item, size: job.size, ac: job.ac});
+  }));
+
+  doc.autoTable({
+    startY: 34,
+    margin: { left: margin, right: margin },
+    head: [['Filename', 'Garment', 'Size', 'Copies', 'Location', 'Placement', 'Press']],
+    body: allFiles.map(f => [
+      f.name,
+      `${f.ac} ${f.item}`,
+      f.size,
+      `×${f.qty}`,
+      f.loc,
+      [f.pos1,f.pos2,f.pos3].filter(Boolean).join(' · '),
+      `${f.temp} / ${f.time}`
+    ]),
+    styles: { fontSize: 8, cellPadding: 3, font: 'helvetica' },
+    headStyles: { fillColor: lightRGB, textColor: greyRGB, fontStyle: 'bold', fontSize: 7.5 },
+    columnStyles: {
+      0: { cellWidth: 52, font: 'courier', fontSize: 7 },
+      3: { cellWidth: 14, halign: 'center', fontStyle: 'bold', textColor: accentRGB },
+    },
+    alternateRowStyles: { fillColor: [250,249,247] },
+    didDrawPage: (data) => addPageFooter(doc, today, orderRef, pageW, margin)
+  });
+
+  // ── Per-job pages ─────────────────────────────────────────────────────────
+  batch.forEach((job, ji) => {
+    doc.addPage();
+    const files = buildFileList(job.rows);
+    const anyWarn = job.rows.some(hasWarning);
+    const temps = [...new Set(job.rows.map(r=>r['Temp']).filter(Boolean))];
+    const times = [...new Set(job.rows.map(r=>r['Time']).filter(Boolean))];
+
+    // Job header
+    doc.setFillColor(...accentRGB);
+    doc.rect(0, 0, pageW, 28, 'F');
+    doc.setFont('helvetica','normal');
+    doc.setFontSize(8);
+    doc.setTextColor(180,210,195);
+    doc.text(`Job ${ji+1} of ${batch.length}${orderRef ? '  ·  ' + orderRef : ''}`, margin, 9);
+    doc.setFont('helvetica','bold');
+    doc.setFontSize(14);
+    doc.setTextColor(255,255,255);
+    doc.text(`${job.ac} · ${job.item}`, margin, 18);
+    doc.setFont('helvetica','normal');
+    doc.setFontSize(9);
+    doc.setTextColor(200,220,210);
+    doc.text(`Size ${job.size}  ·  ×${job.qty} copies in Digital Factory  ·  ${temps[0]||'—'} / ${times[0]||'—'}`, margin, 25);
+
+    let yPos = 36;
+
+    // Warning notice
+    if (anyWarn) {
+      doc.setFillColor(254,243,199);
+      doc.setDrawColor(252,211,77);
+      doc.roundedRect(margin, yPos, contentW, 9, 2, 2, 'FD');
+      doc.setFont('helvetica','bold');
+      doc.setFontSize(8);
+      doc.setTextColor(146,64,14);
+      doc.text('⚠  Some placements have unconfirmed measurements — double-check before pressing.', margin+3, yPos+6);
+      yPos += 14;
+    }
+
+    // Stats row
+    const statW = (contentW - 8) / 3;
+    [[files.length,'Placements'],[files.length,'Files to import'],[`${temps[0]||'—'} / ${times[0]||'—'}`,'Press temp / time']].forEach((s,si) => {
+      const sx = margin + si*(statW+4);
+      doc.setFillColor(...lightRGB);
+      doc.roundedRect(sx, yPos, statW, 18, 2, 2, 'F');
+      doc.setFont('helvetica','bold');
+      doc.setFontSize(si===2?9:14);
+      doc.setTextColor(26,24,20);
+      doc.text(String(s[0]), sx+statW/2, yPos+10, {align:'center'});
+      doc.setFont('helvetica','normal');
+      doc.setFontSize(7);
+      doc.setTextColor(...greyRGB);
+      doc.text(s[1], sx+statW/2, yPos+16, {align:'center'});
+    });
+    yPos += 24;
+
+    // Placements detail table
+    doc.autoTable({
+      startY: yPos,
+      margin: { left: margin, right: margin },
+      head: [['Filename — import into Digital Factory', 'DF copies', 'Location', 'Placement / measurement', 'Press']],
+      body: files.map(f => [
+        f.name + (f.warn ? '  ⚠' : ''),
+        `×${job.qty}`,
+        f.loc,
+        [f.pos1,f.pos2,f.pos3].filter(Boolean).join(' · '),
+        `${f.temp} / ${f.time}`
+      ]),
+      styles: { fontSize: 8, cellPadding: 3, font: 'helvetica' },
+      headStyles: { fillColor: lightRGB, textColor: greyRGB, fontStyle: 'bold', fontSize: 7.5 },
+      columnStyles: {
+        0: { cellWidth: 55, font: 'courier', fontSize: 7.5 },
+        1: { cellWidth: 18, halign: 'center', fontStyle: 'bold', textColor: accentRGB, fontSize: 11 },
+        3: { fontSize: 7.5 },
+      },
+      alternateRowStyles: { fillColor: [250,249,247] },
+      didDrawPage: (data) => addPageFooter(doc, today, orderRef, pageW, margin)
     });
   });
 
-  const summaryRows = allFiles.map(f => {
-    const positions=[f.pos1,f.pos2,f.pos3].filter(Boolean).join(' · ');
-    return `<tr>
-      <td style="font-family:monospace;font-size:11px;padding:7px 10px;border-bottom:1px solid #e5e7eb">${f.name}</td>
-      <td style="padding:7px 10px;border-bottom:1px solid #e5e7eb">${f.ac} ${f.item}</td>
-      <td style="padding:7px 10px;border-bottom:1px solid #e5e7eb">${f.size}</td>
-      <td style="padding:7px 10px;border-bottom:1px solid #e5e7eb;text-align:center;font-weight:700;color:#2d5a3d">×${f.qty}</td>
-      <td style="padding:7px 10px;border-bottom:1px solid #e5e7eb;font-size:11px;color:#6b7280">${f.loc}</td>
-      <td style="padding:7px 10px;border-bottom:1px solid #e5e7eb;font-size:11px;color:#6b7280">${positions}</td>
-      <td style="padding:7px 10px;border-bottom:1px solid #e5e7eb;font-size:11px;color:#6b7280">${f.temp} / ${f.time}</td>
-    </tr>`;
-  }).join('');
+  const dateStr = new Date().toISOString().slice(0,10);
+  const filename = orderRef
+    ? `UPA_Batch_${orderRef.replace(/[^a-z0-9]/gi,'_')}_${dateStr}.pdf`
+    : `UPA_Batch_${dateStr}.pdf`;
+  doc.save(filename);
+}
 
-  const jobPages = batch.map((job, ji) => {
-    const files = buildFileList(job.rows);
-    const fileRows = files.map(f => {
-      const positions=[f.pos1,f.pos2,f.pos3].filter(Boolean).join(' · ');
-      return `<tr>
-        <td style="font-family:monospace;font-size:11px;padding:7px 10px;border-bottom:1px solid #e5e7eb">${f.name}${f.warn?' ⚠':''}</td>
-        <td style="padding:7px 10px;border-bottom:1px solid #e5e7eb;text-align:center;font-weight:700;font-size:16px;color:#2d5a3d">×${job.qty}</td>
-        <td style="padding:7px 10px;border-bottom:1px solid #e5e7eb;font-size:11px;color:#374151">${f.loc}</td>
-        <td style="padding:7px 10px;border-bottom:1px solid #e5e7eb;font-size:11px;color:#6b7280">${positions}</td>
-        <td style="padding:7px 10px;border-bottom:1px solid #e5e7eb;font-size:11px;color:#6b7280">${f.temp} / ${f.time}</td>
-      </tr>`;
-    }).join('');
-
-    return `<div style="page-break-before:always;padding:32px 36px;font-family:'Helvetica Neue',Arial,sans-serif">
-      <div style="display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:20px">
-        <div>
-          <div style="font-size:11px;font-weight:600;letter-spacing:0.8px;text-transform:uppercase;color:#9ca3af;margin-bottom:4px">Job ${ji+1} of ${batch.length}</div>
-          <div style="font-size:20px;font-weight:700;color:#1a1814">${job.ac} · ${job.item}</div>
-          <div style="font-size:14px;color:#6b7280;margin-top:2px">Size ${job.size} · <strong style="color:#2d5a3d">×${job.qty} copies in Digital Factory</strong></div>
-        </div>
-        <div style="text-align:right;font-size:12px;color:#9ca3af">${today}</div>
-      </div>
-      <table style="width:100%;border-collapse:collapse;margin-bottom:24px">
-        <thead>
-          <tr style="background:#f3f4f6">
-            <th style="padding:8px 10px;text-align:left;font-size:10px;letter-spacing:0.5px;text-transform:uppercase;color:#6b7280;font-weight:600">File — import into Digital Factory</th>
-            <th style="padding:8px 10px;text-align:center;font-size:10px;letter-spacing:0.5px;text-transform:uppercase;color:#6b7280;font-weight:600">DF copies</th>
-            <th style="padding:8px 10px;text-align:left;font-size:10px;letter-spacing:0.5px;text-transform:uppercase;color:#6b7280;font-weight:600">Location</th>
-            <th style="padding:8px 10px;text-align:left;font-size:10px;letter-spacing:0.5px;text-transform:uppercase;color:#6b7280;font-weight:600">Placement / measurement</th>
-            <th style="padding:8px 10px;text-align:left;font-size:10px;letter-spacing:0.5px;text-transform:uppercase;color:#6b7280;font-weight:600">Press temp / time</th>
-          </tr>
-        </thead>
-        <tbody>${fileRows}</tbody>
-      </table>
-      ${job.rows.some(hasWarning)?`<div style="background:#fef3c7;border:1px solid #fcd34d;border-radius:8px;padding:10px 14px;font-size:12px;color:#92400e;margin-bottom:16px">⚠ Some placements have unconfirmed measurements — double check before pressing.</div>`:''}
-    </div>`;
-  }).join('');
-
-  const html = `<!DOCTYPE html><html><head><meta charset="UTF-8">
-  <title>UPA Batch ${today}</title>
-  <style>
-    @media print {
-      body { margin: 0; }
-      .no-print { display: none !important; }
-    }
-    body { font-family: 'Helvetica Neue', Arial, sans-serif; margin: 0; color: #1a1814; }
-  </style>
-  </head><body>
-  <!-- Summary page -->
-  <div style="padding:32px 36px">
-    <div style="display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:24px;padding-bottom:16px;border-bottom:2px solid #1a1814">
-      <div>
-        <div style="font-size:22px;font-weight:700">UPA Print Batch</div>
-        <div style="font-size:13px;color:#6b7280;margin-top:3px">${today} · ${batch.length} garment type${batch.length!==1?'s':''} · ${allFiles.length} files to import</div>
-      </div>
-      <div style="font-size:28px;font-weight:800;color:#2d5a3d">UP</div>
-    </div>
-    <div style="font-size:10px;font-weight:600;letter-spacing:0.8px;text-transform:uppercase;color:#9ca3af;margin-bottom:10px">All files — Digital Factory import list</div>
-    <table style="width:100%;border-collapse:collapse">
-      <thead>
-        <tr style="background:#f3f4f6">
-          <th style="padding:8px 10px;text-align:left;font-size:10px;letter-spacing:0.5px;text-transform:uppercase;color:#6b7280;font-weight:600">Filename</th>
-          <th style="padding:8px 10px;text-align:left;font-size:10px;letter-spacing:0.5px;text-transform:uppercase;color:#6b7280;font-weight:600">Garment</th>
-          <th style="padding:8px 10px;text-align:left;font-size:10px;letter-spacing:0.5px;text-transform:uppercase;color:#6b7280;font-weight:600">Size</th>
-          <th style="padding:8px 10px;text-align:center;font-size:10px;letter-spacing:0.5px;text-transform:uppercase;color:#6b7280;font-weight:600">Copies</th>
-          <th style="padding:8px 10px;text-align:left;font-size:10px;letter-spacing:0.5px;text-transform:uppercase;color:#6b7280;font-weight:600">Location</th>
-          <th style="padding:8px 10px;text-align:left;font-size:10px;letter-spacing:0.5px;text-transform:uppercase;color:#6b7280;font-weight:600">Placement</th>
-          <th style="padding:8px 10px;text-align:left;font-size:10px;letter-spacing:0.5px;text-transform:uppercase;color:#6b7280;font-weight:600">Press</th>
-        </tr>
-      </thead>
-      <tbody>${summaryRows}</tbody>
-    </table>
-  </div>
-  ${jobPages}
-  </body></html>`;
-
-  const blob = new Blob([html], {type:'text/html'});
-  const url  = URL.createObjectURL(blob);
-  const a    = document.createElement('a');
-  a.href = url;
-  a.download = `UPA_Batch_${new Date().toISOString().slice(0,10)}.html`;
-  a.click();
-  URL.revokeObjectURL(url);
+function addPageFooter(doc, today, orderRef, pageW, margin) {
+  const pageH = doc.internal.pageSize.getHeight();
+  doc.setFont('helvetica','normal');
+  doc.setFontSize(7);
+  doc.setTextColor(158,152,144);
+  doc.text(`UPA Print Prep  ·  ${today}${orderRef ? '  ·  ' + orderRef : ''}`, margin, pageH - 8);
+  doc.text(`Page ${doc.internal.getCurrentPageInfo().pageNumber}`, pageW - margin, pageH - 8, {align:'right'});
 }
 
 loadSheet();
